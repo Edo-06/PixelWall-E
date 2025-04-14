@@ -1,57 +1,53 @@
 @page "/"
+@using Microsoft.AspNetCore.Components.Forms
+@using System.IO
 @inject IJSRuntime jsRuntime
 
 <PageTitle>Home</PageTitle>
 
-<h1>Home</h1>
-
 <section id=split-screen>
     <div class="left">
-        <h1>Hello, world!</h1>
+        <CanvasView/>
     </div>
     <div class="right">
         <div style="margin:10px 0;">
             Theme:
             <select @onchange="ChangeTheme">
-                <option value="vs">Visual Studio</option>
-                <option value="vs-dark">Visual Studio Dark</option>
+                <option value="vs">Light</option>
+                <option value="vs-dark">Dark</option>
                 <option value="hc-black">High Contrast Black</option>
             </select>
         </div>
-        @*<div style="margin:10px 0;">
-            New Value: <input type="text" @bind="_valueToSet" style="width: 400px;" />
-            <button @onclick="SetValue">Set Value</button>
-        </div>
-        <div style="margin:10px 0;">
-            <button @onclick="GetValue">Get Value</button>
-        </div>
-        <div style="margin:10px 0;">
-            <button @onclick="AddCommand">Add Command</button>
-            <span style="font-size:10px">Ctrl+Enter to trigger the command.</span>
-        </div>
-        <div style="margin:10px 0;">
-            <button @onclick="AddAction">Add Action</button>
-            <span style="font-size:10px">Ctrl+B to trigger the action.</span>
-        </div>
-        <div style="margin:10px 0;">
-            <button @onclick="RegisterCodeActionProvider">RegisterCodeActionProvider</button>
-            <span style="font-size:10px">Hover over the "this" on line:4</span>
-        </div>
-        <div style="margin:10px 0;">
-            <button @onclick="RegisterDocumentFormattingEditProvider">RegisterDocumentFormattingEditProvider</button>
-            <span style="font-size:10px">Shift+Alt+F to trigger the action.</span>
-        </div>
-        <div style="margin:10px 0;">
-            <button @onclick="RegisterCompletionItemProvider">RegisterCompletionItemProvider</button>
-            <span style="font-size:10px">Ctrl+Space on the "this" on line:4</span>
-        </div>
-        <div style="margin:10px 0;">
-            See the console for the button results.
-        </div>*@
 
     <StandaloneCodeEditor @ref="_editor" Id="sample-code-editor" ConstructionOptions="EditorConstructionOptions"
         OnDidInit="EditorOnDidInit" OnContextMenu="OnContextMenu" />
+    
+    <div class="button-container">
+        <button @onclick="GetCode" class="btn btn-primary">Ejecutar</button>
+        <button @onclick="LoadFile" class="btn btn-primary">
+            <i class="fas fa-upload"></i> Cargar Archivo .pw
+        </button>
+        <button @onclick="ShowDialogueForSave" class="btn btn-primary">
+            <i class="fas fa-download"></i> Guardar Archivo .pw
+        </button>
     </div>
+
+    <InputFile @ref="_inputFileElement" id="fileInput" OnChange="HandleFileSelected" hidden accept=".pw" />
+
+        <div class="save-dialogue" style="@dialogueStyle">
+            <div class="dialogue-content">
+                <h3>Guardar archivo</h3>
+                <input @ref="_name" 
+                        type="text" 
+                        placeholder="name.pw" />
+                <div class="dialogue-buttons">
+                    <button @onclick="CancelSave"class="btn btn-primary accept">Cancelar</button>
+                    <button @onclick="ConfirmSave"class="btn btn-primary cancel">Guardar</button>
+                </div>
+            </div>
+        </div>
+
+    </div>  
 </section>
 
 

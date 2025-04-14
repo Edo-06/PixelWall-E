@@ -60,15 +60,6 @@ body {
     background: lightblue;
 }
 
-.monaco-editor {
-    height: 100% !important;
-    width: 100% !important;
-}
-
-.monaco-editor .suggest-widget {
-    display: none !important;
-}
-
-.monaco-editor .parameter-hints-widget {
-    display: none !important;
+.monaco-editor-container {
+    height: 650px;
 }

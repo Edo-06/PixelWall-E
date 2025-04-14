@@ -13,6 +13,7 @@ main {
     background-color: #ffffff;
     height: 100vh;
     width: 50%;
+    position: relative;
 }
 
 #split-screen {
@@ -94,4 +95,70 @@ main {
         padding-left: 2rem !important;
         padding-right: 1.5rem !important;
     }
+}
+
+
+/* Diálogo flotante para guardar*/
+.save-dialogue {
+    position: absolute;
+    top: 60%; 
+    left: 50%; 
+    transform: translate(-50%, -50%); 
+    z-index: 1000; 
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    width: 300px;
+    display: none;
+}
+
+.save-dialogue.visible {
+    display: block; 
+}
+
+.save-dialogue::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(204, 204, 204, 0.5);
+    z-index: -1;
+}
+
+.dialogue-buttons {
+    display: flex;
+    gap: 1rem;    
+    margin-top: 1.5rem;
+    justify-content: flex-end;
+}
+
+.btn-primary.cancel {
+    background-color: #dc3545; 
+    border-color: #dc3545;
+}
+
+.btn-primary.accept {
+    background-color: #28a745; 
+    border-color: #28a745;
+}
+
+.btn.cancel:hover {
+    background-color: #bb2d3b;
+    border-color: #b02a37;
+}
+
+.btn.accept:hover {
+    background-color: #218838;
+    border-color: #1e7e34;
+}
+
+.button-container {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem;
+    background: #f8f9fa; 
+    border-top: 1px solid #dee2e6; 
 }
