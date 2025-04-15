@@ -1,0 +1,27 @@
+public class Mul: Binary
+{
+    public override ExpressionType type {get; set;}
+    public override object? value {get; set;}
+    public Mul(CodeLocation location) : base(location){}
+
+    public override void Evaluate()
+    {
+        Right.Evaluate();
+        Left.Evaluate();
+        
+        this.value = (int)Right.value* (int)Left.value;
+    }
+    public override bool CheckSemantic()
+    {
+        bool right = Right.CheckSemantic();
+        bool left = Left.CheckSemantic();
+        if (Right.type != ExpressionType.Number || Left.type != ExpressionType.Number)
+        {
+            type = ExpressionType.ErrorType;
+            return false;
+        }
+
+        type = ExpressionType.Number;
+        return right && left;
+    }
+}

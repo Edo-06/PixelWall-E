@@ -1,5 +1,6 @@
 @page "/"
 @using Microsoft.AspNetCore.Components.Forms
+@using PixelWall_E.Components
 @using System.IO
 @inject IJSRuntime jsRuntime
 
@@ -7,7 +8,7 @@
 
 <section id=split-screen>
     <div class="left">
-        <CanvasView/>
+        <CanvasGrid/>
     </div>
     <div class="right">
         <div style="margin:10px 0;">
@@ -23,17 +24,12 @@
         OnDidInit="EditorOnDidInit" OnContextMenu="OnContextMenu" />
     
     <div class="button-container">
-        <button @onclick="GetCode" class="btn btn-primary">Ejecutar</button>
-        <button @onclick="LoadFile" class="btn btn-primary">
-            <i class="fas fa-upload"></i> Cargar Archivo .pw
-        </button>
-        <button @onclick="ShowDialogueForSave" class="btn btn-primary">
-            <i class="fas fa-download"></i> Guardar Archivo .pw
-        </button>
+        <button @onclick="GetCode" class="btn btn-primary">Run</button>
+        <button @onclick="LoadFile" class="btn btn-primary">Load file</button>
+        <button @onclick="ShowDialogueForSave" class="btn btn-primary">Save as .pw</button>
     </div>
 
     <InputFile @ref="_inputFileElement" id="fileInput" OnChange="HandleFileSelected" hidden accept=".pw" />
-
         <div class="save-dialogue" style="@dialogueStyle">
             <div class="dialogue-content">
                 <h3>Guardar archivo</h3>
@@ -41,12 +37,11 @@
                         type="text" 
                         placeholder="name.pw" />
                 <div class="dialogue-buttons">
-                    <button @onclick="CancelSave"class="btn btn-primary accept">Cancelar</button>
-                    <button @onclick="ConfirmSave"class="btn btn-primary cancel">Guardar</button>
+                    <button @onclick="CancelSave"class="btn btn-primary accept">Cancel</button>
+                    <button @onclick="ConfirmSave"class="btn btn-primary cancel">Save</button>
                 </div>
             </div>
         </div>
-
     </div>  
 </section>
 

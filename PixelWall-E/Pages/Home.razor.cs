@@ -6,6 +6,7 @@ using BlazorMonaco.Languages;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.JSInterop;
+using PixelWall_E.Components;
 
 namespace PixelWall_E.Pages;
 
@@ -15,8 +16,10 @@ public partial class Home
     private string _valueToSet = "";
     private InputFile? _inputFileElement;
     private ElementReference _name;
+    public int _numberOfPixels;
     private string dialogueStyle = "display: none;";
     private string temporaryContent = "";
+    private EventCallback<int> OnGridChange {get; set;}
     
     [AllowNull]
     private StandaloneCodeEditor _editor;
@@ -136,5 +139,9 @@ public partial class Home
         dialogueStyle = "display: none;";
     }
 #endregion
+    private async Task ChangeGridSize()
+    {
+        await OnGridChange.InvokeAsync(_numberOfPixels);
+    }
 
 }

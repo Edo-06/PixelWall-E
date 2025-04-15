@@ -1,5 +1,5 @@
 
-window.drawGrid = (canvasId, cellSize, color) => {
+window.drawGrid = (canvasId, pixelSize, color) => {
     const canvas = document.getElementById(canvasId);
     const ctx = canvas.getContext('2d');
     const width = canvas.width;
@@ -9,7 +9,7 @@ window.drawGrid = (canvasId, cellSize, color) => {
     ctx.lineWidth = 0.2;
 
     
-    for (let x = 0; x <= width; x += cellSize) {
+    for (let x = 0.0; x <= width; x += pixelSize) {
         ctx.beginPath();
         ctx.moveTo(x, 0);
         ctx.lineTo(x, height);
@@ -17,7 +17,7 @@ window.drawGrid = (canvasId, cellSize, color) => {
     }
 
     
-    for (let y = 0; y <= height; y += cellSize) {
+    for (let y = 0.0; y <= height; y += pixelSize) {
         ctx.beginPath();
         ctx.moveTo(0, y);
         ctx.lineTo(width, y);
@@ -30,4 +30,17 @@ window.clearCanvas = (canvasId, backgroundColor = "#FFFFFF") => {
     const ctx = canvas.getContext('2d');
     ctx.fillStyle = backgroundColor;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
+};
+
+window.fillPixel = (canvasId, pixelSize, x, y, color) => {
+    const canvas = document.getElementById(canvasId);
+    const ctx = canvas.getContext('2d');
+    const pixelX = (x-1)*pixelSize + pixelSize/2;
+    const pixelY = (y-1)*pixelSize + pixelSize/2;
+
+    ctx.fillStyle = color;
+    ctx.fillRect(pixelX, pixelY, pixelSize, pixelSize);
+
+    ctx.strokeStyle = "#000000";
+    ctx.strokeReact(pixelX, pixelY, pixelSize);
 };

@@ -1,6 +1,5 @@
 ﻿
-
-window.clickFileInput = function (elementId) {
+window.clickFileInput = (elementId) => {
     document.getElementById(elementId).click();
 };
 

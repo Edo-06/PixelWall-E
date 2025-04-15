@@ -23,20 +23,24 @@ public class LexerRegex
 
         // Operator
         new TokenPattern(TokenType.Power, @"^\*\*"),
-        new TokenPattern(TokenType.AssignArrow, @"^<-"),
-        new TokenPattern(TokenType.GreaterEqual, @"^>="),
-        new TokenPattern(TokenType.LessEqual, @"^<="),
-        new TokenPattern(TokenType.NotEqual, @"^!="),
-        new TokenPattern(TokenType.And, @"^&&"),
-        new TokenPattern(TokenType.Or, @"^\|\|"),
-        new TokenPattern(TokenType.Equal, @"^=="),
         new TokenPattern(TokenType.Plus, @"^\+"),
         new TokenPattern(TokenType.Minus, @"^-"),
         new TokenPattern(TokenType.Multiply, @"^\*"),
         new TokenPattern(TokenType.Divide, @"^/"),
         new TokenPattern(TokenType.Modulo, @"^%"),
+
+
+        // ComparisionOperator
         new TokenPattern(TokenType.Greater, @"^>"),
         new TokenPattern(TokenType.Less, @"^<"),
+        new TokenPattern(TokenType.GreaterEqual, @"^>="),
+        new TokenPattern(TokenType.LessEqual, @"^<="),
+        new TokenPattern(TokenType.NotEqual, @"^!="),
+        new TokenPattern(TokenType.Equal, @"^=="),
+
+        // BooleanOperator
+        new TokenPattern(TokenType.And, @"^&&"),
+        new TokenPattern(TokenType.Or, @"^\|\|"),
 
         // Symbol
         new TokenPattern(TokenType.AssignArrow, @"^<-"),
@@ -48,10 +52,10 @@ public class LexerRegex
 
         // Literal
         new TokenPattern(TokenType.Number, @"^-?\d+"),
-        new TokenPattern(TokenType.Identifier, @"^[a-zA-Z_][a-zA-Z_0-9]*"),
+        new TokenPattern(TokenType.Identifier, @"^[a-zA-Z][a-zA-Z0-9-]*"),
 
         //Control
-        new TokenPattern(TokenType.Label, @"^[a-zA-Z_][a-zA-Z_0-9]*:"),
+        new TokenPattern(TokenType.Label, @"^[a-zA-Z][a-zA-Z0-9-]*\r?\n"),
         new TokenPattern(TokenType.Goto, @"^GoTo\b"),
         new TokenPattern(TokenType.EndOfLine, @"^\r?\n"),
 
