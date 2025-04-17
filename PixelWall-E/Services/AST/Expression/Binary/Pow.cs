@@ -6,22 +6,23 @@ public class Pow: Binary
 
     public override void Evaluate()
     {
-        Right.Evaluate();
-        Left.Evaluate();
+        right.Evaluate();
+        left.Evaluate();
         
-        this.value = Math.Pow((int)Right.value,(int)Left.value);
+        this.value = Math.Pow((int)right.value,(int)left.value);
     }
-    public override bool CheckSemantic()
+    public override bool CheckSemantic(List<CompilingError> errors)
     {
-        bool right = Right.CheckSemantic();
-        bool left = Left.CheckSemantic();
-        if (Right.type != ExpressionType.Number || Left.type != ExpressionType.Number)
+        bool checkRight = right.CheckSemantic(errors);
+        bool checkLeft = left.CheckSemantic(errors);
+        if (right.type != ExpressionType.Number || left.type != ExpressionType.Number)
         {
+            errors.Add(new CompilingError(location, ErrorCode.Invalid, ""));
             type = ExpressionType.ErrorType;
             return false;
         }
 
         type = ExpressionType.Number;
-        return right && left;
+        return checkRight &&  checkLeft;
     }
 }

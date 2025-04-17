@@ -1,6 +1,6 @@
 public abstract class Binary: Expression
 {
-    public Expression? Right;
-    public Expression? Left;
+    public Expression? right;
+    public Expression? left;
     public Binary(CodeLocation location) : base(location){}
 }

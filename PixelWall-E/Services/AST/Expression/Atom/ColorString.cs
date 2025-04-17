@@ -1,20 +1,17 @@
-public class Number: Atom
+public class ColorString: Atom
 {
     public override object? value { get; set; }
     public override ExpressionType type
     {
-        get{return ExpressionType.Number;}
+        get{return ExpressionType.Color;}
         set {}
     }
 
-    public Number(int value, CodeLocation location) : base(location)
-    {
-        this.value = value;
-    }
+    public ColorString(CodeLocation location) : base(location)
+    {}
     public override bool CheckSemantic(List<CompilingError> errors)
     {
         return true;
     }
     public override void Evaluate(){}
-
 }

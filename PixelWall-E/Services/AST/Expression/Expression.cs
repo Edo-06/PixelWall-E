@@ -9,9 +9,9 @@ public abstract class Expression : Node
     public Expression(CodeLocation location) : base (location) {}
 }
 public enum ExpressionType
-    {
-        Anytype,
-        Text,
-        Number,
-        ErrorType
-    }
+{
+    Anytype,
+    Color,
+    Number,
+    ErrorType
+}

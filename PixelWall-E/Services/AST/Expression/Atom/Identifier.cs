@@ -1,4 +1,4 @@
-public class Number: Atom
+public class Identifier: Atom
 {
     public override object? value { get; set; }
     public override ExpressionType type
@@ -7,7 +7,7 @@ public class Number: Atom
         set {}
     }
 
-    public Number(int value, CodeLocation location) : base(location)
+    public Identifier(int value, CodeLocation location) : base(location)
     {
         this.value = value;
     }
@@ -16,5 +16,4 @@ public class Number: Atom
         return true;
     }
     public override void Evaluate(){}
-
 }

@@ -17,7 +17,7 @@ public enum TokenType
     Equal, NotEqual, Greater, Less, GreaterEqual, LessEqual,
     
     // Literal
-    Number, Identifier,
+    Number, Identifier, ColorString,
     
     // Control
     Goto, Label, EndOfLine, Whitespace,
