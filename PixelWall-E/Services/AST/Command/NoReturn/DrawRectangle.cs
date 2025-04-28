@@ -24,4 +24,8 @@ public class DrawRectangle: Command
         }
         return true;
     }
+        public override void Evaluate()
+    {
+        throw new NotImplementedException();
+    }
 }

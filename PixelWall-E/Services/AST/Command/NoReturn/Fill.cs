@@ -17,4 +17,8 @@ public class Fill: Command
     {
         return true;
     }
+        public override void Evaluate()
+    {
+        throw new NotImplementedException();
+    }
 }

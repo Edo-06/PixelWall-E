@@ -1,13 +1,3 @@
-public enum ComandsType
-{
-    DrawCircle,
-    DrawLine,
-    DrawRectangle,
-    Color,
-    Spawn,
-    Size,
-    Fill
-}
 public abstract class Command: Node
 {
     public abstract string name {get; set;}

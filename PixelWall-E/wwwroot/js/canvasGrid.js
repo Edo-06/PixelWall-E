@@ -44,3 +44,7 @@ window.fillPixel = (canvasId, pixelSize, x, y, color) => {
     ctx.strokeStyle = "#000000";
     ctx.strokeReact(pixelX, pixelY, pixelSize);
 };
+
+window.getNumberOfPixels = (element) => {
+    return element.value ? parseInt(element.value) : 0;
+};

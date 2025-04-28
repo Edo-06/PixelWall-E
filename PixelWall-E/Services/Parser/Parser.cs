@@ -1,285 +1,96 @@
-using System.Drawing;
-
 public class Parser
 {
     private List<Token> tokens;
     private int currentPosition;
-
-    Parser(List<Token> tokens)
+    public List<Node> nodes {get; private set;} = new List<Node>();
+    public List<CompilingError> errors {get; private set;} = new List<CompilingError>();
+    public Parser(List<Token> tokens)
     {
         this.tokens = tokens;
+        currentPosition = 0;
+        ParseStatements();
     }
+    private void ParseStatements()
+    {
+        while (currentPosition < tokens.Count - 1)
+        {
+            switch (tokens[currentPosition].type)
+            {
+                //Command
+                case TokenType.Spawn:
+                    nodes.Add(ParseCommand(new Spawn(tokens[currentPosition].location)));
+                    break;
+                case TokenType.Color:
+                    nodes.Add(ParseCommand(new Color(tokens[currentPosition].location)));
+                    break;
+                case TokenType.Fill:
+                    nodes.Add(ParseCommand(new Fill(tokens[currentPosition].location)));
+                    break;
+                case TokenType.Size:
+                    nodes.Add(ParseCommand(new Size(tokens[currentPosition].location)));
+                    break;
+                case TokenType.DrawCircle:
+                    nodes.Add(ParseCommand(new DrawCircle(tokens[currentPosition].location)));
+                    break;
+                case TokenType.DrawLine:
+                    nodes.Add(ParseCommand(new DrawLine(tokens[currentPosition].location)));
+                    break;
+                case TokenType.DrawRectangle:
+                    nodes.Add(ParseCommand(new DrawRectangle(tokens[currentPosition].location)));
+                    break;
+                
+                //FUnction
+                case TokenType.GetActualX:
+                    nodes.Add(ParseFunction(new GetActualX(tokens[currentPosition].location)));
+                    break;
+                case TokenType.GetActualY:
+                    nodes.Add(ParseFunction(new GetActualY(tokens[currentPosition].location)));
+                    break;
+                case TokenType.GetCanvasSize:
+                    nodes.Add(ParseFunction(new GetCanvasSize(tokens[currentPosition].location)));
+                    break;
+                case TokenType.GetColorCount:
+                    nodes.Add(ParseFunction(new GetColorCount(tokens[currentPosition].location)));
+                    break;
+                case TokenType.IsBrushColor:
+                    nodes.Add(ParseFunction(new IsBrushColor(tokens[currentPosition].location)));
+                    break;
+                case TokenType.IsBrushSize:
+                    nodes.Add(ParseFunction(new IsBrushSize(tokens[currentPosition].location)));
+                    break;
+                case TokenType.IsCanvasColor:
+                    nodes.Add(ParseFunction(new IsColor(tokens[currentPosition].location)));
+                    break;
+                //Identifier
+                case TokenType.Identifier:
+                    ParseIdentifier();
+                    break;
+                //GoTo
+                default:
+                    ConsumeWithEOL();
+                    break;
+            }
+        }}
 #region ParseCommand
-    private Spawn ParseSpawn(List<CompilingError> errors)
+    private T ParseCommand<T>(T node) where T : Command
     {
-        Spawn spawn = new Spawn(tokens[currentPosition].location);
-        ParseExpressionOfComand(spawn.parameters, errors);
-        return spawn;
+        Consume(); // Consume the command token
+        ParseParameters(node.parameters, node.size);
+        return node;
     }
-    private Color? ParseColor(List<CompilingError> errors)
+    private T ParseFunction<T>(T node) where T : Function
     {
-        Color color = new Color(tokens[currentPosition].location);
-        ParseExpressionOfComand(color.parameters, errors);
-        return color;
+        Consume(); // Consume the function token
+        ParseParameters(node.parameters, node.size);
+        return node;
     }
-    private Size ParseSize(List<CompilingError> errors)
+    private void ParseParameters(List<Expression?> parameters, int expectedSize)
     {
-        Size size = new Size(tokens[currentPosition].location);
-        ParseExpressionOfComand(size.parameters, errors);
-        return size;
-    }
-    private DrawLine ParseDrawLine(List<CompilingError> errors)
-    {
-        DrawLine drawLine = new DrawLine(tokens[currentPosition].location);
-        ParseExpressionOfComand(drawLine.parameters, errors);
-        return drawLine;
-    }
-    private DrawCircle ParseDrawCircle(List<CompilingError> errors)
-    {
-        DrawCircle drawCircle = new DrawCircle(tokens[currentPosition].location);
-        ParseExpressionOfComand(drawCircle.parameters, errors);
-        return drawCircle;
-    }
-    private DrawRectangle ParseDrawRectangle(List<CompilingError> errors)
-    {
-        DrawRectangle drawRectangle = new DrawRectangle(tokens[currentPosition].location);
-        ParseExpressionOfComand(drawRectangle.parameters, errors);
-        return drawRectangle;
-    }
-    private Fill ParseFill(List<CompilingError> errors)
-    {
-        Fill fill = new Fill(tokens[currentPosition].location);
-        ParseExpressionOfComand(fill.parameters, errors);
-        return fill;
-    }
-#endregion
-#region Parse Function
-    private GetActualX ParseGetActualX(List<CompilingError> errors)
-    {
-        GetActualX getActualX = new GetActualX(tokens[currentPosition].location);
-        ParseExpressionOfComand(getActualX.parameters, errors);
-        return getActualX;
-    }
-    private GetActualY ParseGetActualY(List<CompilingError> errors)
-    {
-        GetActualY getActualY = new GetActualY(tokens[currentPosition].location);
-        ParseExpressionOfComand(getActualY.parameters, errors);
-        return getActualY;
-    }
-    private GetCanvasSize ParseGetCanvasSize(List<CompilingError> errors)
-    {
-        GetCanvasSize GetCanvasSize = new GetCanvasSize(tokens[currentPosition].location);
-        ParseExpressionOfComand(GetCanvasSize.parameters, errors);
-        return GetCanvasSize;
-    }
-    private GetColorCount ParseGetColorCount(List<CompilingError> errors)
-    {
-        GetColorCount GetColorCount = new GetColorCount(tokens[currentPosition].location);
-        ParseExpressionOfComand(GetColorCount.parameters, errors);
-        return GetColorCount;
-    }
-    private IsBrushColor ParseIsBrushColor(List<CompilingError> errors)
-    {
-        IsBrushColor IsBrushColor = new IsBrushColor(tokens[currentPosition].location);
-        ParseExpressionOfComand(IsBrushColor.parameters, errors);
-        return IsBrushColor;
-    }
-    private IsBrushSize ParseIsBrushSize(List<CompilingError> errors)
-    {
-        IsBrushSize IsBrushSize = new IsBrushSize(tokens[currentPosition].location);
-        ParseExpressionOfComand(IsBrushSize.parameters, errors);
-        return IsBrushSize;
-    }
-    private IsColor ParseIsColor(List<CompilingError> errors)
-    {
-        IsColor IsColor = new IsColor(tokens[currentPosition].location);
-        ParseExpressionOfComand(IsColor.parameters, errors);
-        return IsColor;
-    }
-#endregion
-#region ParseExpression
-    private Expression? ParseExpression()
-    {
-        return ParseExpressionL1(null);
-    }
-    private Expression? ParseExpressionL1(Expression? left)
-    {
-        Expression? newLeft = ParseExpressionL2(left);
-        Expression? expression = ParseExpressionL1_(newLeft);
-        return expression;
-    }
-    private Expression? ParseExpressionL1_(Expression? left)
-    {
-        Expression? exp = ParseAdd(left);
-        if(exp != null)
-        {
-            return exp;
-        }
-        exp = ParseSub(left);
-        if(exp != null)
-        {
-            return exp;
-        }
-        return left;
-    }
-    private Expression? ParseExpressionL2(Expression? left)
-    {
-        Expression? newLeft = ParseExpressionL3(left);
-        Expression? expression = ParseExpressionL2_(newLeft);
-        return expression;
-    }
-    private Expression? ParseExpressionL2_(Expression? left)
-    {
-        Expression? exp = ParseMul(left);
-        if(exp != null)
-        {
-            return exp;
-        }
-        exp = ParseDiv(left);
-        if(exp != null)
-        {
-            return exp;
-        }
-        return left;
-    }
-    private Expression? ParseExpressionL3(Expression? left)
-    {
-        Expression? expression = ParseNumber();
-        if(expression != null)
-        {
-            return expression;
-        }
-        expression = ParseIdentifier();
-        if(expression != null)
-        {
-            return expression;
-        }
-        return null;
-    }
-    private Expression? ParseAdd(Expression? left)
-    {
-        Add? sum = new Add(tokens[currentPosition].location);
-        if(left == null)
-        {
-            return null;
-        }
-        sum.left = left;
-        Consume(); // Skip the left token
-
-        if(tokens[currentPosition].type != TokenType.Plus)
-        {
-            return null;
-        }
-        Consume(); // Skip the '+' token
-
-        Expression? right = ParseExpressionL2(null);
-        if(right == null)
-        {
-            currentPosition-=2; //Back to left token
-            return null;
-        }
-        sum.right = right;
-
-        return ParseExpressionL1_(sum);
-    }
-    private Expression? ParseSub(Expression? left)
-    {
-        Sub? sub = new Sub(tokens[currentPosition].location);
-        if(left == null)
-        {
-            return null;
-        }
-        sub.left = left;
-        Consume(); // Skip the left token
-
-        if(tokens[currentPosition].type != TokenType.Minus)
-        {
-            return null;
-        }
-        Consume(); // Skip the '-' token
-
-        Expression? right = ParseExpressionL2(null);
-        if(right == null)
-        {
-            currentPosition-=2; //Back to left token
-            return null;
-        }
-        sub.right = right;
-
-        return ParseExpressionL1_(sub);
-    }
-    private Expression? ParseMul(Expression? left)
-    {
-        Mul? mul = new Mul(tokens[currentPosition].location);
-        if(left == null)
-        {
-            return null;
-        }
-        mul.left = left;
-        Consume(); // Skip the left token
-
-        if(tokens[currentPosition].type != TokenType.Minus)
-        {
-            return null;
-        }
-        Consume(); // Skip the '*' token
-
-        Expression? right = ParseExpressionL2(null);
-        if(right == null)
-        {
-            currentPosition-=2; //Back to left token
-            return null;
-        }
-        mul.right = right;
-
-        return ParseExpressionL1_(mul);
-    }
-    private Expression? ParseDiv(Expression? left)
-    {
-        Div? div = new Div(tokens[currentPosition].location);
-        if(left == null)
-        {
-            return null;
-        }
-        div.left = left;
-        Consume(); // Skip the left token
-
-        if(tokens[currentPosition].type != TokenType.Minus)
-        {
-            return null;
-        }
-        Consume(); // Skip the '/' token
-
-        Expression? right = ParseExpressionL2(null);
-        if(right == null)
-        {
-            currentPosition-=2; //Back to left token
-            return null;
-        }
-        div.right = right;
-
-        return ParseExpressionL1_(div);
-    }
-    private Expression? ParseNumber()
-    {
-        if(tokens[currentPosition].type != TokenType.Number)
-            return null;
-        return new Number(int.Parse(tokens[currentPosition].lexeme), tokens[currentPosition].location);
-    }
-    private Expression? ParseIdentifier()
-    {
-        if(tokens[currentPosition].type != TokenType.Identifier)
-            return null;
-        return new Identifier(int.Parse(tokens[currentPosition].lexeme), tokens[currentPosition].location);
-    }
-    private void ParseExpressionOfComand(List<Expression?> parameters, List<CompilingError> errors)
-    {   
-        Consume();
         if(tokens[currentPosition].type != TokenType.LeftParen)
             errors.Add(new CompilingError(tokens[currentPosition].location,ErrorCode.Expected,"Expected a '('"));
         Consume(); // Skip the '(' token
 
-        for(int i = 0; i < parameters.Count; i++)
+        for(int i = 0; i < expectedSize; i++)
         {
             if(i >= 1)
             {
@@ -292,22 +103,145 @@ public class Parser
             Expression? newExpression = ParseExpression();
             if (newExpression == null)
             {
-                errors.Add(new CompilingError(tokens[currentPosition].location,ErrorCode.Invalid,""));
+                errors.Add(new CompilingError(tokens[currentPosition].location,ErrorCode.Invalid,"."));
             }
-            parameters[i] = newExpression;
-            Consume(); // Skip expression
+            parameters.Add(newExpression);
         }
-
-        Consume();
         if(tokens[currentPosition].type != TokenType.RightParen)
             errors.Add(new CompilingError(tokens[currentPosition].location,ErrorCode.Expected,"Expected a ')'"));
-        Consume(); // Skip the ')' token
+        ConsumeWithEOL(); // Skip the ')' token
+    }
+    //
+#endregion
+#region ParseExpression
+    private Expression? ParseExpression()
+    {
+        return ParseOr();
+    }
+    private Expression? ParseOr()
+    {
+        Expression? expression = ParseAnd();
+        while(tokens[currentPosition].type == TokenType.Or)
+        {
+            ConsumeWithEOL();
+            Expression? right = ParseAnd();
+            expression = new Or(tokens[currentPosition - 1].location, expression, right);
+        }
+        return expression;
+    }
+    private Expression? ParseAnd()
+    {
+        Expression? expression = ParseComparision();
+        while(tokens[currentPosition].type == TokenType.And)
+        {
+            ConsumeWithEOL();
+            Expression? right = ParseComparision();
+            expression = new And(tokens[currentPosition - 1].location, expression, right);
+        }
+        return expression;
+    }
+    private Expression? ParseComparision()
+    {
+        Expression? expression = ParseAddSub();
+        while(tokens[currentPosition].type == TokenType.Greater || tokens[currentPosition].type == TokenType.GreaterEqual 
+        ||tokens[currentPosition].type == TokenType.Less || tokens[currentPosition].type == TokenType.LessEqual || tokens[currentPosition].type == TokenType.Equal)
+        {
+            ConsumeWithEOL();
+            Expression? right = ParseAddSub();
+            expression = new Equal(tokens[currentPosition - 1].location, expression, right);
+        }
+        return expression;
+    }
+    private Expression? ParseAddSub()
+    {
+        Expression? expression = ParseMulDivMod();
+        while(tokens[currentPosition].type == TokenType.Plus || tokens[currentPosition].type == TokenType.Minus)
+        {
+            ConsumeWithEOL();
+            Expression? right = ParseMulDivMod();
+            expression = new Add(tokens[currentPosition - 1].location, expression, right);
+        }
+        return expression;
+    }
+    private Expression? ParseMulDivMod()
+    {
+        Expression? expression = ParsePower();
+        while(tokens[currentPosition].type == TokenType.Multiply || tokens[currentPosition].type == TokenType.Divide ||
+        tokens[currentPosition].type == TokenType.Modulo)
+        {
+            ConsumeWithEOL();
+            Expression? right = ParsePower();
+            expression = new Add(tokens[currentPosition - 1].location, expression, right);
+        }
+        return expression;
+    }
+    private Expression? ParsePower()
+    {
+        Expression? expression = ParseAtom();
+        while(tokens[currentPosition].type == TokenType.Power)
+        {
+            ConsumeWithEOL();
+            Expression? right = ParseAtom();
+            expression = new Add(tokens[currentPosition - 1].location, expression, right);
+        }
+        return expression;
+    }
+    private Expression? ParseAtom()
+    {
+        Token actual = tokens[currentPosition];
+        switch(tokens[currentPosition].type)
+        {
+            case TokenType.Number:
+                Consume();
+                return new Number(int.Parse(actual.lexeme), actual.location);
+            case TokenType.Identifier:
+                Consume();
+                return new Variable(actual.lexeme, actual.location);
+            case TokenType.ColorString:
+                Consume();
+                return new ColorString(actual.location);
+            case TokenType.LeftParen:
+                Consume();
+                Expression? expression = ParseExpression();
+                Consume(); //RightParen
+                return expression;
+            default:
+                return null;
+        }
     }
 #endregion
+#region ParseIdentifier
+    private void ParseIdentifier()
+    {
+        string name = tokens[currentPosition].lexeme;
+        CodeLocation location = tokens[currentPosition].location;
+        Consume();
+        if(tokens[currentPosition].type == TokenType.EndOfLine)
+            nodes.Add(new Label(name, location));
+        else if(tokens[currentPosition].type == TokenType.AssignArrow)
+        {
+            Variable variable = new Variable(name, location);
+            Consume();
+            Expression? expression = ParseExpression();
+            variable.value = expression;
+            nodes.Add(variable);
+        }
+        ConsumeWithEOL();
+    }
+#endregion
+    private void ConsumeWithEOL()
+    {
+        if(currentPosition < tokens.Count - 1)
+        {
+            currentPosition++; //Skip current token != EOL
+            while(currentPosition < tokens.Count - 1 && tokens[currentPosition].type == TokenType.EndOfLine)
+            {
+                currentPosition++;
+            }
+        }
+    }
     private void Consume()
     {
-        currentPosition++; //Skip current token != EOL
-        while(tokens[currentPosition].type == TokenType.EndOfLine)
-            currentPosition++;
+        currentPosition++;
     }
 }

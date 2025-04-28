@@ -1,16 +1,18 @@
-public class Sub: Binary
+public class Mod : Binary
 {
     public override ExpressionType type {get; set;}
     public override object? value {get; set;}
-    public Sub(CodeLocation location) : base(location){}
+
+    public Mod(CodeLocation location, Expression left, Expression right) : base(location, left, right){}
 
     public override void Evaluate()
     {
         right.Evaluate();
         left.Evaluate();
         
-        this.value = (int)right.value - (int)left.value;
+        value = (double)right.value % (double)left.value;
     }
+
     public override bool CheckSemantic(List<CompilingError> errors)
     {
         bool checkRight = right.CheckSemantic(errors);

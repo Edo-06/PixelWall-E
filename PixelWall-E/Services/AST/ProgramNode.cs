@@ -19,5 +19,11 @@ public class ProgramNode: Node
         }
         return true;
     }
-
+    public override void Evaluate()
+    {
+        for(int i = 0; i < nodes.Count; i++)
+        {
+            nodes[i].Evaluate();
+        }
+    }
 }

@@ -1,18 +1,16 @@
-public class Div : Binary
+public class Sub: Binary
 {
     public override ExpressionType type {get; set;}
     public override object? value {get; set;}
-
-    public Div(CodeLocation location) : base(location){}
+    public Sub(CodeLocation location, Expression left, Expression right) : base(location, left, right){}
 
     public override void Evaluate()
     {
         right.Evaluate();
         left.Evaluate();
         
-        value = (double)right.value / (double)left.value;
+        this.value = (int)right.value - (int)left.value;
     }
-
     public override bool CheckSemantic(List<CompilingError> errors)
     {
         bool checkRight = right.CheckSemantic(errors);

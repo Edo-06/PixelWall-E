@@ -9,14 +9,12 @@ using Microsoft.JSInterop;
 using PixelWall_E.Components;
 
 namespace PixelWall_E.Pages;
-
 public partial class Home
 {
     public string code {get; private set;} = "";
     private string _valueToSet = "";
     private InputFile? _inputFileElement;
     private ElementReference _name;
-    public int _numberOfPixels;
     private string dialogueStyle = "display: none;";
     private string temporaryContent = "";
     private EventCallback<int> OnGridChange {get; set;}
@@ -74,10 +72,12 @@ public partial class Home
         await BlazorMonaco.Editor.Global.SetTheme(jsRuntime, e.Value?.ToString());
     }
 
-    public async Task GetCode()
+    public async Task Run()
     {
         code = await _editor.GetValue();
         Console.WriteLine(code);
+        PipeLineManager pip = new PipeLineManager();
+        pip.Start(code);
     }
 
     
@@ -139,9 +139,4 @@ public partial class Home
         dialogueStyle = "display: none;";
     }
 #endregion
-    private async Task ChangeGridSize()
-    {
-        await OnGridChange.InvokeAsync(_numberOfPixels);
-    }
-
 }

@@ -1,16 +1,16 @@
 public class CompilingError
     {
-        public ErrorCode Code { get; private set; }
+        public ErrorCode code { get; private set; }
 
-        public string Argument { get; private set; }
+        public string message { get; private set; }
 
-        public CodeLocation Location {get; private set;}
+        public CodeLocation location {get; private set;}
 
-        public CompilingError(CodeLocation location, ErrorCode code, string argument)
+        public CompilingError(CodeLocation location, ErrorCode code, string message)
         {
-            this.Code = code;
-            this.Argument = argument;
-            Location = location;
+            this.code = code;
+            this.message = message;
+            this.location = location;
         }
     }
 

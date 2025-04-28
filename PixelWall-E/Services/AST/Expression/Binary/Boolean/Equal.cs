@@ -1,30 +1,30 @@
-public class Mod : Binary
+public class Equal: Binary
 {
     public override ExpressionType type {get; set;}
     public override object? value {get; set;}
-
-    public Mod(CodeLocation location) : base(location){}
+    public Equal(CodeLocation location, Expression left, Expression right) : base(location, left, right){}
 
     public override void Evaluate()
     {
-        right.Evaluate();
-        left.Evaluate();
-        
-        value = (double)right.value % (double)left.value;
+        if(right != null && left != null)
+        {   
+            right.Evaluate();
+            left.Evaluate();
+            this.value = (bool)right.value == (bool)left.value;
+        }
     }
-
     public override bool CheckSemantic(List<CompilingError> errors)
     {
         bool checkRight = right.CheckSemantic(errors);
         bool checkLeft = left.CheckSemantic(errors);
-        if (right.type != ExpressionType.Number || left.type != ExpressionType.Number)
+        if (right.type != ExpressionType.Bool || left.type != ExpressionType.Bool)
         {
             errors.Add(new CompilingError(location, ErrorCode.Invalid, ""));
             type = ExpressionType.ErrorType;
             return false;
         }
 
-        type = ExpressionType.Number;
-        return checkRight && checkLeft;
+        type = ExpressionType.Bool;
+        return checkLeft && checkRight;
     }
 }

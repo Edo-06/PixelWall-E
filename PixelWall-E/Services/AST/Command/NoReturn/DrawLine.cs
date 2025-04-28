@@ -23,4 +23,8 @@ public class DrawLine: Command
         }
         return true;
     }
+        public override void Evaluate()
+    {
+        throw new NotImplementedException();
+    }
 }

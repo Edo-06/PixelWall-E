@@ -20,4 +20,8 @@ public class Color: Command
             return true;
         return false;
     }
+        public override void Evaluate()
+    {
+        throw new NotImplementedException();
+    }
 }

@@ -56,7 +56,6 @@ public class LexerRegex
         new TokenPattern(TokenType.ColorString, @"^\s*[""](Red|Blue|Green|Yellow|Orange|Purple|Black|White)[""]"),
 
         //Control
-        new TokenPattern(TokenType.Label, @"^\s*[a-zA-Z][a-zA-Z0-9-]*\r?\n"),
         new TokenPattern(TokenType.Goto, @"^\s*GoTo\b"),
         new TokenPattern(TokenType.EndOfLine, @"^\s*\r?\n"),
     };

@@ -5,7 +5,7 @@ public class LexerAnalyzer
         List<Token> tokens = new List<Token>();
         Reader reader = new Reader(code);
 
-        while (!reader.IsAtEOF())
+        while (!reader.IsAtEnd())
         {
             reader.ScanToken(tokens);
         }
@@ -29,7 +29,7 @@ public class LexerAnalyzer
             last = -1;
         }
 
-        public bool IsAtEOF()
+        public bool IsAtEnd()
         {
             if(position >= code.Length) return true;
             return false;

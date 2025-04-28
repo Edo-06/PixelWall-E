@@ -1,8 +1,9 @@
-public class Add: Binary
+public class Div : Binary
 {
     public override ExpressionType type {get; set;}
     public override object? value {get; set;}
-    public Add(CodeLocation location) : base(location){}
+
+    public Div(CodeLocation location, Expression left, Expression right) : base(location, left, right){}
 
     public override void Evaluate()
     {
@@ -10,9 +11,10 @@ public class Add: Binary
         {   
             right.Evaluate();
             left.Evaluate();
-            this.value = (int)right.value + (int)left.value;
+            this.value = (int)right.value / (int)left.value;
         }
     }
+
     public override bool CheckSemantic(List<CompilingError> errors)
     {
         bool checkRight = right.CheckSemantic(errors);
@@ -25,6 +27,6 @@ public class Add: Binary
         }
 
         type = ExpressionType.Number;
-        return checkLeft && checkRight;
+        return checkRight && checkLeft;
     }
 }

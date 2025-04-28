@@ -1,15 +1,17 @@
-public class Pow: Binary
+public class Add: Binary
 {
     public override ExpressionType type {get; set;}
     public override object? value {get; set;}
-    public Pow(CodeLocation location) : base(location){}
+    public Add(CodeLocation location, Expression left, Expression right) : base(location, left, right){}
 
     public override void Evaluate()
     {
-        right.Evaluate();
-        left.Evaluate();
-        
-        this.value = Math.Pow((int)right.value,(int)left.value);
+        if(right != null && left != null)
+        {   
+            right.Evaluate();
+            left.Evaluate();
+            this.value = (int)right.value + (int)left.value;
+        }
     }
     public override bool CheckSemantic(List<CompilingError> errors)
     {
@@ -23,6 +25,6 @@ public class Pow: Binary
         }
 
         type = ExpressionType.Number;
-        return checkRight &&  checkLeft;
+        return checkLeft && checkRight;
     }
 }

@@ -6,7 +6,7 @@ public class Spawn : Command
 
     public Spawn(CodeLocation location): base(location)
     {
-        size = 1;
+        size = 2;
         name = "Spawn";
         parameters = new List<Expression?>(size);
     }
@@ -22,5 +22,9 @@ public class Spawn : Command
                 return false;
         }
         return true;
+    }
+        public override void Evaluate()
+    {
+        throw new NotImplementedException();
     }
 }
