@@ -5,6 +5,9 @@ public  static class PipeLineManager
     private static List<Token> tokens = new List<Token>();
     public static List<Node> nodes = new List<Node>();
     public static CanvasGrid? canvas;
+    public static (int x, int y) currentPixel = (0,0);
+    public static string currentColor = "white";
+    public static List<Pixel> pixelChange = new List<Pixel>();
     public static async Task Start(string code)
     {
         tokens = lexer.GetTokens(code);
@@ -17,27 +20,40 @@ public  static class PipeLineManager
         {
             Console.WriteLine(parser.errors[i].message);
         }
-        
         if(canvas == null)
         {
             Console.WriteLine("Canvas is null");
             return;
         }
-        await canvas.ChangePixelColor(0,0,"black");
-        await canvas.ChangePixelColor(2,2,"red");
-        await canvas.ChangePixelColor(2,3,"blue");
-        await canvas.ChangePixelColor(3,2,"green");
-        await canvas.ChangePixelColor(3,3,"yellow");
-        
-
-        await Prove(5,6);
-        await Prove(10,15);
-        await Prove(25, 30);
-        await canvas.ChangePixelColor(0,0,"white");
-
+        parser.programNode.CheckSemantic(parser.errors);
+        parser.programNode.Evaluate();
+        Console.WriteLine("currentPixel: " + currentPixel.x + " " + currentPixel.y);
+        await Paint();
     }
-    public static async Task Prove(int x, int y)
+    public static async Task Paint()
     {
-        await canvas.ChangePixelColor(x,y,"red");
+        if(canvas == null)
+        {
+            Console.WriteLine("Canvas is null");
+            return;
+        }
+        for(int i = 0; i < pixelChange.Count; i++)
+        {
+            await canvas.ChangePixelColor(pixelChange[i].x, pixelChange[i].y, "Black");
+            await canvas.ChangePixelColor(pixelChange[i].x, pixelChange[i].y, pixelChange[i].color);
+        }
+        await canvas.ChangePixelColor(currentPixel.x, currentPixel.y, "Black");
+    }
+    public struct Pixel
+    {
+        public int x { get; set; }
+        public int y { get; set; }
+        public string color { get; set; }
+        public Pixel(int x, int y, string color)
+        {
+            this.x = x;
+            this.y = y;
+            this.color = color;
+        }
     }
 }

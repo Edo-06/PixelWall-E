@@ -7,14 +7,15 @@ public class Number: Atom
         set {}
     }
 
-    public Number(int value, CodeLocation location) : base(location)
+    public Number(string value, CodeLocation location) : base(location)
     {
-        this.value = value;
+        this.value = int.Parse(value);
     }
     public override bool CheckSemantic(List<CompilingError> errors)
     {
         return true;
     }
-    public override void Evaluate(){}
+    public override void Evaluate()
+    {}
 
 }

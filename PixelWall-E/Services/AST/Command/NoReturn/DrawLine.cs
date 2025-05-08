@@ -23,8 +23,30 @@ public class DrawLine: Command
         }
         return true;
     }
-        public override void Evaluate()
+    public override void Evaluate()
     {
-        throw new NotImplementedException();
+        if(parameters[0] == null || parameters[1] == null || parameters[2] == null)
+            return;
+        parameters[0].Evaluate();
+        parameters[1].Evaluate();
+        parameters[2].Evaluate();
+        if(parameters[0].value == null || parameters[1].value == null || parameters[2].value == null)
+        {
+            Console.WriteLine("Error: null value in parameters");
+            return;
+        }
+            
+        int currentX = PipeLineManager.currentPixel.x;
+        int currentY = PipeLineManager.currentPixel.y;
+        for(int i = 0; i < (int)parameters[2].value; i++)
+        {
+            currentX += (int)parameters[0].value;
+            currentY += (int)parameters[1].value;
+            Console.WriteLine($"Drawing" + PipeLineManager.currentColor + $" at ({currentX}, {currentY})");
+            PipeLineManager.pixelChange.Add(
+                new PipeLineManager.Pixel(currentX, currentY, PipeLineManager.currentColor)
+            );
+        }
+        PipeLineManager.currentPixel = (currentX, currentY);
     }
 }

@@ -61,13 +61,13 @@ public partial class CanvasGrid
     {
         Rgba32 namedColor = colorString switch
         {
-        "red" => new Rgba32(255, 0, 0),
-        "green" => new Rgba32(0, 255, 0),
-        "blue" => new Rgba32(0, 0, 255),
-        "white" => new Rgba32(255, 255, 255),
-        "black" => new Rgba32(0, 0, 0),
-        "yellow" => new Rgba32(255, 255, 0),
-        "transparent" => new Rgba32(0, 0, 0, 0),
+        "Red" => new Rgba32(255, 0, 0),
+        "Green" => new Rgba32(0, 255, 0),
+        "Blue" => new Rgba32(0, 0, 255),
+        "White" => new Rgba32(255, 255, 255),
+        "Black" => new Rgba32(0, 0, 0),
+        "Yellow" => new Rgba32(255, 255, 0),
+        "Transparent" => new Rgba32(0, 0, 0, 0),
         _ => new Rgba32(0, 0, 0, 0) 
         };
 

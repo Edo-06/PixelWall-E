@@ -7,8 +7,11 @@ public class ColorString: Atom
         set {}
     }
 
-    public ColorString(CodeLocation location) : base(location)
-    {}
+    public ColorString(CodeLocation location, string value) : base(location)
+    {   
+        string cleaned = value.Replace("\"", "").Trim();
+        this.value = cleaned;
+    }
     public override bool CheckSemantic(List<CompilingError> errors)
     {
         return true;

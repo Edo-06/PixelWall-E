@@ -22,6 +22,13 @@ public class Color: Command
     }
     public override void Evaluate()
     {
-        throw new NotImplementedException();
+        if(parameters[0] == null)
+            return;
+        parameters[0].Evaluate();
+        if(parameters[0].value == null)
+            return;
+        PipeLineManager.currentColor = (string)parameters[0].value;
+        Console.WriteLine($"Color: {PipeLineManager.currentColor}");
+        Console.WriteLine("Red");
     }
 }

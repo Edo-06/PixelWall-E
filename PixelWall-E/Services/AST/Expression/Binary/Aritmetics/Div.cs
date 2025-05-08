@@ -7,16 +7,22 @@ public class Div : Binary
 
     public override void Evaluate()
     {
-        if(right != null && left != null)
-        {   
-            right.Evaluate();
-            left.Evaluate();
-            this.value = (int)right.value / (int)left.value;
-        }
+        if(right == null || left == null)
+            return;  
+        right.Evaluate();
+        left.Evaluate();
+        if(right.value == null || left.value == null)
+            return;
+        this.value = (int)right.value / (int)left.value;
     }
 
     public override bool CheckSemantic(List<CompilingError> errors)
     {
+        if (right == null || left == null)
+        {
+            type = ExpressionType.ErrorType;
+            return false;
+        }
         bool checkRight = right.CheckSemantic(errors);
         bool checkLeft = left.CheckSemantic(errors);
         if (right.type != ExpressionType.Number || left.type != ExpressionType.Number)
@@ -27,6 +33,6 @@ public class Div : Binary
         }
 
         type = ExpressionType.Number;
-        return checkRight && checkLeft;
+        return checkLeft && checkRight;
     }
 }

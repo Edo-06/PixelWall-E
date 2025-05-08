@@ -6,15 +6,22 @@ public class And: Binary
 
     public override void Evaluate()
     {
-        if(right != null && left != null)
-        {   
+        if(right == null || left == null)
+            return;
             right.Evaluate();
             left.Evaluate();
+        if(right.value == null || left.value == null)
+            return;
             this.value = (bool)right.value && (bool)left.value;
-        }
+        
     }
     public override bool CheckSemantic(List<CompilingError> errors)
     {
+        if (right == null || left == null)
+        {
+            type = ExpressionType.ErrorType;
+            return false;
+        }
         bool checkRight = right.CheckSemantic(errors);
         bool checkLeft = left.CheckSemantic(errors);
         if (right.type != ExpressionType.Bool || left.type != ExpressionType.Bool)

@@ -2,7 +2,6 @@ public class Parser
 {
     private List<Token> tokens;
     private int currentPosition;
-    //private Dictionary<TokenType, T>
     public List<Node> nodes {get; private set;} = new List<Node>();
     public List<CompilingError> errors {get; private set;} = new List<CompilingError>();
     public ProgramNode programNode {get; private set;} = new ProgramNode(new CodeLocation());
@@ -43,25 +42,25 @@ public class Parser
                 
                 //FUnction
                 case TokenType.GetActualX:
-                    nodes.Add(ParseFunction(new GetActualX(tokens[currentPosition].location)));
+                    nodes.Add(ParseCommand(new GetActualX(tokens[currentPosition].location)));
                     break;
                 case TokenType.GetActualY:
-                    nodes.Add(ParseFunction(new GetActualY(tokens[currentPosition].location)));
+                    nodes.Add(ParseCommand(new GetActualY(tokens[currentPosition].location)));
                     break;
                 case TokenType.GetCanvasSize:
-                    nodes.Add(ParseFunction(new GetCanvasSize(tokens[currentPosition].location)));
+                    nodes.Add(ParseCommand(new GetCanvasSize(tokens[currentPosition].location)));
                     break;
                 case TokenType.GetColorCount:
-                    nodes.Add(ParseFunction(new GetColorCount(tokens[currentPosition].location)));
+                    nodes.Add(ParseCommand(new GetColorCount(tokens[currentPosition].location)));
                     break;
                 case TokenType.IsBrushColor:
-                    nodes.Add(ParseFunction(new IsBrushColor(tokens[currentPosition].location)));
+                    nodes.Add(ParseCommand(new IsBrushColor(tokens[currentPosition].location)));
                     break;
                 case TokenType.IsBrushSize:
-                    nodes.Add(ParseFunction(new IsBrushSize(tokens[currentPosition].location)));
+                    nodes.Add(ParseCommand(new IsBrushSize(tokens[currentPosition].location)));
                     break;
                 case TokenType.IsCanvasColor:
-                    nodes.Add(ParseFunction(new IsColor(tokens[currentPosition].location)));
+                    nodes.Add(ParseCommand(new IsColor(tokens[currentPosition].location)));
                     break;
                 //Identifier
                 case TokenType.Identifier:
@@ -86,55 +85,38 @@ public class Parser
         ParseParameters(node.parameters, node.size);
         return node;
     }
-    private T ParseFunction<T>(T node) where T : Function
-    {
-        Consume(); // Consume the function token
-        ParseParameters(node.parameters, node.size);
-        return node;
-    }
     private T ParseGoTo<T>(T node) where T: GoTo
     {
         Consume(); 
-        if(tokens[currentPosition].type != TokenType.LeftBracket)
+        if(tokens[currentPosition].type == TokenType.LeftBracket)
+            Consume();
+        else
             errors.Add(new CompilingError(tokens[currentPosition].location, ErrorCode.Expected, "Expected a '['"));
-        Consume(); 
-        if(tokens[currentPosition].type != TokenType.Identifier)
-            errors.Add(new CompilingError(tokens[currentPosition].location, ErrorCode.Expected, "Expected a label"));
-        Label label = new Label(tokens[currentPosition].lexeme, tokens[currentPosition].location);
-        node.label = label;
-        Consume();
-        if(tokens[currentPosition].type != TokenType.RightBracket)
-            errors.Add(new CompilingError(tokens[currentPosition].location, ErrorCode.Expected, "Expected a ']'"));
-        Consume();
-        if(tokens[currentPosition].type != TokenType.LeftParen)
-            errors.Add(new CompilingError(tokens[currentPosition].location, ErrorCode.Expected, "Expected a '('"));
-        Consume(); 
-        Expression? expression = ParseExpression();
-        if (expression == null)
+        if(tokens[currentPosition].type == TokenType.Identifier)
         {
-            errors.Add(new CompilingError(tokens[currentPosition].location,ErrorCode.Invalid,"Invalid expression"));
+            Label label = new Label(tokens[currentPosition].lexeme, tokens[currentPosition].location);
+            node.label = label;
+            Consume();
         }
-        node.parameters.Add(expression);
-        if(tokens[currentPosition].type != TokenType.RightParen)
-            errors.Add(new CompilingError(tokens[currentPosition].location,ErrorCode.Expected,"Expected a ')'"));
-        ConsumeWithEOL();
+        else
+            errors.Add(new CompilingError(tokens[currentPosition].location, ErrorCode.Expected, "Expected a label"));
+        ParseParameters(node.parameters, node.size);
         return node;
     }
     private void ParseParameters(List<Expression?> parameters, int expectedSize)
     {
-        if(tokens[currentPosition].type != TokenType.LeftParen)
+        if(tokens[currentPosition].type == TokenType.LeftParen)
+            Consume(); // Skip the '(' token
+        else
             errors.Add(new CompilingError(tokens[currentPosition].location,ErrorCode.Expected,"Expected a '('"));
-        Consume(); // Skip the '(' token
-
         for(int i = 0; i < expectedSize; i++)
         {
             if(i >= 1)
             {
-                if(tokens[currentPosition].type != TokenType.Comma)
-                {
+                if(tokens[currentPosition].type == TokenType.Comma)
+                    Consume(); // Skip the ',' token
+                else
                     errors.Add(new CompilingError(tokens[currentPosition].location,ErrorCode.Expected,$"Expected a ','"));
-                }
-                Consume(); // Skip the ',' token
             }
             Expression? newExpression = ParseExpression();
             if (newExpression == null)
@@ -159,7 +141,7 @@ public class Parser
         Expression? expression = ParseAnd();
         while(tokens[currentPosition].type == TokenType.Or)
         {
-            ConsumeWithEOL();
+            Consume();
             Expression? right = ParseAnd();
             expression = new Or(tokens[currentPosition - 1].location, expression, right);
         }
@@ -170,7 +152,7 @@ public class Parser
         Expression? expression = ParseComparision();
         while(tokens[currentPosition].type == TokenType.And)
         {
-            ConsumeWithEOL();
+            Consume();
             Expression? right = ParseComparision();
             expression = new And(tokens[currentPosition - 1].location, expression, right);
         }
@@ -182,7 +164,7 @@ public class Parser
         while(tokens[currentPosition].type == TokenType.Greater || tokens[currentPosition].type == TokenType.GreaterEqual 
         ||tokens[currentPosition].type == TokenType.Less || tokens[currentPosition].type == TokenType.LessEqual || tokens[currentPosition].type == TokenType.Equal)
         {
-            ConsumeWithEOL();
+            Consume();
             Expression? right = ParseAddSub();
             expression = new Equal(tokens[currentPosition - 1].location, expression, right);
         }
@@ -193,7 +175,7 @@ public class Parser
         Expression? expression = ParseMulDivMod();
         while(tokens[currentPosition].type == TokenType.Plus || tokens[currentPosition].type == TokenType.Minus)
         {
-            ConsumeWithEOL();
+            Consume();
             Expression? right = ParseMulDivMod();
             expression = new Add(tokens[currentPosition - 1].location, expression, right);
         }
@@ -205,7 +187,7 @@ public class Parser
         while(tokens[currentPosition].type == TokenType.Multiply || tokens[currentPosition].type == TokenType.Divide ||
         tokens[currentPosition].type == TokenType.Modulo)
         {
-            ConsumeWithEOL();
+            Consume();
             Expression? right = ParsePower();
             expression = new Add(tokens[currentPosition - 1].location, expression, right);
         }
@@ -216,7 +198,7 @@ public class Parser
         Expression? expression = ParseAtom();
         while(tokens[currentPosition].type == TokenType.Power)
         {
-            ConsumeWithEOL();
+            Consume();
             Expression? right = ParseAtom();
             expression = new Add(tokens[currentPosition - 1].location, expression, right);
         }
@@ -231,13 +213,13 @@ public class Parser
         {
             case TokenType.Number:
                 Consume();
-                return new Number(int.Parse(actual.lexeme), actual.location);
+                return new Number(actual.lexeme, actual.location);
             case TokenType.Identifier:
                 Consume();
                 return new Variable(actual.lexeme, actual.location);
             case TokenType.ColorString:
                 Consume();
-                return new ColorString(actual.location);
+                return new ColorString(actual.location, actual.lexeme);
             case TokenType.LeftParen:
                 Consume();
                 Expression? expression = ParseExpression();
@@ -260,15 +242,15 @@ public class Parser
         }
         else if(tokens[currentPosition].type == TokenType.AssignArrow)
         {
-            Variable variable = new Variable(name, location);
+            Assignament assignament = new Assignament(name, location);
             Consume();
             Expression? expression = ParseExpression();
             if(expression == null)
                 errors.Add(new CompilingError(tokens[currentPosition].location, ErrorCode.Invalid,"Invalid expression"));
-            variable.expression = expression;
-            nodes.Add(variable);
-            Scope.variables.Add((name,location.line), variable.value);
+            assignament.expression = expression;
+            nodes.Add(assignament);
         }
+        errors.Add(new CompilingError(tokens[currentPosition].location,ErrorCode.Expected,"Expected a '<-'"));
         ConsumeWithEOL();
     }
 #endregion
@@ -276,10 +258,10 @@ public class Parser
     {
         if(currentPosition < tokens.Count - 1)
         {
-            currentPosition++; //Skip current token != EOL
+            Consume(); //Skip current token != EOL
             while(currentPosition < tokens.Count - 1 && tokens[currentPosition].type == TokenType.EndOfLine)
             {
-                currentPosition++;
+                Consume(); //Skip EOL tokens
             }
         }
     }

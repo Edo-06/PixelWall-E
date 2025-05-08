@@ -44,12 +44,7 @@ public class Variable: Identifier
 {
     public override string name { get; set; }
     public override object? value { get; set; }
-    public Expression? expression { get; set; }
-    public override ExpressionType type 
-    {
-        get{return ExpressionType.Number;}
-        set {}
-    }
+    public override ExpressionType type {get; set;}
 
     public Variable(string name, CodeLocation location) : base(location)
     {
@@ -60,21 +55,48 @@ public class Variable: Identifier
         return true;
     }
     public override void Evaluate(){
+        if(Scope.variables.ContainsKey(name))
+        {
+            value = Scope.variables[name].value;
+            type = Scope.variables[name].type;
+            return;
+        }
+    }
+}
+public class Assignament: Identifier
+{
+    public override string name { get; set; }
+    public override object? value { get; set; }
+    public override ExpressionType type {get; set;}
+    public Expression? expression { get; set; }
+    public Assignament(string name, CodeLocation location) : base(location)
+    {
+        this.name = name;
+    }
+    public override bool CheckSemantic(List<CompilingError> errors)
+    {
+        if(expression == null)
+        {
+            errors.Add(new CompilingError(location, ErrorCode.Invalid, "Expression is null"));
+            return false;
+        }
+        expression.CheckSemantic(errors);
+        type = expression.type;
+        return true;
+    }
+    public override void Evaluate()
+    {
         if(expression != null)
         {
             expression.Evaluate();
             value = expression.value;
-        }
-        else
-        {
-            for(int i = location.line; i > 0; i--)
+            if(Scope.variables.ContainsKey(name))
             {
-                if(Scope.variables.ContainsKey((name,i)))
-                {
-                    value = Scope.variables[(name,i)];
-                    return;
-                }
+                Scope.variables[name] = this;
+                return;
             }
+            Scope.variables.Add(name, this);
+            return;
         }
     }
 }
