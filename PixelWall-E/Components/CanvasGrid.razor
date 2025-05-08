@@ -1,11 +1,19 @@
 @inject IJSRuntime jsRuntime
+@using SixLabors.ImageSharp
+@using SixLabors.ImageSharp.PixelFormats
 
-<canvas @ref="_canvasElement" 
-        id="pixelCanvas" 
-        width="@Size" 
-        height="@Size"
-        style="border: 1px solid #ddd; background: white;">
-</canvas>
+<div style="width: @(Size)px; height: @(Size)px; overflow: hidden; border: 1px solid gray;">                                                                            
+        @if (imageDataUrl != null)
+        {
+        <img src="@imageDataUrl"
+                style="image-rendering: pixelated; width: 100%; height: 100%; display: block;" />
+        }
+        else
+        {
+                <p>Cargando imagen...</p>
+        }
+</div>
+
 <input @ref="_numberOfPixels"
         type="int" />
-<button @onclick="ChangeGridSize" class="btn btn-primary">Resize</button>
+<button @onclick="ChangeNumberOfPixels" class="btn btn-primary">Resize</button>

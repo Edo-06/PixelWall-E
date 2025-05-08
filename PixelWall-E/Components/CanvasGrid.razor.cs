@@ -1,41 +1,38 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
 
 namespace PixelWall_E.Components;
 public partial class CanvasGrid
 {
-    private ElementReference _numberOfPixels;
-    private int Size = 840;
-    private bool showGrid { get; set; } = true;
-    private string gridColor { get; set; } = "#000000";
-    private ElementReference _canvasElement;
-    private float pixelSize { get; set;} 
-    private string id { get; set;} = "pixelCanvas";
-    public int numberOfPixels {get; set;} = 33;
-    public List<float> X {get; set;} = new List<float>(); 
-    public CanvasGrid(){}
+    private int Size { get; set; } = 840;
+    private ElementReference _numberOfPixels {get; set;}
+    public int numberOfPixels {get; set;} = 33;  
+    private Image<Rgba32>? image;
+    private string? imageDataUrl {get; set;}
 
-    protected override async Task OnAfterRenderAsync(bool firstRender) 
+    protected override void OnInitialized()
     {
-        if (firstRender) 
-        {
-            await InitializeCanvas(id);
-        }
+        CreateImage();
     }
-
-    public async Task InitializeCanvas(string id) 
+    private void CreateImage()
     {
-        CalculatePixelSize();
+        image?.Dispose();
 
-        await jsRuntime.InvokeVoidAsync("clearCanvas", id, "#FFFFFF");
-        if (showGrid) 
+        image = new Image<Rgba32>(numberOfPixels,numberOfPixels);
+        for (int y = 0; y < numberOfPixels; y++)
         {
-            await jsRuntime.InvokeVoidAsync("drawGrid", id, pixelSize, gridColor);
+            for (int x = 0; x < numberOfPixels; x++)
+            {
+                image[x, y] = new Rgba32(255, 255, 255); // Color blanco
+            }
         }
+        UpdateImageDisplay();
         PipeLineManager.canvas = this;
     }
-
-    public async Task ChangeGridSize()
+    private async Task ChangeNumberOfPixels()
     {
         var numberOfPixels = await jsRuntime.InvokeAsync<int>("getNumberOfPixels", _numberOfPixels);
         if (numberOfPixels < 1 || numberOfPixels > 256)
@@ -44,18 +41,51 @@ public partial class CanvasGrid
             return;
         }
         this.numberOfPixels = numberOfPixels;
-        await InitializeCanvas(id);
+        CreateImage();
     }
-    private void CalculatePixelSize()
+    private void UpdateImageDisplay()
     {
-        pixelSize = (float)Size/numberOfPixels;
+        if (image == null) return;
+
+        using var stream = new MemoryStream();
+        image.SaveAsPng(stream);
+        imageDataUrl = $"data:image/png;base64,{Convert.ToBase64String(stream.ToArray())}";
+        StateHasChanged();
     }
-    public async Task Clear()
+
+    public void Dispose()
     {
-        await jsRuntime.InvokeVoidAsync("clearCanvas", id, "#FFFFFF");
+        image?.Dispose();
     }
+    private Rgba32 StringToRgba32(string colorString)
+    {
+        Rgba32 namedColor = colorString switch
+        {
+        "red" => new Rgba32(255, 0, 0),
+        "green" => new Rgba32(0, 255, 0),
+        "blue" => new Rgba32(0, 0, 255),
+        "white" => new Rgba32(255, 255, 255),
+        "black" => new Rgba32(0, 0, 0),
+        "yellow" => new Rgba32(255, 255, 0),
+        "transparent" => new Rgba32(0, 0, 0, 0),
+        _ => new Rgba32(0, 0, 0, 0) 
+        };
+
+        return namedColor;
+    }
+
     public async Task ChangePixelColor(int x, int y, string color)
     {
-        await jsRuntime.InvokeVoidAsync("fillPixel", id, pixelSize, x, y, color);
+        await Task.Delay(5);
+        if (image == null) return;
+
+        Rgba32 newColor = StringToRgba32(color);
+        if(x < 0 || x >= numberOfPixels || y < 0 || y >= numberOfPixels)
+        {
+            Console.WriteLine($"Error: Coordenadas fuera de rango ({x}, {y})");
+            return;
+        }
+        image[x, y] = newColor;
+        UpdateImageDisplay();
     }
 }
