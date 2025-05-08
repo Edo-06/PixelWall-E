@@ -5,30 +5,34 @@ namespace PixelWall_E.Components;
 public partial class CanvasGrid
 {
     private ElementReference _numberOfPixels;
-    private int Size { get; set; } = 840;
-    private bool ShowGrid { get; set; } = true;
-    private string GridColor { get; set; } = "#000000";
+    private int Size = 840;
+    private bool showGrid { get; set; } = true;
+    private string gridColor { get; set; } = "#000000";
     private ElementReference _canvasElement;
     private float pixelSize { get; set;} 
+    private string id { get; set;} = "pixelCanvas";
     public int numberOfPixels {get; set;} = 33;
+    public List<float> X {get; set;} = new List<float>(); 
     public CanvasGrid(){}
 
     protected override async Task OnAfterRenderAsync(bool firstRender) 
     {
         if (firstRender) 
         {
-            await InitializeCanvas();
+            await InitializeCanvas(id);
         }
     }
 
-    public async Task InitializeCanvas() 
+    public async Task InitializeCanvas(string id) 
     {
         CalculatePixelSize();
-        await jsRuntime.InvokeVoidAsync("clearCanvas", "pixelCanvas", "#FFFFFF");
-        if (ShowGrid) 
+
+        await jsRuntime.InvokeVoidAsync("clearCanvas", id, "#FFFFFF");
+        if (showGrid) 
         {
-            await jsRuntime.InvokeVoidAsync("drawGrid", "pixelCanvas", pixelSize, GridColor);
+            await jsRuntime.InvokeVoidAsync("drawGrid", id, pixelSize, gridColor);
         }
+        PipeLineManager.canvas = this;
     }
 
     public async Task ChangeGridSize()
@@ -40,11 +44,18 @@ public partial class CanvasGrid
             return;
         }
         this.numberOfPixels = numberOfPixels;
-        await InitializeCanvas();
+        await InitializeCanvas(id);
     }
-
     private void CalculatePixelSize()
     {
         pixelSize = (float)Size/numberOfPixels;
+    }
+    public async Task Clear()
+    {
+        await jsRuntime.InvokeVoidAsync("clearCanvas", id, "#FFFFFF");
+    }
+    public async Task ChangePixelColor(int x, int y, string color)
+    {
+        await jsRuntime.InvokeVoidAsync("fillPixel", id, pixelSize, x, y, color);
     }
 }

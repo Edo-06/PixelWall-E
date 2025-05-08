@@ -2,8 +2,10 @@ public class Parser
 {
     private List<Token> tokens;
     private int currentPosition;
+    //private Dictionary<TokenType, T>
     public List<Node> nodes {get; private set;} = new List<Node>();
     public List<CompilingError> errors {get; private set;} = new List<CompilingError>();
+    public ProgramNode programNode {get; private set;} = new ProgramNode(new CodeLocation());
     public Parser(List<Token> tokens)
     {
         this.tokens = tokens;
@@ -66,11 +68,17 @@ public class Parser
                     ParseIdentifier();
                     break;
                 //GoTo
+                case TokenType.GoTo:
+                    nodes.Add(ParseGoTo(new GoTo(tokens[currentPosition].location)));
+                    break;
                 default:
                     ConsumeWithEOL();
                     break;
             }
-        }}
+        }
+        programNode.nodes = nodes;
+        PipeLineManager.nodes = nodes;
+    }
 #region ParseCommand
     private T ParseCommand<T>(T node) where T : Command
     {
@@ -82,6 +90,34 @@ public class Parser
     {
         Consume(); // Consume the function token
         ParseParameters(node.parameters, node.size);
+        return node;
+    }
+    private T ParseGoTo<T>(T node) where T: GoTo
+    {
+        Consume(); 
+        if(tokens[currentPosition].type != TokenType.LeftBracket)
+            errors.Add(new CompilingError(tokens[currentPosition].location, ErrorCode.Expected, "Expected a '['"));
+        Consume(); 
+        if(tokens[currentPosition].type != TokenType.Identifier)
+            errors.Add(new CompilingError(tokens[currentPosition].location, ErrorCode.Expected, "Expected a label"));
+        Label label = new Label(tokens[currentPosition].lexeme, tokens[currentPosition].location);
+        node.label = label;
+        Consume();
+        if(tokens[currentPosition].type != TokenType.RightBracket)
+            errors.Add(new CompilingError(tokens[currentPosition].location, ErrorCode.Expected, "Expected a ']'"));
+        Consume();
+        if(tokens[currentPosition].type != TokenType.LeftParen)
+            errors.Add(new CompilingError(tokens[currentPosition].location, ErrorCode.Expected, "Expected a '('"));
+        Consume(); 
+        Expression? expression = ParseExpression();
+        if (expression == null)
+        {
+            errors.Add(new CompilingError(tokens[currentPosition].location,ErrorCode.Invalid,"Invalid expression"));
+        }
+        node.parameters.Add(expression);
+        if(tokens[currentPosition].type != TokenType.RightParen)
+            errors.Add(new CompilingError(tokens[currentPosition].location,ErrorCode.Expected,"Expected a ')'"));
+        ConsumeWithEOL();
         return node;
     }
     private void ParseParameters(List<Expression?> parameters, int expectedSize)
@@ -103,7 +139,7 @@ public class Parser
             Expression? newExpression = ParseExpression();
             if (newExpression == null)
             {
-                errors.Add(new CompilingError(tokens[currentPosition].location,ErrorCode.Invalid,"."));
+                errors.Add(new CompilingError(tokens[currentPosition].location,ErrorCode.Invalid,"Invalid expression"));
             }
             parameters.Add(newExpression);
         }
@@ -188,6 +224,8 @@ public class Parser
     }
     private Expression? ParseAtom()
     {
+        if(currentPosition >= tokens.Count - 1)
+            return null;
         Token actual = tokens[currentPosition];
         switch(tokens[currentPosition].type)
         {
@@ -217,14 +255,19 @@ public class Parser
         CodeLocation location = tokens[currentPosition].location;
         Consume();
         if(tokens[currentPosition].type == TokenType.EndOfLine)
-            nodes.Add(new Label(name, location));
+        {
+            Scope.labels.Add(name, location.line);
+        }
         else if(tokens[currentPosition].type == TokenType.AssignArrow)
         {
             Variable variable = new Variable(name, location);
             Consume();
             Expression? expression = ParseExpression();
-            variable.value = expression;
+            if(expression == null)
+                errors.Add(new CompilingError(tokens[currentPosition].location, ErrorCode.Invalid,"Invalid expression"));
+            variable.expression = expression;
             nodes.Add(variable);
+            Scope.variables.Add((name,location.line), variable.value);
         }
         ConsumeWithEOL();
     }

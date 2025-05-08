@@ -21,13 +21,30 @@ public class Label: Identifier
     {
         return true;
     }
-    public override void Evaluate(){}
+    public override void Evaluate()
+    {
+        if(Scope.labels.ContainsKey(name))
+        {
+            for(int i = Scope.labels[name]; i < PipeLineManager.nodes[PipeLineManager.nodes.Count - 1].location.line; i++)
+            {
+                if(PipeLineManager.nodes[i].location.line == Scope.labels[name])
+                {
+                    for(int j = i; j < PipeLineManager.nodes.Count; j++)
+                    {
+                        PipeLineManager.nodes[i].Evaluate();
+                    }
+                    return;
+                }
+            }
+        }
+    }
 }
 
 public class Variable: Identifier
 {
     public override string name { get; set; }
     public override object? value { get; set; }
+    public Expression? expression { get; set; }
     public override ExpressionType type 
     {
         get{return ExpressionType.Number;}
@@ -42,5 +59,22 @@ public class Variable: Identifier
     {
         return true;
     }
-    public override void Evaluate(){}
+    public override void Evaluate(){
+        if(expression != null)
+        {
+            expression.Evaluate();
+            value = expression.value;
+        }
+        else
+        {
+            for(int i = location.line; i > 0; i--)
+            {
+                if(Scope.variables.ContainsKey((name,i)))
+                {
+                    value = Scope.variables[(name,i)];
+                    return;
+                }
+            }
+        }
+    }
 }

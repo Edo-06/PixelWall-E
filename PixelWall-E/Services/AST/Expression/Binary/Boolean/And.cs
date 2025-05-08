@@ -2,7 +2,7 @@ public class And: Binary
 {
     public override ExpressionType type {get; set;}
     public override object? value {get; set;}
-    public And(CodeLocation location, Expression left, Expression right) : base(location, left, right){}
+    public And(CodeLocation location, Expression? left, Expression? right) : base(location, left, right){}
 
     public override void Evaluate()
     {

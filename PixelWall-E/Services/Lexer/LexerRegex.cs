@@ -1,63 +1,74 @@
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 public class LexerRegex
 {
     public List<TokenPattern> tokenPatterns = new List<TokenPattern> 
     {
         // Command
-        new TokenPattern(TokenType.Spawn, @"^\s*Spawn\b"),
-        new TokenPattern(TokenType.Color, @"^\s*Color\b"),
-        new TokenPattern(TokenType.Size, @"^\s*Size\b"),
-        new TokenPattern(TokenType.DrawLine, @"^\s*DrawLine\b"),
-        new TokenPattern(TokenType.DrawCircle, @"^\s*DrawCircle\b"),
-        new TokenPattern(TokenType.DrawRectangle, @"^\s*DrawRectangle\b"),
-        new TokenPattern(TokenType.Fill, @"^\s*Fill\b"),
+        new TokenPattern(TokenType.Spawn, @"^[ \t]*Spawn\b"),
+        new TokenPattern(TokenType.Color, @"^[ \t]*Color\b"),
+        new TokenPattern(TokenType.Size, @"^[ \t]*Size\b"),
+        new TokenPattern(TokenType.DrawLine, @"^[ \t]*DrawLine\b"),
+        new TokenPattern(TokenType.DrawCircle, @"^[ \t]*DrawCircle\b"),
+        new TokenPattern(TokenType.DrawRectangle, @"^[ \t]*DrawRectangle\b"),
+        new TokenPattern(TokenType.Fill, @"^[ \t]*Fill\b"),
 
         // Function
-        new TokenPattern(TokenType.GetActualX, @"^\s*GetActualX\b"),
-        new TokenPattern(TokenType.GetActualY, @"^\s*GetActualY\b"),
-        new TokenPattern(TokenType.GetCanvasSize, @"^\s*GetCanvasSize\b"),
-        new TokenPattern(TokenType.GetColorCount, @"^\s*GetColorCount\b"),
-        new TokenPattern(TokenType.IsBrushColor, @"^\s*IsBrushColor\b"),
-        new TokenPattern(TokenType.IsBrushSize, @"^\s*IsBrushSize\b"),
-        new TokenPattern(TokenType.IsCanvasColor, @"^\s*IsCanvasColor\b"),
+        new TokenPattern(TokenType.GetActualX, @"^[ \t]*GetActualX\b"),
+        new TokenPattern(TokenType.GetActualY, @"^[ \t]*GetActualY\b"),
+        new TokenPattern(TokenType.GetCanvasSize, @"^[ \t]*GetCanvasSize\b"),
+        new TokenPattern(TokenType.GetColorCount, @"^[ \t]*GetColorCount\b"),
+        new TokenPattern(TokenType.IsBrushColor, @"^[ \t]*IsBrushColor\b"),
+        new TokenPattern(TokenType.IsBrushSize, @"^[ \t]*IsBrushSize\b"),
+        new TokenPattern(TokenType.IsCanvasColor, @"^[ \t]*IsCanvasColor\b"),
 
         // Operator
-        new TokenPattern(TokenType.Power, @"^\s*\*\*"),
-        new TokenPattern(TokenType.Plus, @"^\s*\+"),
-        new TokenPattern(TokenType.Minus, @"^\s*-"),
-        new TokenPattern(TokenType.Multiply, @"^\s*\*"),
-        new TokenPattern(TokenType.Divide, @"^\s*/"),
-        new TokenPattern(TokenType.Modulo, @"^\s*%"),
+        new TokenPattern(TokenType.Power, @"^[ \t]*\*\*"),
+        new TokenPattern(TokenType.Plus, @"^[ \t]*\+"),
+        new TokenPattern(TokenType.Minus, @"^[ \t]*-"),
+        new TokenPattern(TokenType.Multiply, @"^[ \t]*\*"),
+        new TokenPattern(TokenType.Divide, @"^[ \t]*/"),
+        new TokenPattern(TokenType.Modulo, @"^[ \t]*%"),
 
 
         // ComparisionOperator
-        new TokenPattern(TokenType.Greater, @"^\s*>"),
-        new TokenPattern(TokenType.Less, @"^\s*<"),
-        new TokenPattern(TokenType.GreaterEqual, @"^\s*>="),
-        new TokenPattern(TokenType.LessEqual, @"^\s*<="),
-        new TokenPattern(TokenType.NotEqual, @"^\s*!="),
-        new TokenPattern(TokenType.Equal, @"^\s*=="),
+        new TokenPattern(TokenType.Greater, @"^[ \t]*>"),
+        new TokenPattern(TokenType.Less, @"^[ \t]*<"),
+        new TokenPattern(TokenType.GreaterEqual, @"^[ \t]*>="),
+        new TokenPattern(TokenType.LessEqual, @"^[ \t]*<="),
+        new TokenPattern(TokenType.NotEqual, @"^[ \t]*!="),
+        new TokenPattern(TokenType.Equal, @"^[ \t]*=="),
 
         // BooleanOperator
-        new TokenPattern(TokenType.And, @"^\s*&&"),
-        new TokenPattern(TokenType.Or, @"^\s*\|\|"),
+        new TokenPattern(TokenType.And, @"^[ \t]*&&"),
+        new TokenPattern(TokenType.Or, @"^[ \t]*\|\|"),
 
         // Symbol
-        new TokenPattern(TokenType.AssignArrow, @"^\s*<-"),
-        new TokenPattern(TokenType.LeftParen, @"^\s*\("),
-        new TokenPattern(TokenType.RightParen, @"^\s*\)"),
-        new TokenPattern(TokenType.Comma, @"^\s*,"),
-        new TokenPattern(TokenType.LeftBracket, @"^\s*\["),
-        new TokenPattern(TokenType.RightBracket, @"^\s*\]"),
+        new TokenPattern(TokenType.AssignArrow, @"^[ \t]*<-"),
+        new TokenPattern(TokenType.LeftParen, @"^[ \t]*\("),
+        new TokenPattern(TokenType.RightParen, @"^[ \t]*\)"),
+        new TokenPattern(TokenType.Comma, @"^[ \t]*,"),
+        new TokenPattern(TokenType.LeftBracket, @"^[ \t]*\["),
+        new TokenPattern(TokenType.RightBracket, @"^[ \t]*\]"),
 
         // Literal
-        new TokenPattern(TokenType.Number, @"^\s*-?\d+"),
-        new TokenPattern(TokenType.Identifier, @"^\s*[a-zA-Z][a-zA-Z0-9-]*"),
-        new TokenPattern(TokenType.ColorString, @"^\s*[""](Red|Blue|Green|Yellow|Orange|Purple|Black|White)[""]"),
+        new TokenPattern(TokenType.Number, @"^[ \t]*-?\d+"),
+        new TokenPattern(TokenType.Identifier, @"^[ \t]*[a-zA-Z][a-zA-Z0-9-]*"),
+        new TokenPattern(TokenType.ColorString, @"^[ \t]*[""](Red|Blue|Green|Yellow|Orange|Purple|Black|White)[""]"),
 
         //Control
-        new TokenPattern(TokenType.Goto, @"^\s*GoTo\b"),
-        new TokenPattern(TokenType.EndOfLine, @"^\s*\r?\n"),
+        new TokenPattern(TokenType.GoTo, @"^[ \t]*GoTo\b"),
+        new TokenPattern(TokenType.EndOfLine, @"^[ \t]*\r?\n"),
     };
+}
+public class TokenPattern
+{
+    public TokenType Type { get; private set; }
+    public Regex Regex { get; private set; }
 
+    public TokenPattern(TokenType type, string pattern)
+    {
+        Type = type;
+        Regex = new Regex(pattern, RegexOptions.Compiled);
+    }
 }

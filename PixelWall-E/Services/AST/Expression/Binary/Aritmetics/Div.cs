@@ -3,7 +3,7 @@ public class Div : Binary
     public override ExpressionType type {get; set;}
     public override object? value {get; set;}
 
-    public Div(CodeLocation location, Expression left, Expression right) : base(location, left, right){}
+    public Div(CodeLocation location, Expression? left, Expression? right) : base(location, left, right){}
 
     public override void Evaluate()
     {

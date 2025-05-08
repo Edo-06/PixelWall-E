@@ -2,7 +2,7 @@ public class Mul: Binary
 {
     public override ExpressionType type {get; set;}
     public override object? value {get; set;}
-    public Mul(CodeLocation location, Expression left, Expression right) : base(location, left, right){}
+    public Mul(CodeLocation location, Expression? left, Expression? right) : base(location, left, right){}
 
     public override void Evaluate()
     {

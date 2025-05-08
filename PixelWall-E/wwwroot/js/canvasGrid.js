@@ -2,6 +2,10 @@
 window.drawGrid = (canvasId, pixelSize, color) => {
     const canvas = document.getElementById(canvasId);
     const ctx = canvas.getContext('2d');
+    ctx.imageSmoothingEnabled = false;
+    ctx.mozImageSmoothingEnabled = false;
+    ctx.webkitImageSmoothingEnabled = false;
+    ctx.msImageSmoothingEnabled = false;
     const width = canvas.width;
     const height = canvas.height;
 
@@ -9,7 +13,7 @@ window.drawGrid = (canvasId, pixelSize, color) => {
     ctx.lineWidth = 0.2;
 
     
-    for (let x = 0.0; x <= width; x += pixelSize) {
+    for (let x = 0; x <= width; x += pixelSize) {
         ctx.beginPath();
         ctx.moveTo(x, 0);
         ctx.lineTo(x, height);
@@ -17,7 +21,7 @@ window.drawGrid = (canvasId, pixelSize, color) => {
     }
 
     
-    for (let y = 0.0; y <= height; y += pixelSize) {
+    for (let y = 0; y <= height; y += pixelSize) {
         ctx.beginPath();
         ctx.moveTo(0, y);
         ctx.lineTo(width, y);
@@ -32,17 +36,22 @@ window.clearCanvas = (canvasId, backgroundColor = "#FFFFFF") => {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 };
 
-window.fillPixel = (canvasId, pixelSize, x, y, color) => {
+window.fillPixel = (canvasId, pixelSize, x, y, color, gridColor) => {
     const canvas = document.getElementById(canvasId);
     const ctx = canvas.getContext('2d');
-    const pixelX = (x-1)*pixelSize + pixelSize/2;
-    const pixelY = (y-1)*pixelSize + pixelSize/2;
+    ctx.imageSmoothingEnabled = false;
+    ctx.mozImageSmoothingEnabled = false;
+    ctx.webkitImageSmoothingEnabled = false;
+    ctx.msImageSmoothingEnabled = false;
+    ctx.lineWidth = 0.2;
+    const padding = ctx.lineWidth;
+    const pixelX = x*(pixelSize);
+    const pixelY = y*(pixelSize);
 
     ctx.fillStyle = color;
-    ctx.fillRect(pixelX, pixelY, pixelSize, pixelSize);
+    ctx.fillRect(pixelX + padding, pixelY + padding , pixelSize - 2*padding, pixelSize - 2*padding);
 
-    ctx.strokeStyle = "#000000";
-    ctx.strokeReact(pixelX, pixelY, pixelSize);
+//
 };
 
 window.getNumberOfPixels = (element) => {

@@ -20,7 +20,7 @@ public enum TokenType
     Number, Identifier, ColorString,
     
     // Control
-    Goto, Label, EndOfLine, Whitespace,
+    GoTo, Label, EndOfLine, Whitespace,
     
     // Symbol
     AssignArrow, LeftParen, RightParen, Comma, LeftBracket, RightBracket   

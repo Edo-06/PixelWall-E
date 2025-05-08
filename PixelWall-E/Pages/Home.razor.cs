@@ -2,11 +2,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using BlazorMonaco;
 using BlazorMonaco.Editor;
-using BlazorMonaco.Languages;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.JSInterop;
-using PixelWall_E.Components;
 
 namespace PixelWall_E.Pages;
 public partial class Home
@@ -22,34 +20,34 @@ public partial class Home
     [AllowNull]
     private StandaloneCodeEditor _editor;
     private static StandaloneEditorConstructionOptions EditorConstructionOptions(StandaloneCodeEditor editor)
-{
-    return new StandaloneEditorConstructionOptions
     {
-        Language = "pixelwalle",
-        GlyphMargin = true,
-        AutomaticLayout = true,
-        Value = "", 
-
-        WordBasedSuggestions = false,
-        SuggestOnTriggerCharacters = false,
-        QuickSuggestions = new BlazorMonaco.Editor.QuickSuggestionsOptions 
+        return new StandaloneEditorConstructionOptions
         {
-            Other = "off",
-            Comments = "off",
-            Strings = "off"
-        },
-        AcceptSuggestionOnEnter = "off",
-        AcceptSuggestionOnCommitCharacter = false,
-        TabCompletion = "off",
-        SnippetSuggestions = "none", 
-        ParameterHints = new EditorParameterHintOptions { Enabled = false },
-        Hover = new EditorHoverOptions { Enabled = false },
-        SuggestSelection = "first", 
-        Links = false,       
-        CodeLens = false,       
-        Folding = false,        
-    };
-}
+            Language = "pixelwalle",
+            GlyphMargin = true,
+            AutomaticLayout = true,
+            Value = "", 
+
+            WordBasedSuggestions = false,
+            SuggestOnTriggerCharacters = false,
+            QuickSuggestions = new BlazorMonaco.Editor.QuickSuggestionsOptions 
+            {
+                Other = "off",
+                Comments = "off",
+                Strings = "off"
+            },
+            AcceptSuggestionOnEnter = "off",
+            AcceptSuggestionOnCommitCharacter = false,
+            TabCompletion = "off",
+            SnippetSuggestions = "none", 
+            ParameterHints = new EditorParameterHintOptions { Enabled = false },
+            Hover = new EditorHoverOptions { Enabled = false },
+            SuggestSelection = "first", 
+            Links = false,       
+            CodeLens = false,       
+            Folding = false,        
+        };
+    }
 
     private async Task EditorOnDidInit()
     {
@@ -76,8 +74,7 @@ public partial class Home
     {
         code = await _editor.GetValue();
         Console.WriteLine(code);
-        PipeLineManager pip = new PipeLineManager();
-        pip.Start(code);
+        await PipeLineManager.Start(code);
     }
 
     
