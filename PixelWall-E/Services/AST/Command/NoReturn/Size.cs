@@ -24,8 +24,8 @@ public class Size: Command
         }
         return true;
     }
-        public override void Evaluate()
+    public override Task Evaluate()
     {
-        throw new NotImplementedException();
+        return Task.CompletedTask;
     }
 }

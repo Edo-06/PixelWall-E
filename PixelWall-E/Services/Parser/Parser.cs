@@ -13,6 +13,10 @@ public class Parser
     }
     private void ParseStatements()
     {
+        if(tokens[currentPosition].type == TokenType.Spawn)
+            nodes.Add(ParseCommand(new Spawn(tokens[currentPosition].location)));
+        else
+            errors.Add(new CompilingError(tokens[currentPosition].location, ErrorCode.Expected, "Expected a 'Spawn' command"));
         while (currentPosition < tokens.Count - 1)
         {
             switch (tokens[currentPosition].type)
@@ -71,6 +75,8 @@ public class Parser
                     nodes.Add(ParseGoTo(new GoTo(tokens[currentPosition].location)));
                     break;
                 default:
+                    if (tokens[currentPosition].type != TokenType.EndOfLine)
+                        errors.Add(new CompilingError(tokens[currentPosition].location, ErrorCode.Invalid, $"Invalid {tokens[currentPosition].lexeme} at {tokens[currentPosition].location.line}"));
                     ConsumeWithEOL();
                     break;
             }

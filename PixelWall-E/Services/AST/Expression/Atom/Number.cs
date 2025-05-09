@@ -15,7 +15,9 @@ public class Number: Atom
     {
         return true;
     }
-    public override void Evaluate()
-    {}
+    public override Task Evaluate()
+    {
+        return Task.CompletedTask;
+    }
 
 }

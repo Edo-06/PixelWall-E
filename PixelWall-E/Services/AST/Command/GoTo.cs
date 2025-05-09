@@ -11,9 +11,9 @@ public class GoTo: Command
         size = 1;
         parameters = new List<Expression?>();
     }
-    public override void Evaluate()
+    public override Task Evaluate()
     {
-        throw new NotImplementedException();
+        return Task.CompletedTask;
     }
     public override bool CheckParameters(List<CompilingError> errors)
     {

@@ -4,15 +4,16 @@ public class Add: Binary
     public override object? value {get; set;}
     public Add(CodeLocation location, Expression? left, Expression? right) : base(location, left, right){}
 
-    public override void Evaluate()
+    public override Task Evaluate()
     {
         if(right == null || left == null)
-            return;  
+            return Task.CompletedTask;  
         right.Evaluate();
         left.Evaluate();
         if(right.value == null || left.value == null)
-            return;
+            return Task.CompletedTask;;
         this.value = (int)right.value + (int)left.value;
+        return Task.CompletedTask;
     }
     public override bool CheckSemantic(List<CompilingError> errors)
     {

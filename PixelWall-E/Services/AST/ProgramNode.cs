@@ -19,11 +19,15 @@ public class ProgramNode: Node
         }
         return true;
     }
-    public override void Evaluate()
+    public override Task Evaluate()
     {
         for(int i = 0; i < nodes.Count; i++)
         {
+            if(!nodes[i].CheckSemantic(errors) || errors.Count > 0)
+                return Task.CompletedTask;
+            Console.WriteLine($"Evaluating node {i} of type {nodes[i].GetType()}");
             nodes[i].Evaluate();
         }
+        return Task.CompletedTask;
     }
 }

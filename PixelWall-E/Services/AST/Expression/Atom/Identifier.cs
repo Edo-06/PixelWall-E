@@ -21,7 +21,7 @@ public class Label: Identifier
     {
         return true;
     }
-    public override void Evaluate()
+    public override Task Evaluate()
     {
         if(Scope.labels.ContainsKey(name))
         {
@@ -33,10 +33,11 @@ public class Label: Identifier
                     {
                         PipeLineManager.nodes[i].Evaluate();
                     }
-                    return;
+                    return Task.CompletedTask;
                 }
             }
         }
+        return Task.CompletedTask;
     }
 }
 
@@ -54,13 +55,14 @@ public class Variable: Identifier
     {
         return true;
     }
-    public override void Evaluate(){
+    public override Task Evaluate(){
         if(Scope.variables.ContainsKey(name))
         {
             value = Scope.variables[name].value;
             type = Scope.variables[name].type;
-            return;
+            return Task.CompletedTask;
         }
+        return Task.CompletedTask;
     }
 }
 public class Assignament: Identifier
@@ -84,7 +86,7 @@ public class Assignament: Identifier
         type = expression.type;
         return true;
     }
-    public override void Evaluate()
+    public override Task Evaluate()
     {
         if(expression != null)
         {
@@ -93,10 +95,11 @@ public class Assignament: Identifier
             if(Scope.variables.ContainsKey(name))
             {
                 Scope.variables[name] = this;
-                return;
+                return Task.CompletedTask; 
             }
             Scope.variables.Add(name, this);
-            return;
+            return Task.CompletedTask;
         }
+        return Task.CompletedTask;
     }
 }

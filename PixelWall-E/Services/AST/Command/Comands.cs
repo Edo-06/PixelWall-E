@@ -9,6 +9,7 @@ public abstract class Command: Node
     {
         for(int i = 0; i < parameters.Count; i++)
         {
+            parameters[i].Evaluate();
             if(parameters[i] == null)
                 return false;
             if(!parameters[i].CheckSemantic(errors))

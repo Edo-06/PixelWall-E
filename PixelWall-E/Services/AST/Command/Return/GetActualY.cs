@@ -10,9 +10,9 @@ public class GetActualY: Function
         size = 0;
         parameters = new List<Expression?>(size);
     }
-    public override void Evaluate()
+    public override Task Evaluate()
     {
-        throw new NotImplementedException();
+        return Task.CompletedTask;
     }
     public override bool CheckSemantic(List<CompilingError> errors)
     {

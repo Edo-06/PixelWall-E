@@ -2,12 +2,12 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
+using System.Threading.Tasks;
 
 namespace PixelWall_E.Components;
 public partial class CanvasGrid
 {
-    private int Size { get; set; } = 840;
+    public int Size { get; private set; } = 840;
     private ElementReference _numberOfPixels {get; set;}
     public int numberOfPixels {get; set;} = 33;  
     private Image<Rgba32>? image;
@@ -70,10 +70,22 @@ public partial class CanvasGrid
         "Transparent" => new Rgba32(0, 0, 0, 0),
         _ => new Rgba32(0, 0, 0, 0) 
         };
-
         return namedColor;
     }
-
+    private string Rgba32ToString(Rgba32 color)
+    {
+        string colorString = color switch
+        {
+            { R: 255, G: 0, B: 0 } => "Red",
+            { R: 0, G: 255, B: 0 } => "Green",
+            { R: 0, G: 0, B: 255 } => "Blue",
+            { R: 255, G: 255, B: 255 } => "White",
+            { R: 0, G: 0, B: 0 } => "Black",
+            { R: 255, G: 255, B: 0 } => "Yellow",
+            _ => $"({color.R}, {color.G}, {color.B})"
+        };
+        return colorString;
+    }
     public async Task ChangePixelColor(int x, int y, string color)
     {
         await Task.Delay(5);
@@ -88,4 +100,10 @@ public partial class CanvasGrid
         image[x, y] = newColor;
         UpdateImageDisplay();
     }
+    public string GetPixelColor(int x, int y)
+    {
+        if (image == null) return "Error: Imagen no inicializada.";
+        return Rgba32ToString(image[x, y]);
+    }
 }
+

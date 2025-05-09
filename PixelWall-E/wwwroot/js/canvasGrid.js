@@ -57,3 +57,13 @@ window.fillPixel = (canvasId, pixelSize, x, y, color, gridColor) => {
 window.getNumberOfPixels = (element) => {
     return element.value ? parseInt(element.value) : 0;
 };
+
+function updateImageSource(imageDataUrl) {
+                const img = document.getElementById('image');
+                console.log("img element:", img); 
+                if (img) {
+                    img.src = imageDataUrl;
+                } else {
+                    console.error("Element with ID 'image' not found!");
+                }
+            }

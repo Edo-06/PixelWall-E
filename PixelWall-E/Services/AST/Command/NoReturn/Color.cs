@@ -20,15 +20,23 @@ public class Color: Command
             return true;
         return false;
     }
-    public override void Evaluate()
+    public override async Task Evaluate()
     {
-        if(parameters[0] == null)
+        await PipeLineManager.semaphore.WaitAsync();
+        try{
+            if(parameters[0] == null)
             return;
-        parameters[0].Evaluate();
-        if(parameters[0].value == null)
+            parameters[0].Evaluate();
+            if(parameters[0].value == null)
+                return;
+            PipeLineManager.brushColor = (string)parameters[0].value;
+            Console.WriteLine($"Color: {PipeLineManager.brushColor}");
+            Console.WriteLine("Red");
             return;
-        PipeLineManager.currentColor = (string)parameters[0].value;
-        Console.WriteLine($"Color: {PipeLineManager.currentColor}");
-        Console.WriteLine("Red");
+        }
+        finally
+        {
+            PipeLineManager.semaphore.Release();
+        }
     }
 }
