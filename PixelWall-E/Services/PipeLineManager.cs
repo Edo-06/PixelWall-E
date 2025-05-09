@@ -6,7 +6,8 @@ public  static class PipeLineManager
     public static List<Node> nodes = new List<Node>();
     public static CanvasGrid? canvas;
     public static (int x, int y) currentPixel = (0,0);
-    public static string currentColor = "white";
+    public static string brushColor = "white";
+    public static string currentPixelColor = "white";
     public static List<Pixel> pixelChange = new List<Pixel>();
     public static async Task Start(string code)
     {
@@ -41,6 +42,11 @@ public  static class PipeLineManager
         {
             await canvas.ChangePixelColor(pixelChange[i].x, pixelChange[i].y, "Black");
             await canvas.ChangePixelColor(pixelChange[i].x, pixelChange[i].y, pixelChange[i].color);
+        }
+        if(currentPixel != (-1,1))
+        {
+            currentPixelColor = canvas.GetPixelColor(currentPixel.x, currentPixel.y);
+            await canvas.ChangePixelColor(currentPixel.x, currentPixel.y, "Black");
         }
         await canvas.ChangePixelColor(currentPixel.x, currentPixel.y, "Black");
     }

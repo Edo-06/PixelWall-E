@@ -40,11 +40,14 @@ public class DrawLine: Command
         int currentY = PipeLineManager.currentPixel.y;
         for(int i = 0; i < (int)parameters[2].value; i++)
         {
-            currentX += (int)parameters[0].value;
-            currentY += (int)parameters[1].value;
-            Console.WriteLine($"Drawing" + PipeLineManager.currentColor + $" at ({currentX}, {currentY})");
+            if(i > 0)
+            {
+                currentX += (int)parameters[0].value;
+                currentY += (int)parameters[1].value;
+            }
+            Console.WriteLine($"Drawing" + PipeLineManager.brushColor + $" at ({currentX}, {currentY})");
             PipeLineManager.pixelChange.Add(
-                new PipeLineManager.Pixel(currentX, currentY, PipeLineManager.currentColor)
+                new PipeLineManager.Pixel(currentX, currentY, PipeLineManager.brushColor)
             );
         }
         PipeLineManager.currentPixel = (currentX, currentY);
