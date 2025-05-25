@@ -1,11 +1,10 @@
-using System.Collections.Generic;
 using System.Text.RegularExpressions;
 public class LexerRegex
 {
     public List<TokenPattern> tokenPatterns = new List<TokenPattern> 
     {
         // Command
-        new TokenPattern(TokenType.Spawn, @"^[ \t]*Spawn\b"),
+        new TokenPattern(TokenType.Spawn, @"^[ \t\n]*Spawn\b"),
         new TokenPattern(TokenType.Color, @"^[ \t]*Color\b"),
         new TokenPattern(TokenType.Size, @"^[ \t]*Size\b"),
         new TokenPattern(TokenType.DrawLine, @"^[ \t]*DrawLine\b"),
