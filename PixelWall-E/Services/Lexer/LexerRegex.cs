@@ -21,6 +21,10 @@ public class LexerRegex
         new TokenPattern(TokenType.IsBrushSize, @"^[ \t]*IsBrushSize\b"),
         new TokenPattern(TokenType.IsCanvasColor, @"^[ \t]*IsCanvasColor\b"),
 
+        //Control
+        new TokenPattern(TokenType.GoTo, @"^[ \t]*GoTo\b"),
+        new TokenPattern(TokenType.EndOfLine, @"^[ \t]*\r?\n"),
+
         // Operator
         new TokenPattern(TokenType.Power, @"^[ \t]*\*\*"),
         new TokenPattern(TokenType.Plus, @"^[ \t]*\+"),
@@ -29,6 +33,13 @@ public class LexerRegex
         new TokenPattern(TokenType.Divide, @"^[ \t]*/"),
         new TokenPattern(TokenType.Modulo, @"^[ \t]*%"),
 
+        // Symbol
+        new TokenPattern(TokenType.AssignArrow, @"^[ \t]*<-"),
+        new TokenPattern(TokenType.LeftParen, @"^[ \t]*\("),
+        new TokenPattern(TokenType.RightParen, @"^[ \t]*\)"),
+        new TokenPattern(TokenType.Comma, @"^[ \t]*,"),
+        new TokenPattern(TokenType.LeftBracket, @"^[ \t]*\["),
+        new TokenPattern(TokenType.RightBracket, @"^[ \t]*\]"),
 
         // ComparisionOperator
         new TokenPattern(TokenType.Greater, @"^[ \t]*>"),
@@ -42,22 +53,12 @@ public class LexerRegex
         new TokenPattern(TokenType.And, @"^[ \t]*&&"),
         new TokenPattern(TokenType.Or, @"^[ \t]*\|\|"),
 
-        // Symbol
-        new TokenPattern(TokenType.AssignArrow, @"^[ \t]*<-"),
-        new TokenPattern(TokenType.LeftParen, @"^[ \t]*\("),
-        new TokenPattern(TokenType.RightParen, @"^[ \t]*\)"),
-        new TokenPattern(TokenType.Comma, @"^[ \t]*,"),
-        new TokenPattern(TokenType.LeftBracket, @"^[ \t]*\["),
-        new TokenPattern(TokenType.RightBracket, @"^[ \t]*\]"),
-
         // Literal
         new TokenPattern(TokenType.Number, @"^[ \t]*-?\d+"),
+        new TokenPattern(TokenType.Bool, @"^[ \t]*true\b"),
+        new TokenPattern(TokenType.Bool, @"^[ \t]*false\b"),
         new TokenPattern(TokenType.Identifier, @"^[ \t]*[a-zA-Z][a-zA-Z0-9-]*"),
         new TokenPattern(TokenType.ColorString, @"^[ \t]*[""](Red|Blue|Green|Yellow|Orange|Purple|Black|White)[""]"),
-
-        //Control
-        new TokenPattern(TokenType.GoTo, @"^[ \t]*GoTo\b"),
-        new TokenPattern(TokenType.EndOfLine, @"^[ \t]*\r?\n"),
     };
 }
 public class TokenPattern

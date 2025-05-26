@@ -120,12 +120,16 @@ public class Parser
             errors.Add(new CompilingError(tokens[currentPosition].location, ErrorCode.Expected, "Expected a '['"));
         if(tokens[currentPosition].type == TokenType.Identifier)
         {
-            LabelNode label = new LabelNode(tokens[currentPosition].location, tokens[currentPosition].lexeme);
+            LabelNode label = new LabelNode(tokens[currentPosition].location, tokens[currentPosition].lexeme, nodes.Count - 1);
             node.label = label;
             Consume();
         }
         else
             errors.Add(new CompilingError(tokens[currentPosition].location, ErrorCode.Expected, "Expected a label"));
+        if(tokens[currentPosition].type == TokenType.RightBracket)
+            Consume();
+        else
+            errors.Add(new CompilingError(tokens[currentPosition].location, ErrorCode.Expected, "Expected a ']'"));
         ParseParameters(node.parameters, size);
         return node;
     }
@@ -240,16 +244,23 @@ public class Parser
         Token token = tokens[currentPosition];
         if (token.type == TokenType.Minus || token.type == TokenType.Not)
         {
+            Console.WriteLine(token.lexeme + "ParseUnary");
+            Consume();
+            Console.WriteLine(tokens[currentPosition].lexeme + "ParseUnary");
             ExpressionNode operand = ParseUnary();
-            new UnaryOpNode(token.location, token.type, operand);
+            return new UnaryOpNode(token.location, token.type, operand);
         }
-        return ParseAtom();
+        else 
+        {
+            return ParseAtom();
+        }
     }
     private ExpressionNode ParseAtom()
     {
         if(currentPosition >= tokens.Count - 1)
             return null!;
         Token token = tokens[currentPosition];
+        Console.WriteLine(token.lexeme);
         switch(tokens[currentPosition].type)
         {
             case TokenType.Number:
@@ -259,6 +270,9 @@ public class Parser
                 Consume();
                 return new VariableNode(token.location, token.lexeme);
             case TokenType.ColorString:
+                Consume();
+                return new LiteralNode(token.location, token.lexeme);
+            case TokenType.Bool:
                 Consume();
                 return new LiteralNode(token.location, token.lexeme);
             case TokenType.LeftParen:
@@ -280,10 +294,20 @@ public class Parser
     private void ParseIdentifier()
     {
         Token token = tokens[currentPosition];
+        Console.WriteLine(token.type);
         Consume();
+        Console.WriteLine(tokens[currentPosition].type);
         if(tokens[currentPosition].type == TokenType.EndOfLine)
         {
-            Scope.labels.Add(token.lexeme, token.location.line);
+            if(Scope.labels.ContainsKey(token.lexeme))
+            {
+                Scope.labels[token.lexeme] = nodes.Count;
+                Consume();
+                return;
+            }
+            Scope.labels.Add(token.lexeme, nodes.Count);
+            Consume();
+            return;
         }
         else if(tokens[currentPosition].type == TokenType.AssignArrow)
         {
@@ -291,12 +315,16 @@ public class Parser
             Consume();
             ExpressionNode expression = ParseExpression();
             if(expression != null)
+            {
                 assignment.expression = expression;
+                nodes.Add(assignment);
+            }
             else
             {
                 errors.Add(new CompilingError(tokens[currentPosition].location, ErrorCode.Invalid,"Invalid expression"));
-                nodes.Add(assignment);
             }
+            Consume();
+            return;
         }
         errors.Add(new CompilingError(tokens[currentPosition].location,ErrorCode.Expected,"Expected a '<-'"));
         ConsumeWithEOL();
@@ -309,6 +337,7 @@ public class Parser
             Consume(); //Skip current token != EOL
             if(tokens[currentPosition].type != TokenType.EndOfLine)
             {
+                Console.WriteLine("here");
                 errors.Add(new CompilingError(tokens[currentPosition].location, ErrorCode.Expected, "Expected an EndOfLine token"));
             }
             while(currentPosition < tokens.Count - 1 && tokens[currentPosition].type == TokenType.EndOfLine)

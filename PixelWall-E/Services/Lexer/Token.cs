@@ -17,7 +17,7 @@ public enum TokenType
     Equal, NotEqual, Greater, Less, GreaterEqual, LessEqual,
     
     // Literal
-    Number, ColorString,
+    Number, ColorString, Bool,
     
     // Control
     GoTo, Identifier, EndOfLine,
@@ -83,7 +83,9 @@ public class Token
         { TokenType.GetColorCount, 0 },
         { TokenType.IsBrushColor, 1 },
         { TokenType.IsBrushSize, 1 },
-        { TokenType.IsCanvasColor, 1 }
+        { TokenType.IsCanvasColor, 1 },
+
+        {TokenType.GoTo, 1}
     };
 }
 #endregion

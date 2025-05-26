@@ -21,6 +21,9 @@ public class SemanticCheckerVisitor: IVisitor<bool>
     {
         if (!assignment.expression.Accept(this)) return false;
         assignment.type = assignment.expression.type;
+
+        Scope.variables.Add(assignment.name, assignment.expression);
+        Console.WriteLine($"asignando {assignment.name} en SC");
         return true;
     }
     public bool Visit(CommandNode command)
@@ -52,6 +55,7 @@ public class SemanticCheckerVisitor: IVisitor<bool>
 #region Expression
     public bool Visit(UnaryOpNode unary)
     {
+        unary.operand.Accept(this);
         switch (unary.op)
         {
             case TokenType.Not:
@@ -117,23 +121,18 @@ public class SemanticCheckerVisitor: IVisitor<bool>
     }
     public bool Visit(LiteralNode literal)
     {
-        Console.WriteLine("aaa");
         string value = (string)literal.value;
         string cleaned = value.Replace("\"", "").Trim();
         value = cleaned;
-        Console.WriteLine(value + "b");
-        Console.WriteLine("hola");
         if(int.TryParse(value , out int number))
         {
             literal.value = number;
             literal.type = ExpressionType.Number;
-            Console.WriteLine(literal.value + "a");
         }
         else if(bool.TryParse(value , out bool boolean))
         {
             literal.value = boolean;
             literal.type = ExpressionType.Bool;
-            Console.WriteLine(literal.value + "a");
             /* errors.Add(new CompilingError(literal.location, ErrorCode.Invalid, "Invalid number format"));
             return false; */
         }
@@ -141,7 +140,6 @@ public class SemanticCheckerVisitor: IVisitor<bool>
         {
             literal.value = value;
             literal.type = ExpressionType.Color;
-            Console.WriteLine(literal.value + "a");
             /* errors.Add(new CompilingError(literal.location, ErrorCode.Invalid, "Invalid boolean format"));
             return false; */
         }
@@ -159,7 +157,7 @@ public class SemanticCheckerVisitor: IVisitor<bool>
             errors.Add(new CompilingError(variable.location, ErrorCode.Invalid, $"Variable '{variable.name}' is not defined"));
             return false;
         }
-        variable.type = Scope.variables[variable.name].type;
+        variable.type = Scope.variables[variable.name].type; 
         return true;
     }
     public bool Visit(FunctionNode function)

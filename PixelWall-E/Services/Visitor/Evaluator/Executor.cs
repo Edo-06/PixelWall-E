@@ -105,7 +105,8 @@ public class Executor : IVisitor<Task>
     public Task Visit(AssignmentNode assignment)
     {
         assignment.expression.Accept(this);
-        Scope.variables.Add(assignment.name, assignment.expression);
+        Scope.variables[assignment.name] = assignment.expression;
+        Console.WriteLine($"asignando {assignment.name}");
         return Task.CompletedTask;
     }
 
@@ -118,9 +119,15 @@ public class Executor : IVisitor<Task>
         await Handler.Execute(command);
     }
 
-    public Task Visit(GoToNode goTo)
+    public async Task Visit(GoToNode goTo)
     {
-        return Task.CompletedTask;
+        if((bool)goTo.parameters[0].value)
+        {
+            for(int i = Scope.labels[goTo.label.name]; i < goTo.label.breakP; i++)
+            {
+                await PipeLineManager.program.statements[i].Accept(this);
+            }
+        }
     }
 
     public Task Visit(LabelNode label)
