@@ -34,18 +34,16 @@ public class Executor : IVisitor<Task>
         switch (binary.left.type)
         {
             case ExpressionType.Number:
-                try
-                {
-                    binary.value = int.Parse($"{binary.left.value} {Operators.OperatorSymbols[binary.op]} {binary.right.value}");
-                }
-                catch(DivideByZeroException)
-                {
-                    errors.Add(new CompilingError(binary.location, ErrorCode.Invalid, "Division by zero is not allowed."));
-                }
-                binary.value = int.Parse($"{binary.left.value} {Operators.OperatorSymbols[binary.op]} {binary.right.value}");
+                if(Operators<int>.AritmeticOperator.ContainsKey(binary.op)) 
+                    binary.value = Operators<int>.AritmeticOperator[binary.op].Invoke((int)binary.left.value, (int)binary.right.value);
+                else if(Operators<int>.ComparisionOperator.ContainsKey(binary.op))
+                    binary.value = Operators<bool>.ComparisionOperator[binary.op].Invoke((bool)binary.left.value, (bool)binary.right.value);
                 break;
             case ExpressionType.Bool:
-                binary.value = bool.Parse($"{binary.left.value} {Operators.OperatorSymbols[binary.op]} {binary.right.value}");
+                if(Operators<bool>.BooleanOperator.ContainsKey(binary.op))
+                    binary.value = Operators<bool>.BooleanOperator[binary.op].Invoke((bool)binary.left.value, (bool)binary.right.value);
+                else if(Operators<bool>.ComparisionOperator.ContainsKey(binary.op))
+                    binary.value = Operators<bool>.ComparisionOperator[binary.op].Invoke((bool)binary.left.value, (bool)binary.right.value);
                 break;
             default:
                 throw new NotImplementedException($"Binary operation for type {binary.left.type} is not implemented.");

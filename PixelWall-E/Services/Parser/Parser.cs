@@ -11,6 +11,28 @@ public class Parser
         currentPosition = 0;
         ParseStatements();
     }
+        private void ConsumeWithEOL()
+    {
+        if(currentPosition < tokens.Count - 1)
+        {
+            Consume(); //Skip current token != EOL
+            if(tokens[currentPosition].type != TokenType.EndOfLine)
+            {
+                Console.WriteLine("here");
+                errors.Add(new CompilingError(tokens[currentPosition].location, ErrorCode.Expected, "Expected an EndOfLine token"));
+            }
+            while(currentPosition < tokens.Count - 1 && tokens[currentPosition].type == TokenType.EndOfLine)
+            {
+                Consume(); //Skip EOL tokens
+            }
+        }
+    }
+    private void Consume()
+    {
+        if(currentPosition + 1 < tokens.Count)
+            currentPosition++;
+        return;
+    }
     private void ParseStatements()
     {
         while (currentPosition < tokens.Count - 1)
@@ -39,65 +61,6 @@ public class Parser
                 errors.Add(new CompilingError(tokens[currentPosition].location, ErrorCode.Invalid, "Invalid token"));
                 Consume();
             }
-            /* switch (tokens[currentPosition].type)
-            {
-                //Command
-                case TokenType.Spawn:
-                    nodes.Add(ParseCommand(new Spawn(tokens[currentPosition].location)));
-                    break;
-                case TokenType.Color:
-                    nodes.Add(ParseCommand(new Color(tokens[currentPosition].location)));
-                    break;
-                case TokenType.Fill:
-                    nodes.Add(ParseCommand(new Fill(tokens[currentPosition].location)));
-                    break;
-                case TokenType.Size:
-                    nodes.Add(ParseCommand(new Size(tokens[currentPosition].location)));
-                    break;
-                case TokenType.DrawCircle:
-                    nodes.Add(ParseCommand(new DrawCircle(tokens[currentPosition].location)));
-                    break;
-                case TokenType.DrawLine:
-                    nodes.Add(ParseCommand(new DrawLine(tokens[currentPosition].location)));
-                    break;
-                case TokenType.DrawRectangle:
-                    nodes.Add(ParseCommand(new DrawRectangle(tokens[currentPosition].location)));
-                    break;
-                
-                //FUnction
-                case TokenType.GetActualX:
-                    nodes.Add(ParseCommand(new GetActualX(tokens[currentPosition].location)));
-                    break;
-                case TokenType.GetActualY:
-                    nodes.Add(ParseCommand(new GetActualY(tokens[currentPosition].location)));
-                    break;
-                case TokenType.GetCanvasSize:
-                    nodes.Add(ParseCommand(new GetCanvasSize(tokens[currentPosition].location)));
-                    break;
-                case TokenType.GetColorCount:
-                    nodes.Add(ParseCommand(new GetColorCount(tokens[currentPosition].location)));
-                    break;
-                case TokenType.IsBrushColor:
-                    nodes.Add(ParseCommand(new IsBrushColor(tokens[currentPosition].location)));
-                    break;
-                case TokenType.IsBrushSize:
-                    nodes.Add(ParseCommand(new IsBrushSize(tokens[currentPosition].location)));
-                    break;
-                case TokenType.IsCanvasColor:
-                    nodes.Add(ParseCommand(new IsColor(tokens[currentPosition].location)));
-                    break;
-                //Identifier
-                case TokenType.Identifier:
-                    ParseIdentifier();
-                    break;
-                //GoTo
-                case TokenType.GoTo:
-                    nodes.Add(ParseGoTo(new GoTo(tokens[currentPosition].location)));
-                    break;
-                default:
-                    ConsumeWithEOL();
-                    break;
-            } */
         }
         programNode.statements = nodes;
         PipeLineManager.program = programNode;
@@ -174,6 +137,7 @@ public class Parser
             Consume();
             ExpressionNode right = ParseAnd();
             expression = new BinaryOpNode(token.location, expression ,token.type, right);
+            token = tokens[currentPosition];
         }
         return expression;
     }
@@ -184,8 +148,9 @@ public class Parser
         while(token.type == TokenType.And)
         {
             Consume();
-            ExpressionNode? right = ParseComparision();
+            ExpressionNode right = ParseComparision();
             expression = new BinaryOpNode(token.location, expression, token.type, right);
+            token = tokens[currentPosition];
         }
         return expression;
     }
@@ -199,6 +164,7 @@ public class Parser
             Consume();
             ExpressionNode right = ParseAddSub();
             expression = new BinaryOpNode(token.location, expression,token.type , right);
+            token = tokens[currentPosition];
         }
         return expression;
     }
@@ -209,8 +175,9 @@ public class Parser
         while(token.type == TokenType.Plus || token.type == TokenType.Minus)
         {
             Consume();
-            ExpressionNode? right = ParseMulDivMod();
+            ExpressionNode right = ParseMulDivMod();
             expression = new BinaryOpNode(token.location, expression, token.type,right);
+            token = tokens[currentPosition];
         }
         return expression;
     }
@@ -219,11 +186,12 @@ public class Parser
         ExpressionNode expression = ParsePower();
         Token token = tokens[currentPosition];
         while(token.type == TokenType.Multiply || token.type == TokenType.Divide ||
-        tokens[currentPosition].type == TokenType.Modulo)
+        tokens[currentPosition].type == TokenType.Modulo|| token.type == TokenType.Power)
         {
             Consume();
             ExpressionNode right = ParsePower();
             expression = new BinaryOpNode(token.location, expression, token.type,right);
+            token = tokens[currentPosition];
         }
         return expression;
     }
@@ -236,6 +204,7 @@ public class Parser
             Consume();
             ExpressionNode right = ParseUnary();
             expression = new BinaryOpNode(token.location, expression, token.type,right);
+            token = tokens[currentPosition];
         }
         return expression;
     }
@@ -244,11 +213,11 @@ public class Parser
         Token token = tokens[currentPosition];
         if (token.type == TokenType.Minus || token.type == TokenType.Not)
         {
-            Console.WriteLine(token.lexeme + "ParseUnary");
             Consume();
-            Console.WriteLine(tokens[currentPosition].lexeme + "ParseUnary");
             ExpressionNode operand = ParseUnary();
-            return new UnaryOpNode(token.location, token.type, operand);
+            ExpressionNode rt = new UnaryOpNode(token.location, token.type, operand);
+            token = tokens[currentPosition];
+            return rt;
         }
         else 
         {
@@ -257,7 +226,7 @@ public class Parser
     }
     private ExpressionNode ParseAtom()
     {
-        if(currentPosition >= tokens.Count - 1)
+        if(currentPosition > tokens.Count - 1)
             return null!;
         Token token = tokens[currentPosition];
         Console.WriteLine(token.lexeme);
@@ -265,6 +234,7 @@ public class Parser
         {
             case TokenType.Number:
                 Consume();
+                Console.WriteLine(tokens[currentPosition].lexeme + tokens[currentPosition].type);
                 return new LiteralNode(token.location, token.lexeme);
             case TokenType.Identifier:
                 Consume();
@@ -330,24 +300,4 @@ public class Parser
         ConsumeWithEOL();
     }
 #endregion
-    private void ConsumeWithEOL()
-    {
-        if(currentPosition < tokens.Count - 1)
-        {
-            Consume(); //Skip current token != EOL
-            if(tokens[currentPosition].type != TokenType.EndOfLine)
-            {
-                Console.WriteLine("here");
-                errors.Add(new CompilingError(tokens[currentPosition].location, ErrorCode.Expected, "Expected an EndOfLine token"));
-            }
-            while(currentPosition < tokens.Count - 1 && tokens[currentPosition].type == TokenType.EndOfLine)
-            {
-                Consume(); //Skip EOL tokens
-            }
-        }
-    }
-    private void Consume()
-    {
-        currentPosition++;
-    }
 }
