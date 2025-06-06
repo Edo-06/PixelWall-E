@@ -7,8 +7,7 @@ public  static class PipeLineManager
     public static CanvasGrid? canvas;
     public static (int x, int y) currentPixel {get; set;}= (0,0);
     public static string brushColor = "white";
-    public static string currentPixelColor = "white";
-    public static int brushSize;
+    public static int brushSize = 1;
     public static async Task Start(string code)
     {
         tokens = lexer.GetTokens(code);
@@ -39,7 +38,7 @@ public  static class PipeLineManager
         /* parser.programNode.CheckSemantic(parser.errors);
         parser.programNode.Evaluate(); */
         Console.WriteLine("currentPixel: " + currentPixel.x + " " + currentPixel.y);
-        await Paint();
+        //await Paint();
     }
     public static async Task Paint()
     {
@@ -105,5 +104,16 @@ public  static class PipeLineManager
             this.y = y;
             this.color = color;
         }
+    }
+    public static void ReStart()
+    {
+        lexer = new LexerAnalyzer();
+        program = null!;
+        tokens = new List<Token>();
+        currentPixel = (0,0);
+        brushColor = "white";
+        brushSize = 1;
+        Scope.variables = [];
+        Scope.labels = [];
     }
 }

@@ -229,7 +229,6 @@ public class Parser
         if(currentPosition > tokens.Count - 1)
             return null!;
         Token token = tokens[currentPosition];
-        Console.WriteLine(token.lexeme);
         switch(tokens[currentPosition].type)
         {
             case TokenType.Number:
@@ -238,6 +237,7 @@ public class Parser
                 return new LiteralNode(token.location, token.lexeme);
             case TokenType.Identifier:
                 Consume();
+                Console.WriteLine(token.lexeme);
                 return new VariableNode(token.location, token.lexeme);
             case TokenType.ColorString:
                 Consume();
@@ -272,6 +272,7 @@ public class Parser
             if(Scope.labels.ContainsKey(token.lexeme))
             {
                 Scope.labels[token.lexeme] = nodes.Count;
+                //revisar, no se puede tener 2 labels con en mismo nombre
                 Consume();
                 return;
             }

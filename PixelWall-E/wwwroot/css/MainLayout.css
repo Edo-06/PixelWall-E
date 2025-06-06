@@ -14,6 +14,66 @@ main {
     height: 100vh;
     width: 50%;
     position: relative;
+    display: flex; 
+    flex-direction: column;
+    overflow: hidden;
+    padding-bottom: 5.2rem; 
+    /*border: 1px solid #ddd; */
+}
+.right-top {
+    background-color: #ffffff; 
+    min-height: 50vh; 
+    height: 60vh;
+    max-height: 100vh;
+    overflow: hidden;
+}
+/*.splitter {
+    height: 8px;
+    background-color: #ccc;
+    cursor: ns-resize;
+    border-top: 1px solid #aaa;
+    border-bottom: 1px solid #aaa;
+    flex-shrink: 0; 
+}*/
+.splitter {
+    height: 8px; 
+    cursor: ns-resize; 
+    background-color: #333;
+    border-top: 1px solid #444;
+    border-bottom: 1px solid #222;
+    z-index: 10; 
+    box-sizing: border-box; 
+}
+
+.monaco-theme-vs-light .splitter {
+    background-color: #f0f0f0;
+    border-top: 1px solid #e0e0e0;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.monaco-theme-vs-dark .splitter {
+    background-color: #333;
+    border-top: 1px solid #444;
+    border-bottom: 1px solid #222;
+}
+
+.monaco-theme-my-custom-dark-theme .splitter {
+    background-color: #1a1a1a;
+    border-top: 1px solid #2a2a2a;
+    border-bottom: 1px solid #0a0a0a;
+}
+
+.right-bottom {
+    flex: 1; 
+    background-color: #e0e0e0; 
+    overflow: hidden;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.2);
+}
+.no-select {
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none;    /* Firefox */
+    -ms-user-select: none;     /* IE 10+ */
+    user-select: none;         /* Standard */
 }
 
 #split-screen {
@@ -158,7 +218,15 @@ main {
 .button-container {
     display: flex;
     gap: 1rem;
-    padding: 1rem;
-    background: #f8f9fa; 
-    border-top: 1px solid #dee2e6; 
+    padding-bottom: 0.5rem;
+    background: #ffffff; 
+    /*border-top: 1px solid #dee2e6; */
+}
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+/* Asegúrate de que tus íconos (si usas Font Awesome) tengan el tamaño correcto */
+.btn .fas {
+    font-size: 20px; /* O el tamaño que desees */
 }

@@ -1,0 +1,9 @@
+@using Microsoft.AspNetCore.Components.Forms
+@using PixelWall_E.Components
+@using System.IO
+@inject IJSRuntime jsRuntime
+
+<div>
+        <StandaloneCodeEditor @ref="_editor" Id="console" ConstructionOptions="EditorConstructionOptions"
+                OnDidInit="EditorOnDidInit" OnContextMenu="OnContextMenu" />
+</div>

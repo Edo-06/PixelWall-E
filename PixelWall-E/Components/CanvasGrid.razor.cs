@@ -8,7 +8,7 @@ public partial class CanvasGrid
 {
     private int Size { get; set; } = 840;
     private ElementReference _numberOfPixels {get; set;}
-    public int numberOfPixels {get; set;} = 33;  
+    public int numberOfPixels {get; set;} = 200;  
     private Image<Rgba32>? image;
     private string? imageDataUrl {get; set;}
 
@@ -33,6 +33,7 @@ public partial class CanvasGrid
     }
     private async Task ChangeNumberOfPixels()
     {
+        PipeLineManager.ReStart();
         var numberOfPixels = await jsRuntime.InvokeAsync<int>("getNumberOfPixels", _numberOfPixels);
         if (numberOfPixels < 1 || numberOfPixels > 256)
         {
@@ -89,7 +90,7 @@ public partial class CanvasGrid
     }
     public async Task ChangePixelColor(int x, int y, string color)
     {
-        await Task.Delay(5);
+        await Task.Delay(1);
         if (image == null) return;
 
         Rgba32 newColor = StringToRgba32(color);

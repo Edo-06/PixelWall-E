@@ -57,7 +57,7 @@ public class LexerRegex
         new TokenPattern(TokenType.Number, @"^[ \t]*-?\d+"),
         new TokenPattern(TokenType.Bool, @"^[ \t]*true\b"),
         new TokenPattern(TokenType.Bool, @"^[ \t]*false\b"),
-        new TokenPattern(TokenType.Identifier, @"^[ \t]*[a-zA-Z][a-zA-Z0-9-]*"),
+        new TokenPattern(TokenType.Identifier, @"^[ \t]*[a-zA-Z][a-zA-Z0-9_]*"),
         new TokenPattern(TokenType.ColorString, @"^[ \t]*[""](Red|Blue|Green|Yellow|Orange|Purple|Black|White)[""]"),
     };
 }

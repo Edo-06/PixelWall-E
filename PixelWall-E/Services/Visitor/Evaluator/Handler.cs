@@ -64,8 +64,8 @@ public static class Handler
         int dirY = (int)command.parameters[1].value;
         int radius = (int)command.parameters[2].value;
 
-        int centerX = PipeLineManager.currentPixel.x + dirX;
-        int centerY = PipeLineManager.currentPixel.y + dirY;
+        int centerX = PipeLineManager.currentPixel.x + dirX*radius;
+        int centerY = PipeLineManager.currentPixel.y + dirY*radius;
 
         PipeLineManager.currentPixel = (centerX, centerY);
         
@@ -82,7 +82,7 @@ public static class Handler
                 }
             }
         }
-        await PipeLineManager.ChangePixelColor(PipeLineManager.currentPixel.x, PipeLineManager.currentPixel.y);
+        //await PipeLineManager.ChangePixelColor(PipeLineManager.currentPixel.x, PipeLineManager.currentPixel.y);
     }
     private static async Task ExecuteDrawRectangle(CommandNode command)
     {
@@ -101,7 +101,6 @@ public static class Handler
             int centerX = (startX + endX) / 2;
             int centerY = (startY + endY) / 2;
 
-            // Dibujar las 4 líneas del rectángulo
             for (int x = startX; x <= endX; x++)
             {
                 Console.WriteLine($"Drawing" + PipeLineManager.brushColor + $" at ({x}, {startY}) for rectangle");
@@ -110,7 +109,7 @@ public static class Handler
                 await PipeLineManager.ChangePixelColor(x, endY);
             }
 
-            for (int y = startY + 1; y < endY; y++) // Evitar redibujar las esquinas
+            for (int y = startY + 1; y < endY; y++) 
             {
                 Console.WriteLine($"Drawing" + PipeLineManager.brushColor + $" at ({startX}, {y}) for rectangle");
                 await PipeLineManager.ChangePixelColor(startX, y);
@@ -118,13 +117,13 @@ public static class Handler
                 await PipeLineManager.ChangePixelColor(endX, y);
             }
             PipeLineManager.currentPixel = (centerX, centerY);
-            await PipeLineManager.ChangePixelColor(centerX, centerY);
+            //await PipeLineManager.ChangePixelColor(centerX, centerY);
     }
     private static async Task ExecuteFill(CommandNode command)
     {
         int startX = PipeLineManager.currentPixel.x;
         int startY = PipeLineManager.currentPixel.y;
-        string targetColor = PipeLineManager.currentPixelColor;
+        string targetColor = PipeLineManager.GetPixelColor(PipeLineManager.currentPixel.x, PipeLineManager.currentPixel.y);
         string replacementColor = PipeLineManager.brushColor; 
 
         if (targetColor == replacementColor) return;

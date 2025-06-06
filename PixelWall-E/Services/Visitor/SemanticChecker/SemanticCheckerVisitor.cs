@@ -19,11 +19,25 @@ public class SemanticCheckerVisitor: IVisitor<bool>
     }
     public bool Visit(AssignmentNode assignment)
     {
-        if (!assignment.expression.Accept(this)) return false;
+        if (!assignment.expression.Accept(this))
+        {
+            Console.WriteLine($"tenias razon ");
+            return false;
+        }
         assignment.type = assignment.expression.type;
 
-        Scope.variables.Add(assignment.name, assignment.expression);
-        Console.WriteLine($"asignando {assignment.name} en SC");
+        if(Scope.variables.ContainsKey(assignment.name))
+        {
+            ExpressionNode expression = assignment.expression;
+            Console.WriteLine(expression);
+            //Scope.variables[assignment.name] = expression;
+            Console.WriteLine($"reasignando {assignment.name} en SC");
+        }
+        else
+        {
+            Scope.variables.Add(assignment.name, assignment.expression);
+            Console.WriteLine($"asignando {assignment.name} en SC");
+        }
         return true;
     }
     public bool Visit(CommandNode command)
@@ -82,6 +96,7 @@ public class SemanticCheckerVisitor: IVisitor<bool>
     }
     public bool Visit(BinaryOpNode binary)
     {
+        Console.WriteLine("parseando expresion binaria");
         if (!binary.left.Accept(this) || !binary.right.Accept(this)) return false;
         if (binary.left.type != binary.right.type)
         {
@@ -152,6 +167,7 @@ public class SemanticCheckerVisitor: IVisitor<bool>
     }
     public bool Visit(VariableNode variable)
     {
+        Console.WriteLine("parseando variable");
         if (!Scope.variables.ContainsKey(variable.name))
         {
             errors.Add(new CompilingError(variable.location, ErrorCode.Invalid, $"Variable '{variable.name}' is not defined"));

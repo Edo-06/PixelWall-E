@@ -45,8 +45,10 @@ public class LexerAnalyzer
                     string lexeme = match.Value;
                     TokenType type = pattern.Type;
 
-                    tokens.Add(new Token(type, location, lexeme));
+                    
                     position += lexeme.Length;
+                    lexeme = lexeme.Trim();
+                    tokens.Add(new Token(type, location, lexeme));
                     UpdateLineAndColumn(lexeme);
                     return;
                 }
