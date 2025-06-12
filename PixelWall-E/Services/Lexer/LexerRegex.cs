@@ -23,7 +23,7 @@ public class LexerRegex
 
         //Control
         new TokenPattern(TokenType.GoTo, @"^[ \t]*GoTo\b"),
-        new TokenPattern(TokenType.EndOfLine, @"^[ \t]*\r?\n"),
+        new TokenPattern(TokenType.EndOfLine, @"^[ \t]*\r\n"),
 
         // Operator
         new TokenPattern(TokenType.Power, @"^[ \t]*\*\*"),

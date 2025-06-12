@@ -2,7 +2,6 @@ main {
     flex: 1;
     width: 0;
 }
-
 .left {
     height: 100vh;
     width: 50%;
@@ -22,47 +21,11 @@ main {
 }
 .right-top {
     background-color: #ffffff; 
-    min-height: 50vh; 
     height: 60vh;
+    min-height: 20vh;
     max-height: 100vh;
     overflow: hidden;
 }
-/*.splitter {
-    height: 8px;
-    background-color: #ccc;
-    cursor: ns-resize;
-    border-top: 1px solid #aaa;
-    border-bottom: 1px solid #aaa;
-    flex-shrink: 0; 
-}*/
-.splitter {
-    height: 8px; 
-    cursor: ns-resize; 
-    background-color: #333;
-    border-top: 1px solid #444;
-    border-bottom: 1px solid #222;
-    z-index: 10; 
-    box-sizing: border-box; 
-}
-
-.monaco-theme-vs-light .splitter {
-    background-color: #f0f0f0;
-    border-top: 1px solid #e0e0e0;
-    border-bottom: 1px solid #e0e0e0;
-}
-
-.monaco-theme-vs-dark .splitter {
-    background-color: #333;
-    border-top: 1px solid #444;
-    border-bottom: 1px solid #222;
-}
-
-.monaco-theme-my-custom-dark-theme .splitter {
-    background-color: #1a1a1a;
-    border-top: 1px solid #2a2a2a;
-    border-bottom: 1px solid #0a0a0a;
-}
-
 .right-bottom {
     flex: 1; 
     background-color: #e0e0e0; 
@@ -74,6 +37,36 @@ main {
     -moz-user-select: none;    /* Firefox */
     -ms-user-select: none;     /* IE 10+ */
     user-select: none;         /* Standard */
+}
+
+.splitter {
+    height: 40px; 
+    cursor: ns-resize; 
+    background-color: #f0f0f0;
+    border-top: 1px solid #e0e0e0;
+    border-bottom: 1px solid #e0e0e0;
+    border-left: 1px solid #6e6d6d;
+    border-right: 1px solid #6e6d6d;
+    justify-content: flex-end;
+    align-items: flex-start;
+}
+
+.right.monaco-pixelwalle-light-theme .splitter {
+    background-color: #f0f0f0;
+    border-top: 1px solid #e0e0e0;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.right.monaco-pixelwalle-dark-theme .splitter {
+    background-color: #333;
+    border-top: 1px solid #444;
+    border-bottom: 1px solid #222;
+}
+
+.right.monaco-pixelwalle-high-contrast-black-theme .splitter {
+    background-color: #1a1a1a;
+    border-top: 1px solid #2a2a2a;
+    border-bottom: 1px solid #0a0a0a;
 }
 
 #split-screen {
@@ -218,12 +211,9 @@ main {
 .button-container {
     display: flex;
     gap: 1rem;
-    padding-bottom: 0.5rem;
-    background: #ffffff; 
-    /*border-top: 1px solid #dee2e6; */
-}
-.btn-primary:hover {
-    background-color: #0056b3;
+    padding-bottom: 1rem;
+    float: right;
+    justify-content: flex-end;
 }
 
 /* Asegúrate de que tus íconos (si usas Font Awesome) tengan el tamaño correcto */

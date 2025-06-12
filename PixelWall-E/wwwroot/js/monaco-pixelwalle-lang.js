@@ -120,9 +120,9 @@ require(['vs/editor/editor.main'], function() {
     base: 'vs', // Base theme (like VS Code's Light+)
     inherit: true,
     rules: [
-        { token: 'keyword', foreground: '0000FF' }, // Azul vibrante, muy común para palabras clave
+        { token: 'keyword', foreground: '0000FF' }, 
         { token: 'function', foreground: 'CC7832' }, // Un morado distintivo para funciones
-        { token: 'identifier', foreground: '000000' }, // Negro para claridad en nombres de variables
+        { token: 'identifier', foreground: '000080' },
         { token: 'comment', foreground: '008000' }, // Verde oscuro para comentarios, legible pero discreto
         { token: 'string', foreground: 'A31515' }, // Rojo oscuro para cadenas de texto
         { token: 'string.quote', foreground: 'A31515' }, // También las comillas

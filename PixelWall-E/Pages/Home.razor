@@ -9,13 +9,21 @@
     <div class="left">
         <CanvasGrid/>
     </div>
-    <div @ref="splitContainerRef" class="right">
+    <div @ref="splitContainerRef" class="right  @currentMonacoTheme">
     <div @ref="topPanelRef" id="rightTop" class="right-top">
-        <PixelWall_E.Components.CodeEditor/>
+        <PixelWall_E.Components.CodeEditor 
+            @ref="codeEditorRef"
+            OnThemeChanged="HandleMonacoThemeChanged" />
     </div>
-    <div @ref="splitterRef" id="splitter" class="splitter"></div>
+    <div @ref="splitterRef" id="splitter" class="splitter">
+        <div class="button-container">
+            <button @onclick="HandleClearConsole" class="btn"><i class="fas fa-trash"></i></button>
+        </div>
+    </div>
     <div @ref="bottomPanelRef" id="rightBottom" class="right-bottom">
-        <ConsolePw/>
+        <ConsolePw 
+            @ref="consoleRef"
+            OnConsoleKeyDown="HandleConsoleKeyDown" />
     </div>
 </div>  
 </section>

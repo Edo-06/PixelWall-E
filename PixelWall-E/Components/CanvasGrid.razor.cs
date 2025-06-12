@@ -14,6 +14,7 @@ public partial class CanvasGrid
 
     protected override void OnInitialized()
     {
+        base.OnInitialized();
         CreateImage();
     }
     private void CreateImage()

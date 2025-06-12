@@ -9,14 +9,25 @@ using Microsoft.JSInterop;
 namespace PixelWall_E.Components;
 public partial class CodeEditor
 {
+    [Parameter]public EventCallback<string> OnThemeChanged { get; set; }
     public string code {get; private set;} = "";
-    private string _valueToSet = "";
+    private string _value = "";
     private InputFile? _inputFileElement;
     private ElementReference _name;
     private string dialogueStyle = "display: none;";
     private string temporaryContent = "";
-    private EventCallback<int> OnGridChange {get; set;}
-    
+    private string _selectedTheme = "vs-light";
+    public string selectedTheme
+    {
+        get => _selectedTheme;
+        set
+        {
+            if (_selectedTheme != value)
+            {
+                _selectedTheme = value; 
+            }
+        }
+    }
     [AllowNull]
     private StandaloneCodeEditor _editor;
     private static StandaloneEditorConstructionOptions EditorConstructionOptions(StandaloneCodeEditor editor)
@@ -63,8 +74,14 @@ public partial class CodeEditor
     }
     private async Task ChangeTheme(ChangeEventArgs e)
     {
-        Console.WriteLine($"setting theme to: {e.Value?.ToString()}");
-        await BlazorMonaco.Editor.Global.SetTheme(jsRuntime, e.Value?.ToString());
+        string newTheme = e.Value?.ToString();
+        if (newTheme != null && newTheme != _selectedTheme)
+        {
+            Console.WriteLine($"setting theme to: {e.Value?.ToString()}");
+            await Global.SetTheme(jsRuntime, e.Value?.ToString());
+            _selectedTheme = newTheme;
+            await OnThemeChanged.InvokeAsync(newTheme);
+        }
     }
     public async Task Run()
     {

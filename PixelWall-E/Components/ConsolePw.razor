@@ -1,9 +1,14 @@
 @using Microsoft.AspNetCore.Components.Forms
 @using PixelWall_E.Components
+@using BlazorMonaco
+@using BlazorMonaco.Editor
+@using Microsoft.AspNetCore.Components.Web
 @using System.IO
 @inject IJSRuntime jsRuntime
 
 <div>
-        <StandaloneCodeEditor @ref="_editor" Id="console" ConstructionOptions="EditorConstructionOptions"
-                OnDidInit="EditorOnDidInit" OnContextMenu="OnContextMenu" />
+        <StandaloneCodeEditor @ref="_console" Id="console" ConstructionOptions="ConsoleConstructionOptions"
+                OnDidInit="ConsoleOnDidInit" OnContextMenu="OnContextMenu" 
+                OnKeyDown="@((e) => HandleConsoleKeyDown(e))"
+                OnDidChangeModelContent="HandleContentChanged"/>@**@
 </div>
