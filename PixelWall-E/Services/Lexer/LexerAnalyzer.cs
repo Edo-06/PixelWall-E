@@ -56,9 +56,9 @@ public class LexerAnalyzer
                     lexeme = lexeme.Trim();
                     tokens.Add(new Token(type, l, lexeme));
                     return;
+                    throw new LexerException($"Carácter inesperado: '{code[position]}' ", location);
                 }
             }
-            throw new LexerException($"Carácter inesperado: '{code[position]}' ", location);
         }
 
         public CodeLocation location
