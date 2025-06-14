@@ -1,7 +1,7 @@
 public enum TokenType
 {
     // Command
-    Spawn, Color, Size, DrawLine, DrawCircle, DrawRectangle, Fill,
+    Spawn, Color, Size, DrawLine, DrawCircle, DrawRectangle, Fill, MoveTo,
     
     // Functions
     GetActualX, GetActualY, GetCanvasSize, GetColorCount,
@@ -52,7 +52,7 @@ public class Token
     }
     private readonly HashSet<TokenType> callables = new HashSet<TokenType>
     {
-        TokenType.Spawn, TokenType.Color, TokenType.Size, TokenType.DrawLine,
+        TokenType.Spawn, TokenType.MoveTo, TokenType.Color, TokenType.Size, TokenType.DrawLine,
         TokenType.DrawCircle, TokenType.DrawRectangle, TokenType.Fill,
     };
     private readonly HashSet<TokenType> callablesWhitReturn = new HashSet<TokenType>
@@ -69,6 +69,7 @@ public class Token
     {
         // Command
         { TokenType.Spawn, 2 },
+        { TokenType.MoveTo, 2 },
         { TokenType.Color, 1 },
         { TokenType.Size, 1 },
         { TokenType.DrawLine, 3 },

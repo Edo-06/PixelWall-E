@@ -5,6 +5,7 @@ public class LexerRegex
     {
         // Command
         new TokenPattern(TokenType.Spawn, @"^[ \t\n]*Spawn\b"),
+        new TokenPattern(TokenType.MoveTo, @"^[ \t\n]*MoveTo\b"),
         new TokenPattern(TokenType.Color, @"^[ \t]*Color\b"),
         new TokenPattern(TokenType.Size, @"^[ \t]*Size\b"),
         new TokenPattern(TokenType.DrawLine, @"^[ \t]*DrawLine\b"),
@@ -58,7 +59,7 @@ public class LexerRegex
         new TokenPattern(TokenType.Bool, @"^[ \t]*true\b"),
         new TokenPattern(TokenType.Bool, @"^[ \t]*false\b"),
         new TokenPattern(TokenType.Identifier, @"^[ \t]*[a-zA-Z][a-zA-Z0-9_]*"),
-        new TokenPattern(TokenType.ColorString, @"^[ \t]*[""](Red|Blue|Green|Yellow|Orange|Purple|Black|White)[""]"),
+        new TokenPattern(TokenType.ColorString, @"^[ \t]*[""](Red|Blue|Green|Yellow|Orange|Purple|Black|White|MediumBlue|NavyBlue|SkyBlue)[""]"),
         
         new TokenPattern(TokenType.EndOfFile, @"\s+$"),
     };

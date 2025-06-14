@@ -2,19 +2,29 @@
 @using SixLabors.ImageSharp
 @using SixLabors.ImageSharp.PixelFormats
 
-<div style="width: @(Size)px; height: @(Size)px; overflow: hidden; border: 1px solid gray;">                                                                            
+<div style="width: @(Size)px; height: @(Size)px; overflow: hidden; border: 1px solid gray;">
         @if (imageDataUrl != null)
         {
-        <img src="@imageDataUrl"
-                style="image-rendering: pixelated; width: 100%; height: 100%; display: block;" />
+                <img src="@imageDataUrl" style="image-rendering: pixelated; width: 100%; height: 100%; display: block;" />
         }
         else
         {
                 <p>Cargando imagen...</p>
         }
+
+        <InputFile @ref="_inputFileElement" id="imageInput" />
+        <div class="save-dialogue" style="@dialogueStyle">
+                <div class="dialogue-content">
+                        <h3>Guardar archivo</h3>
+                        <input @ref="_filenameInput" type="text" placeholder="name.png" />
+                        <div class="dialogue-buttons">
+                                <button @onclick="CancelSaveImage" class="btn btn-primary cancel">Cancel</button>
+                                <button @onclick="ConfirmSaveImage" class="btn btn-primary accept">Save</button>
+                        </div>
+                </div>
+        </div>
 </div>
 
-<input @ref="_numberOfPixels"
-        type="int"  
-        placeholder="200"/>
+<input @ref="_numberOfPixels" type="int" placeholder= "200"/>
 <button @onclick="ChangeNumberOfPixels" class="btn btn-primary">Resize</button>
+<button @onclick="ShowDialogueForSave" class="btn"><i class="fas fa-save"></i></button>

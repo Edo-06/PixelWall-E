@@ -22,6 +22,11 @@ public static class ParameterChecker
         ExpressionType.Number,
         ExpressionType.Number
     };
+    private static List<ExpressionType> MoveToTypes = new List<ExpressionType>
+    {
+        ExpressionType.Number,
+        ExpressionType.Number
+    };
     private static List<ExpressionType> ColorTypes= new List<ExpressionType>
     {
         ExpressionType.Color
@@ -54,6 +59,7 @@ public static class ParameterChecker
     private static Dictionary<TokenType, List<ExpressionType>> TypeOfCommandParameters = new Dictionary<TokenType, List<ExpressionType>>
     {
         { TokenType.Spawn, SpawnTypes },
+        { TokenType.MoveTo, MoveToTypes },
         { TokenType.Color, ColorTypes },
         { TokenType.Size, SizeTypes },
         { TokenType.DrawCircle, DrawCircleTypes },

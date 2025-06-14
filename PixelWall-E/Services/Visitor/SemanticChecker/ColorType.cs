@@ -17,6 +17,9 @@ public static class ColorTypes
         "Pink",
         "Lime",
         "Teal",
-        "Navy"
+        "Navy",
+        "NavyBlue",
+        "MediumBlue",
+        "SkyBlue"
     };
 }

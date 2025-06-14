@@ -5,7 +5,10 @@ public static class HandlerCommand
         switch (command.tokenType)
         {
             case TokenType.Spawn:
-                await ExecuteSpawn(command);
+                ExecuteSpawn(command);
+                break;
+            case TokenType.MoveTo:
+                ExecuteSpawn(command);
                 break;
             case TokenType.DrawLine:
                 await ExecuteDrawLine(command);
@@ -27,13 +30,13 @@ public static class HandlerCommand
                 break;
         }
     }
-    private static async Task ExecuteSpawn(CommandNode command)
+    private static void ExecuteSpawn(CommandNode command)
     {
         int x = (int)command.parameters[0].value;
         int y = (int)command.parameters[1].value;
 
         PipeLineManager.currentPixel = (x, y);
-        await PincelState.PaintBrushAt(x,y);
+        Console.WriteLine($"Spawning at ({x}, {y})");
     }
     private static async Task ExecuteDrawLine(CommandNode command)
     {
@@ -45,6 +48,7 @@ public static class HandlerCommand
         int currentX = PipeLineManager.currentPixel.x;
         int currentY = PipeLineManager.currentPixel.y;
 
+        await PincelState.PaintBrushAt(currentX, currentY);
         for(int i = 0; i < distance; i++)
         {
             if(!PipeLineManager.isRunning) return;

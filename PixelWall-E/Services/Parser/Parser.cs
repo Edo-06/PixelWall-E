@@ -9,9 +9,16 @@ public class Parser
     {
         this.tokens = tokens;
         currentPosition = 0;
+        if(tokens[currentPosition].type == TokenType.Spawn)
+        {
+            nodes.Add(ParseCallable(new CommandNode(tokens[currentPosition].location, tokens[currentPosition].type)));
+            ConsumeEOL();
+        }
+        else
+            errors.Add(new CompilingError(tokens[currentPosition].location, ErrorCode.Expected, "Expected Spawn"));
         ParseStatements();
     }
-        private void ConsumeWithEOL()
+    private void ConsumeEOL()
     {
         if(currentPosition < tokens.Count - 1)
         {
@@ -23,6 +30,17 @@ public class Parser
             {
                 Consume(); //Skip EOL tokens
             }
+        }
+    }
+    private void ConsumeLine()
+    {
+        while(currentPosition < tokens.Count && tokens[currentPosition].type != TokenType.EndOfLine && tokens[currentPosition].type != TokenType.EndOfFile)
+        {
+            Consume();
+        }
+        if(currentPosition < tokens.Count && tokens[currentPosition].type == TokenType.EndOfLine)
+        {
+            Consume(); // Skip the EndOfLine token
         }
     }
     private void Consume()
@@ -38,6 +56,7 @@ public class Parser
             if(tokens[currentPosition].IsCallable())
             {
                 nodes.Add(ParseCallable(new CommandNode(tokens[currentPosition].location, tokens[currentPosition].type)));
+                ConsumeEOL();
             }
             else if(tokens[currentPosition].IsController())
             {
@@ -45,12 +64,13 @@ public class Parser
                 {
                     case TokenType.GoTo:
                         nodes.Add(ParseGoTo(new GoToNode(tokens[currentPosition].location)));
+                        ConsumeEOL();
                         break;
                     case TokenType.Identifier:
                         ParseIdentifier();
                         break;
                     case TokenType.EndOfLine:
-                        ConsumeWithEOL();
+                        ConsumeEOL();
                         break;
                 }
             }
@@ -119,7 +139,6 @@ public class Parser
             Consume();
         else
             errors.Add(new CompilingError(tokens[currentPosition].location,ErrorCode.Expected,"Expected a ')'"));
-        ConsumeWithEOL();
     }
 #endregion
 #region ParseExpression
@@ -286,6 +305,14 @@ public class Parser
                 AssignmentNode assignment = new AssignmentNode(token.location, token.lexeme);
                 Consume();
                 ExpressionNode expression = ParseExpression();
+                if(tokens[currentPosition].type == TokenType.EndOfLine || tokens[currentPosition].type == TokenType.EndOfFile)
+                {
+                    ConsumeEOL();
+                }
+                else
+                {
+                    errors.Add(new CompilingError(tokens[currentPosition].location, ErrorCode.Expected, "Expected an EndOfLine token"));
+                }
                 if(expression != null)
                 {
                     assignment.expression = expression;
@@ -298,8 +325,9 @@ public class Parser
                 return;
             }
             //errors.Add(new CompilingError(token.location, ErrorCode.Expected, "Expected an assignment or EndOfLine token"));
+            ConsumeLine();
+            errors.Add(new CompilingError(token.location, ErrorCode.Invalid, "Invalid identifier usage"));
         }
-        ConsumeWithEOL();
     }
 #endregion
 }
