@@ -59,6 +59,8 @@ public class LexerRegex
         new TokenPattern(TokenType.Bool, @"^[ \t]*false\b"),
         new TokenPattern(TokenType.Identifier, @"^[ \t]*[a-zA-Z][a-zA-Z0-9_]*"),
         new TokenPattern(TokenType.ColorString, @"^[ \t]*[""](Red|Blue|Green|Yellow|Orange|Purple|Black|White)[""]"),
+        
+        new TokenPattern(TokenType.EndOfFile, @"\s+$"),
     };
 }
 public class TokenPattern

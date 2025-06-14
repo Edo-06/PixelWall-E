@@ -19,6 +19,7 @@ public partial class Home
     {
         if (firstRender)
         {
+            PipeLineManager.OnErrorsDetected += HandleErrors;
             try
             {
                 await jsRuntime.InvokeVoidAsync(
@@ -64,8 +65,19 @@ public partial class Home
                     // Lógica para el comando "run"
                     if (codeEditorRef != null)
                     {
-                        await codeEditorRef.Run();
                         await consoleRef.AppendOutput("Running");
+
+                        await codeEditorRef.Run();
+                        if(PipeLineManager.isRunning)
+                        {
+                            await consoleRef.AppendOutput("Code executed successfully.");
+                            PipeLineManager.isRunning = false;
+                        }
+                        else
+                        {
+                            await consoleRef.AppendOutput("Code execution has finished.");
+                        }
+                        
                     }
                     else
                     {
@@ -110,6 +122,21 @@ public partial class Home
         else
         {
             Console.WriteLine("Home: ConsolePw reference is null, cannot clear console.");
+        }
+    }
+    private async Task HandleErrors(List<CompilingError> errors)
+    {
+        if (consoleRef != null)
+        {
+            Console.WriteLine(errors.Count + " errors detected.");
+            foreach(var error in errors)
+            {
+                await consoleRef.AppendOutput($"Error: {error.message} at line:{error.location.line}, char:{error.location.column}");
+            }
+        }
+        else
+        {
+            Console.WriteLine("Home: ConsolePw reference is null, cannot handle pipeline errors.");
         }
     }
 }

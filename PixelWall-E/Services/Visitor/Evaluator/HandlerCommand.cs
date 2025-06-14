@@ -1,4 +1,4 @@
-public static class Handler
+public static class HandlerCommand
 {
     public static async Task Execute(CommandNode command)
     {
@@ -33,7 +33,7 @@ public static class Handler
         int y = (int)command.parameters[1].value;
 
         PipeLineManager.currentPixel = (x, y);
-        await PipeLineManager.ChangePixelColor(x, y);
+        await PincelState.PaintBrushAt(x,y);
     }
     private static async Task ExecuteDrawLine(CommandNode command)
     {
@@ -47,13 +47,11 @@ public static class Handler
 
         for(int i = 0; i < distance; i++)
         {
-            if(i > 0)
-            {
+            if(!PipeLineManager.isRunning) return;
                 currentX += dirX;
                 currentY += dirY;
-            }
-            Console.WriteLine($"Drawing" + PipeLineManager.brushColor + $" at ({currentX}, {currentY})");
-            await PipeLineManager.ChangePixelColor(currentX, currentY);
+            Console.WriteLine($"Drawing" + PincelState.brushColor + $" at ({currentX}, {currentY})");
+            await PincelState.PaintBrushAt(currentX, currentY);
         }
         PipeLineManager.currentPixel = (currentX, currentY);
     }
@@ -73,58 +71,61 @@ public static class Handler
         {
             for (int x = -radius; x <= radius; x++)
             {
+                if(!PipeLineManager.isRunning) return;
                 if (x * x + y * y < radius * radius && x * x + y * y >= (radius - 1) * (radius - 1))
                 {
                     int currentX = centerX + x;
                     int currentY = centerY + y;
-                    Console.WriteLine($"Drawing" + PipeLineManager.brushColor + $" at ({currentX}, {currentY}) for circle");
-                    await PipeLineManager.ChangePixelColor(currentX, currentY);
+                    Console.WriteLine($"Drawing" + PincelState.brushColor + $" at ({currentX}, {currentY}) for circle");
+                    await PincelState.PaintBrushAt(currentX, currentY);
                 }
             }
         }
-        //await PipeLineManager.ChangePixelColor(PipeLineManager.currentPixel.x, PipeLineManager.currentPixel.y);
+        //await PincelState.PaintBrushAt(PipeLineManager.currentPixel.x, PipeLineManager.currentPixel.y);
     }
     private static async Task ExecuteDrawRectangle(CommandNode command)
     {
         int dirX = (int)command.parameters[0].value;
-            int dirY = (int)command.parameters[1].value;
-            int distance = (int)command.parameters[2].value;
-            int width = (int)command.parameters[3].value;
-            int height = (int)command.parameters[4].value;
+        int dirY = (int)command.parameters[1].value;
+        int distance = (int)command.parameters[2].value;
+        int width = (int)command.parameters[3].value;
+        int height = (int)command.parameters[4].value;
 
-            int startX = PipeLineManager.currentPixel.x + dirX * distance;
-            int startY = PipeLineManager.currentPixel.y + dirY * distance;
+        int startX = PipeLineManager.currentPixel.x + dirX * distance;
+        int startY = PipeLineManager.currentPixel.y + dirY * distance;
 
-            int endX = startX + width;
-            int endY = startY + height - 1;
+        int endX = startX + width;
+        int endY = startY + height - 1;
 
-            int centerX = (startX + endX) / 2;
-            int centerY = (startY + endY) / 2;
+        int centerX = (startX + endX) / 2;
+        int centerY = (startY + endY) / 2;
 
-            for (int x = startX; x <= endX; x++)
-            {
-                Console.WriteLine($"Drawing" + PipeLineManager.brushColor + $" at ({x}, {startY}) for rectangle");
-                await PipeLineManager.ChangePixelColor(x, startY);
-                Console.WriteLine($"Drawing" + PipeLineManager.brushColor + $" at ({x}, {endY}) for rectangle");
-                await PipeLineManager.ChangePixelColor(x, endY);
-            }
+        for (int x = startX; x <= endX; x++)
+        {
+            if(!PipeLineManager.isRunning) return;
+            Console.WriteLine($"Drawing" + PincelState.brushColor + $" at ({x}, {startY}) for rectangle");
+            await PincelState.PaintBrushAt(x, startY);
+            Console.WriteLine($"Drawing" + PincelState.brushColor + $" at ({x}, {endY}) for rectangle");
+            await PincelState.PaintBrushAt(x, endY);
+        }
 
-            for (int y = startY + 1; y < endY; y++) 
-            {
-                Console.WriteLine($"Drawing" + PipeLineManager.brushColor + $" at ({startX}, {y}) for rectangle");
-                await PipeLineManager.ChangePixelColor(startX, y);
-                Console.WriteLine($"Drawing" + PipeLineManager.brushColor + $" at ({endX}, {y}) for rectangle");
-                await PipeLineManager.ChangePixelColor(endX, y);
-            }
-            PipeLineManager.currentPixel = (centerX, centerY);
-            //await PipeLineManager.ChangePixelColor(centerX, centerY);
+        for (int y = startY + 1; y < endY; y++) 
+        {
+            if(!PipeLineManager.isRunning) return;
+            Console.WriteLine($"Drawing" + PincelState.brushColor + $" at ({startX}, {y}) for rectangle");
+            await PincelState.PaintBrushAt(startX, y);
+            Console.WriteLine($"Drawing" + PincelState.brushColor + $" at ({endX}, {y}) for rectangle");
+            await PincelState.PaintBrushAt(endX, y);
+        }
+        PipeLineManager.currentPixel = (centerX, centerY);
+        //await PincelState.PaintBrushAt(centerX, centerY);
     }
     private static async Task ExecuteFill(CommandNode command)
     {
         int startX = PipeLineManager.currentPixel.x;
         int startY = PipeLineManager.currentPixel.y;
         string targetColor = PipeLineManager.GetPixelColor(PipeLineManager.currentPixel.x, PipeLineManager.currentPixel.y);
-        string replacementColor = PipeLineManager.brushColor; 
+        string replacementColor = PincelState.brushColor; 
 
         if (targetColor == replacementColor) return;
 
@@ -142,7 +143,8 @@ public static class Handler
             (int currentX, int currentY) = pixelsToVisit.Dequeue();
 
             PipeLineManager.currentPixel = (currentX, currentY);
-            await PipeLineManager.ChangePixelColor(currentX, currentY);
+            if(!PipeLineManager.isRunning) return;
+            await PincelState.PaintBrushAt(currentX, currentY);
 
             (int dx, int dy)[] directions = { (0, 1), (0, -1), (1, 0), (-1, 0) };
 
@@ -169,12 +171,12 @@ public static class Handler
     }
     private static void ExecuteColor(CommandNode command)
     {
-        PipeLineManager.brushColor = (string)command.parameters[0].value;
-        Console.WriteLine($"Brush color set to {PipeLineManager.brushColor}");
+        PincelState.SetBrushColor((string)command.parameters[0].value);
+        Console.WriteLine($"Brush color set to {PincelState.brushColor}");
     }
     private static void ExecuteSize(CommandNode command)
     {
-        PipeLineManager.brushSize = (int)command.parameters[0].value;
-        Console.WriteLine($"Brush size set to {PipeLineManager.brushSize}");
+        PincelState.SetBrushSize((int)command.parameters[0].value);
+        Console.WriteLine($"Brush size set to {PincelState.brushSize}");
     }
 }

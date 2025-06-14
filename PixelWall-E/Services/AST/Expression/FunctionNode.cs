@@ -1,7 +1,9 @@
 
 public class FunctionNode : ExpressionNode, ICallableNode
 {
-    public FunctionNode(CodeLocation location) : base(location){}
+    public FunctionNode(CodeLocation location, TokenType tokenType) : base(location){
+        this.tokenType = tokenType;
+    }
 
     public override ExpressionType type { get; set; }
     public override object value { get; set; } = null!;

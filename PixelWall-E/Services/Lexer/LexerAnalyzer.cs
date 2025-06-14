@@ -9,7 +9,10 @@ public class LexerAnalyzer
         {
             reader.ScanToken(tokens);
         }
-
+        if(tokens.Count > 0 && tokens[^1].type != TokenType.EndOfFile)
+        {
+            tokens.Add(new Token(TokenType.EndOfFile, reader.location, ""));
+        }
         return tokens;
     }
 
@@ -26,7 +29,7 @@ public class LexerAnalyzer
             this.code = code;
             position = 0;
             line = 1;
-            last = -1;
+            last = 0;
         }
 
         public bool IsAtEnd()
@@ -44,26 +47,28 @@ public class LexerAnalyzer
                 {
                     string lexeme = match.Value;
                     TokenType type = pattern.Type;
-
                     
+                    CodeLocation l = location;
+                    Console.WriteLine($"Token encontrado: {type} con lexema '{lexeme}' en línea {location.line}, columna {location.column}");
+
                     position += lexeme.Length;
-                    lexeme = lexeme.Trim();
-                    tokens.Add(new Token(type, location, lexeme));
                     UpdateLineAndColumn(lexeme);
+                    lexeme = lexeme.Trim();
+                    tokens.Add(new Token(type, l, lexeme));
                     return;
                 }
             }
             throw new LexerException($"Carácter inesperado: '{code[position]}'", location);
         }
 
-        private CodeLocation location
+        public CodeLocation location
         {
             get
             {
                 return new CodeLocation
                 {
-                    line = this.line,
-                    column = position - last
+                    line = line,
+                    column = last
                 };
             }
         }
@@ -71,10 +76,12 @@ public class LexerAnalyzer
         {
             foreach (char c in lexeme)
             {
+                //Console.WriteLine($"Procesando carácter: '{c}' en línea {line}, posición {last + 1}");
                 if (c == '\n')
                 {
                     line++;
-                    last = -1;
+                    last = 0;
+                    Console.WriteLine($"Nueva línea detectada: {line}");
                 }
                 else
                 {

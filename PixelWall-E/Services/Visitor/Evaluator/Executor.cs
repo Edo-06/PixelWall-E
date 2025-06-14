@@ -1,13 +1,18 @@
+using System.Runtime.CompilerServices;
+
 public class Executor : IVisitor<Task>
 {
     public List<CompilingError> errors {get; set;} = [];
     public Executor(){}
+    private int currentStatement = 0;
     public async Task Visit(ProgramNode program)
     {
-        foreach (var statement in program.statements)
+        while(currentStatement < program.statements.Count && PipeLineManager.isRunning)
         {
-            await statement.Accept(this);
+            await program.statements[currentStatement].Accept(this);
+            currentStatement++;
         }
+            return;
     }
 
     public Task Visit(UnaryOpNode unary)
@@ -37,7 +42,7 @@ public class Executor : IVisitor<Task>
                 if(Operators<int>.AritmeticOperator.ContainsKey(binary.op)) 
                     binary.value = Operators<int>.AritmeticOperator[binary.op].Invoke((int)binary.left.value, (int)binary.right.value);
                 else if(Operators<int>.ComparisionOperator.ContainsKey(binary.op))
-                    binary.value = Operators<bool>.ComparisionOperator[binary.op].Invoke((bool)binary.left.value, (bool)binary.right.value);
+                    binary.value = Operators<int>.ComparisionOperator[binary.op].Invoke((int)binary.left.value, (int)binary.right.value);
                 break;
             case ExpressionType.Bool:
                 if(Operators<bool>.BooleanOperator.ContainsKey(binary.op))
@@ -58,36 +63,11 @@ public class Executor : IVisitor<Task>
 
     public Task Visit(FunctionNode function)
     {
-        foreach (ExpressionNode parameter in function.parameters)
+        foreach(ExpressionNode parameter in function.parameters)
         {
             parameter.Accept(this);
         }
-        switch(function.tokenType)
-        {
-            case TokenType.GetActualX:  
-                function.value = PipeLineManager.currentPixel.x;
-                break;
-            case TokenType.GetActualY:
-                function.value = PipeLineManager.currentPixel.y;
-                break;
-            case TokenType.GetCanvasSize:
-                function.value = PipeLineManager.GetCanvasSize();
-                break;
-            case TokenType.GetColorCount:
-                //function.value = PipeLineManager.GetColorCount();
-                break;
-            case TokenType.IsBrushColor:
-                function.value = PipeLineManager.brushColor;
-                break;
-            case TokenType.IsBrushSize:
-                //function.value = PipeLineManager.
-                break;
-            case TokenType.IsCanvasColor:
-                //function.value = PipeLineManager.IsCanvasColor();
-                break;
-            default:
-                throw new NotImplementedException($"Function {function.tokenType} is not implemented.");
-        }
+        function.value = HandlerFunction.Execute(function);
         return Task.CompletedTask;
     }
 
@@ -97,6 +77,7 @@ public class Executor : IVisitor<Task>
             errors.Add(new CompilingError(variable.location, ErrorCode.Invalid, $"Variable '{variable.name}' is not defined."));
         else
             variable.value = Scope.variables[variable.name].value;
+            Console.WriteLine($"Variable {variable.name} = {variable.value}");
         return Task.CompletedTask;
     }
 
@@ -104,7 +85,7 @@ public class Executor : IVisitor<Task>
     {
         assignment.expression.Accept(this);
         Scope.variables[assignment.name] = assignment.expression;
-        Console.WriteLine($"asignando {assignment.name}");
+        Console.WriteLine($"asignando {assignment.name} = {assignment.expression.value}");
         return Task.CompletedTask;
     }
 
@@ -114,17 +95,19 @@ public class Executor : IVisitor<Task>
         {
             await parameter.Accept(this);
         }
-        await Handler.Execute(command);
+        await HandlerCommand.Execute(command);
     }
 
     public async Task Visit(GoToNode goTo)
     {
+        await goTo.parameters[0].Accept(this);
+        Console.WriteLine($"GoToNode: {goTo.label.name} with value {goTo.parameters[0].value}");
         if((bool)goTo.parameters[0].value)
         {
-            for(int i = Scope.labels[goTo.label.name]; i < goTo.label.breakP; i++)
-            {
-                await PipeLineManager.program.statements[i].Accept(this);
-            }
+            Console.WriteLine($"Jumping to label {goTo.label.name}");
+            Console.WriteLine($"{Scope.labels[goTo.label.name]} to {goTo.label.breakP}");
+            currentStatement = Scope.labels[goTo.label.name] - 1;
+            Console.WriteLine("ya");
         }
     }
 

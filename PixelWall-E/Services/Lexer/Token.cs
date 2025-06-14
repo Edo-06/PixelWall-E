@@ -20,7 +20,7 @@ public enum TokenType
     Number, ColorString, Bool,
     
     // Control
-    GoTo, Identifier, EndOfLine,
+    GoTo, Identifier, EndOfLine, EndOfFile,
     
     // Symbol
     AssignArrow, LeftParen, RightParen, Comma, LeftBracket, RightBracket   

@@ -30,7 +30,7 @@ public class SemanticCheckerVisitor: IVisitor<bool>
         {
             ExpressionNode expression = assignment.expression;
             Console.WriteLine(expression);
-            //Scope.variables[assignment.name] = expression;
+            Scope.variables[assignment.name] = expression;
             Console.WriteLine($"reasignando {assignment.name} en SC");
         }
         else
@@ -96,11 +96,11 @@ public class SemanticCheckerVisitor: IVisitor<bool>
     }
     public bool Visit(BinaryOpNode binary)
     {
-        Console.WriteLine("parseando expresion binaria");
+        Console.WriteLine("check expresion binaria");
         if (!binary.left.Accept(this) || !binary.right.Accept(this)) return false;
         if (binary.left.type != binary.right.type)
         {
-            errors.Add(new CompilingError(binary.location, ErrorCode.Invalid, "Types do not match for binary operation"));
+            errors.Add(new CompilingError(binary.location, ErrorCode.Invalid, $"Types do not match for binary operation {binary.left.type} != {binary.right.type}"));
             return false;
         }
         switch (binary.op)
@@ -127,6 +127,7 @@ public class SemanticCheckerVisitor: IVisitor<bool>
             case TokenType.And:
             case TokenType.Or:
                 binary.type = ExpressionType.Bool;
+                Console.WriteLine("check bool");
                 break;
             default:
                 errors.Add(new CompilingError(binary.location, ErrorCode.Invalid, "Unsupported binary operation"));
@@ -137,8 +138,8 @@ public class SemanticCheckerVisitor: IVisitor<bool>
     public bool Visit(LiteralNode literal)
     {
         string value = (string)literal.value;
-        string cleaned = value.Replace("\"", "").Trim();
-        value = cleaned;
+        value = value.Replace("\"", "").Trim();
+
         if(int.TryParse(value , out int number))
         {
             literal.value = number;
@@ -173,6 +174,7 @@ public class SemanticCheckerVisitor: IVisitor<bool>
             errors.Add(new CompilingError(variable.location, ErrorCode.Invalid, $"Variable '{variable.name}' is not defined"));
             return false;
         }
+        //Scope.variables[variable.name].Accept(this);
         variable.type = Scope.variables[variable.name].type; 
         return true;
     }

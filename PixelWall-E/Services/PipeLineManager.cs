@@ -1,16 +1,29 @@
 using PixelWall_E.Components;
 public  static class PipeLineManager
 {
+    public delegate Task OnErrorsDetectedEventHandler(List<CompilingError> errors);
+    public static event OnErrorsDetectedEventHandler OnErrorsDetected = delegate {return Task.CompletedTask;};
     private static LexerAnalyzer lexer = new LexerAnalyzer();
     private static List<Token> tokens = new List<Token>();
     public static ProgramNode program = null!;
+    public static List<string> lexerExceptions = [];
     public static CanvasGrid? canvas;
     public static (int x, int y) currentPixel {get; set;}= (0,0);
-    public static string brushColor = "white";
-    public static int brushSize = 1;
+    public static bool isRunning = false;
+#region Run
     public static async Task Start(string code)
     {
-        tokens = lexer.GetTokens(code);
+        try
+        {
+            tokens = lexer.GetTokens(code);
+        }
+        catch (Exception ex)
+        {
+            lexerExceptions.Add(ex.Message);
+            Console.WriteLine("Lexer Exception: " + ex.Message);
+            tokens = []; 
+        }
+        if(lexerExceptions.Count > 0) return;
         for(int i = 0; i < tokens.Count; i++)
         {
             Console.WriteLine(tokens[i].type);
@@ -24,41 +37,35 @@ public  static class PipeLineManager
         SemanticCheckerVisitor semanticChecker = new SemanticCheckerVisitor(parser.errors);
         if(semanticChecker.errors.Count > 0)
         {
+            await OnErrorsDetected.Invoke(semanticChecker.errors);
             PrintErrors(semanticChecker.errors);
             return;
         }
         semanticChecker.Visit(program);
         if(semanticChecker.errors.Count > 0) 
         {
+            await OnErrorsDetected.Invoke(semanticChecker.errors);
             PrintErrors(semanticChecker.errors);
             return;
         }
         Executor executor = new Executor();
+        isRunning = true;
         await executor.Visit(program);
-        /* parser.programNode.CheckSemantic(parser.errors);
-        parser.programNode.Evaluate(); */
         Console.WriteLine("currentPixel: " + currentPixel.x + " " + currentPixel.y);
-        //await Paint();
     }
-    public static async Task Paint()
+    public static void ReStart()
     {
-        if(canvas == null)
-        {
-            Console.WriteLine("Canvas is null");
-            return;
-        }
-        /* for(int i = 0; i < pixelChange.Count; i++)
-        {
-            await canvas.ChangePixelColor(pixelChange[i].x, pixelChange[i].y, "Black");
-            await canvas.ChangePixelColor(pixelChange[i].x, pixelChange[i].y, pixelChange[i].color);
-        }
-        if(currentPixel != (-1,1))
-        {
-            currentPixelColor = canvas.GetPixelColor(currentPixel.x, currentPixel.y);
-            await canvas.ChangePixelColor(currentPixel.x, currentPixel.y, "Black");
-        }*/
-        await canvas.ChangePixelColor(currentPixel.x, currentPixel.y, "Black"); 
+        isRunning = false;
+        lexer = new LexerAnalyzer();
+        program = null!;
+        tokens = new List<Token>();
+        currentPixel = (0,0);
+        Scope.variables = [];
+        Scope.labels = [];
+        PincelState.ReStart();
     }
+#endregion
+#region Auxiliar Functions
     public static int GetCanvasSize()
     {
         if(canvas == null)
@@ -77,43 +84,21 @@ public  static class PipeLineManager
         }
         return canvas.GetPixelColor(x, y);
     }
-    public static async Task ChangePixelColor(int x, int y)
+    public static void ChangePixelColor(int x, int y, string color)
     {
         if(canvas == null)
         {
             Console.WriteLine("Canvas is null");
             return;
         }
-        await canvas.ChangePixelColor(x, y, brushColor);
+        canvas.ChangePixelColor(x, y, color);
     }
     private static void PrintErrors(List<CompilingError> errors) 
     {
         for(int i = 0; i < errors.Count; i++)
         {
-            Console.WriteLine(errors[i].message);
+            Console.WriteLine(errors[i].message + errors[i].location.line);
         }
     }
-    public struct Pixel
-    {
-        public int x { get; set; }
-        public int y { get; set; }
-        public string color { get; set; }
-        public Pixel(int x, int y, string color)
-        {
-            this.x = x;
-            this.y = y;
-            this.color = color;
-        }
-    }
-    public static void ReStart()
-    {
-        lexer = new LexerAnalyzer();
-        program = null!;
-        tokens = new List<Token>();
-        currentPixel = (0,0);
-        brushColor = "white";
-        brushSize = 1;
-        Scope.variables = [];
-        Scope.labels = [];
-    }
+#endregion
 }

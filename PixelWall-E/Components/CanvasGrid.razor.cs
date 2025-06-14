@@ -89,9 +89,8 @@ public partial class CanvasGrid
         };
         return colorString;
     }
-    public async Task ChangePixelColor(int x, int y, string color)
+    public void ChangePixelColor(int x, int y, string color)
     {
-        await Task.Delay(1);
         if (image == null) return;
 
         Rgba32 newColor = StringToRgba32(color);

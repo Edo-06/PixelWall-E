@@ -15,10 +15,8 @@ public class Parser
     {
         if(currentPosition < tokens.Count - 1)
         {
-            Consume(); //Skip current token != EOL
             if(tokens[currentPosition].type != TokenType.EndOfLine)
             {
-                Console.WriteLine("here");
                 errors.Add(new CompilingError(tokens[currentPosition].location, ErrorCode.Expected, "Expected an EndOfLine token"));
             }
             while(currentPosition < tokens.Count - 1 && tokens[currentPosition].type == TokenType.EndOfLine)
@@ -35,7 +33,7 @@ public class Parser
     }
     private void ParseStatements()
     {
-        while (currentPosition < tokens.Count - 1)
+        while (currentPosition < tokens.Count && tokens[currentPosition].type != TokenType.EndOfFile)
         {
             if(tokens[currentPosition].IsCallable())
             {
@@ -58,7 +56,7 @@ public class Parser
             }
             else
             {
-                errors.Add(new CompilingError(tokens[currentPosition].location, ErrorCode.Invalid, "Invalid token"));
+                errors.Add(new CompilingError(tokens[currentPosition].location, ErrorCode.Invalid, $"Invalid token {tokens[currentPosition].lexeme}"));
                 Consume();
             }
         }
@@ -83,7 +81,7 @@ public class Parser
             errors.Add(new CompilingError(tokens[currentPosition].location, ErrorCode.Expected, "Expected a '['"));
         if(tokens[currentPosition].type == TokenType.Identifier)
         {
-            LabelNode label = new LabelNode(tokens[currentPosition].location, tokens[currentPosition].lexeme, nodes.Count - 1);
+            LabelNode label = new LabelNode(tokens[currentPosition].location, tokens[currentPosition].lexeme, nodes.Count);
             node.label = label;
             Consume();
         }
@@ -117,11 +115,12 @@ public class Parser
             else
                 parameters.Add(newExpression);
         }
-        if(tokens[currentPosition].type != TokenType.RightParen)
+        if(tokens[currentPosition].type == TokenType.RightParen)
+            Consume();
+        else
             errors.Add(new CompilingError(tokens[currentPosition].location,ErrorCode.Expected,"Expected a ')'"));
-        ConsumeWithEOL(); // Skip the ')' token
+        ConsumeWithEOL();
     }
-    //
 #endregion
 #region ParseExpression
     private ExpressionNode ParseExpression()
@@ -237,7 +236,7 @@ public class Parser
                 return new LiteralNode(token.location, token.lexeme);
             case TokenType.Identifier:
                 Consume();
-                Console.WriteLine(token.lexeme);
+                Console.WriteLine($"{token.lexeme} ...............");
                 return new VariableNode(token.location, token.lexeme);
             case TokenType.ColorString:
                 Consume();
@@ -253,10 +252,14 @@ public class Parser
             default:
                 if(tokens[currentPosition].IsCallableExpression())
                 {
-                    nodes.Add(ParseCallable(new CommandNode(tokens[currentPosition].location, tokens[currentPosition].type)));
+                    Console.WriteLine("default function");
+                    return ParseCallable(new FunctionNode(tokens[currentPosition].location, tokens[currentPosition].type));
                 }
-                errors.Add(new CompilingError(token.location, ErrorCode.Invalid, "Invalid expression"));
-                return null!;
+                else
+                {
+                    errors.Add(new CompilingError(token.location, ErrorCode.Invalid, "Invalid expression"));
+                    return null!;
+                }
         }
     }
 #endregion
@@ -265,39 +268,37 @@ public class Parser
     {
         Token token = tokens[currentPosition];
         Console.WriteLine(token.type);
-        Consume();
-        Console.WriteLine(tokens[currentPosition].type);
-        if(tokens[currentPosition].type == TokenType.EndOfLine)
+        //labels o asignaciones
+        Console.WriteLine(token.location.column);
+        if(token.location.column == 0)
         {
-            if(Scope.labels.ContainsKey(token.lexeme))
+            //label
+            Consume();
+            if(tokens[currentPosition].type == TokenType.EndOfLine || tokens[currentPosition].type == TokenType.EndOfFile)
             {
-                Scope.labels[token.lexeme] = nodes.Count;
-                //revisar, no se puede tener 2 labels con en mismo nombre
-                Consume();
+                Console.WriteLine("here");
+                Scope.labels.Add(token.lexeme, nodes.Count);
                 return;
             }
-            Scope.labels.Add(token.lexeme, nodes.Count);
-            Consume();
-            return;
-        }
-        else if(tokens[currentPosition].type == TokenType.AssignArrow)
-        {
-            AssignmentNode assignment = new AssignmentNode(token.location, token.lexeme);
-            Consume();
-            ExpressionNode expression = ParseExpression();
-            if(expression != null)
+            //asignacion
+            if(tokens[currentPosition].type == TokenType.AssignArrow)
             {
-                assignment.expression = expression;
-                nodes.Add(assignment);
+                AssignmentNode assignment = new AssignmentNode(token.location, token.lexeme);
+                Consume();
+                ExpressionNode expression = ParseExpression();
+                if(expression != null)
+                {
+                    assignment.expression = expression;
+                    nodes.Add(assignment);
+                }
+                else
+                {
+                    errors.Add(new CompilingError(tokens[currentPosition].location, ErrorCode.Invalid,"Invalid expression"));
+                }
+                return;
             }
-            else
-            {
-                errors.Add(new CompilingError(tokens[currentPosition].location, ErrorCode.Invalid,"Invalid expression"));
-            }
-            Consume();
-            return;
+            //errors.Add(new CompilingError(token.location, ErrorCode.Expected, "Expected an assignment or EndOfLine token"));
         }
-        errors.Add(new CompilingError(tokens[currentPosition].location,ErrorCode.Expected,"Expected a '<-'"));
         ConsumeWithEOL();
     }
 #endregion

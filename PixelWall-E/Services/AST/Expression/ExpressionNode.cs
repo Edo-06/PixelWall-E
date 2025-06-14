@@ -10,6 +10,5 @@ public enum ExpressionType
     Color,
     Number,
     Bool,
-    Void,
     ErrorType
 }

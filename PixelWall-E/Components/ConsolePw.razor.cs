@@ -91,16 +91,22 @@ public partial class ConsolePw
         KeyboardEventArgs ev = new KeyboardEventArgs
         {
             Code = e.Code,
-            Key = "Enter",
+            Key = e.Code,
             CtrlKey = e.CtrlKey,
             ShiftKey = e.ShiftKey,
             AltKey = e.AltKey,
             MetaKey = e.MetaKey
         };
-        if (e.Code == "Enter")
+        if (ev.Code == "Enter")
         {
             Console.WriteLine($"ConsolePw: Enter key pressed. Notifying parent.");
             await OnConsoleKeyDown.InvokeAsync(ev); 
+        }
+        if(e.Code == "KeyC" && e.CtrlKey)
+        {
+            await AppendOutput("^C");
+            PipeLineManager.isRunning = false;
+            return; 
         }
     }
     public async Task<string> HandleEnter()
