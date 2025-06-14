@@ -20,6 +20,9 @@ public static class ColorTypes
         "Navy",
         "NavyBlue",
         "MediumBlue",
-        "SkyBlue"
+        "SkyBlue",
+        "OrangeRed",
+        "MediumVioletRed",
+        "HotPink"
     };
 }

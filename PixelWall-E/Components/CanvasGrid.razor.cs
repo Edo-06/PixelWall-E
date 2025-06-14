@@ -10,7 +10,7 @@ public partial class CanvasGrid
 {
     private int Size { get; set; } = 840;
     private ElementReference _numberOfPixels { get; set; }
-    public int numberOfPixels { get; set; } = 200;
+    public int numberOfPixels { get; set; } = 37;
     private Image<Rgba32>? image;
     private string? imageDataUrl { get; set; }
     private string dialogueStyle = "display: none;";
@@ -78,6 +78,11 @@ public partial class CanvasGrid
             "NavyBlue" => new Rgba32(0, 0, 128),
             "MediumBlue" => new Rgba32(0, 0, 205),
             "SkyBlue" => new Rgba32(135, 206, 235),
+            "Brown" => new Rgba32(165, 42, 42),
+            "Pink" => new Rgba32(255, 192, 203),
+            "OrangeRed" => new Rgba32(255, 69, 0),
+            "HotPink" => new Rgba32(255, 105, 180),
+            "MediumVioletRed" => new Rgba32(199, 21, 133),
 
             _ => new Rgba32(0, 0, 0, 0)
         };
@@ -100,6 +105,11 @@ public partial class CanvasGrid
             { R: 0, G: 0, B: 128 } => "NavyBlue",
             { R: 0, G: 0, B: 205 } => "MediumBlue",
             { R: 135, G: 206, B: 235 } => "SkyBlue",
+            { R: 165, G: 42, B: 42 } => "Brown",
+            { R: 255, G: 192, B: 203 } => "Pink",
+            { R: 255, G: 69, B: 0 } => "OrangeRed",
+            { R: 255, G: 105, B: 180 } => "HotPink",
+            { R: 199, G: 21, B: 133 } => "MediumVioletRed",
             _ => $"({color.R}, {color.G}, {color.B})"
         };
         return colorString;
