@@ -1,7 +1,7 @@
 html,
 body {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    height: 100%; 
+    height: 100%; /* Asegura que el body ocupe todo el alto disponible */
     margin: 0;   
     padding: 0; 
 }
@@ -9,17 +9,17 @@ body {
 #app {
     position: relative;
     display: flex;
-    flex-direction: column; 
+    flex-direction: row;
     min-height: 100vh;      
     width: 100%;            
 }
 
 /*
- * Media Query para escritorio: 
+ * Media Query para movil: 
  */
-@media (min-width: 768px) {
+@media (max-width: 640.98px) {
     #app {
-        flex-direction: row; 
+        flex-direction: column; 
     }
 }
 
