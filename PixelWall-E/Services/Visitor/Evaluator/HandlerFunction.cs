@@ -1,3 +1,5 @@
+using SixLabors.ImageSharp.PixelFormats;
+
 public static class HandlerFunction
 {
     public static object Execute(FunctionNode function)
@@ -38,13 +40,13 @@ public static class HandlerFunction
     {
         return null;
     }
-    private static string ExecuteGetPixelColor(FunctionNode function)
+    private static Rgba32 ExecuteGetPixelColor(FunctionNode function)
     {
         return PipeLineManager.GetPixelColor((int)function.parameters[0].value, (int)function.parameters[1].value);
     }
     private static object ExecuteIsBrushColor(FunctionNode function)
     {
-        return PincelState.brushColor == (string)function.parameters[0].value; 
+        return PincelState.brushColor == (Rgba32)function.parameters[0].value; 
     }
     private static object ExecuteIsBrushSize(FunctionNode function)
     {

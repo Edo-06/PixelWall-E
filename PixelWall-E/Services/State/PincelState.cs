@@ -1,7 +1,9 @@
+using SixLabors.ImageSharp.PixelFormats;
+
 public static class PincelState
 {
     public static int brushSize { get; private set; } = 1;
-    public static string brushColor {get; private set; } = "transparent";
+    public static Rgba32 brushColor {get; private set; } = new Rgba32(255,255,255); // Transparent color
 
     public static void SetBrushSize(int k)
     {
@@ -21,14 +23,14 @@ public static class PincelState
         }
         Console.WriteLine($"Tamaño del pincel actualizado a: {brushSize}");
     }
-    public static void SetBrushColor(string color)
+    public static void SetBrushColor(Rgba32 color)
     {
         brushColor = color;
     }
 
     public static async Task PaintBrushAt(int centerX, int centerY)
     {
-        if(brushColor == "transparent") return;
+        if(brushColor == new Rgba32(255,255,255)) return;
 
         int offset = (brushSize - 1) / 2;
 
@@ -47,6 +49,6 @@ public static class PincelState
     public static void ReStart()
     {
         brushSize = 1;
-        brushColor = "transparent";
+        brushColor = new Rgba32(255,255,255); // Reset to transparent color
     }
 }

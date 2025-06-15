@@ -14,7 +14,8 @@ require(['vs/editor/editor.main'], function() {
         defaultToken: 'invalid', 
 
         keywords: [
-            'Spawn',   
+            'Spawn',
+            'MoveTo',   
             'Color',       
             'Size',        
             'DrawLine',    

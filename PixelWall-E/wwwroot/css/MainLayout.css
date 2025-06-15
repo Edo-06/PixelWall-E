@@ -33,6 +33,7 @@ main {
     background-color: #e0e0e0;
     overflow: hidden;
     border-bottom: 2px solid rgba(0, 0, 0, 0.2);
+    min-height: 0vh;
 }
 .canvas{
     width: 44vw;
@@ -53,6 +54,7 @@ main {
     height: 100vh;
     padding-bottom: 0;
 }
+
 .right-top{
     height: 100vh;
 }
@@ -81,6 +83,8 @@ main {
     border-bottom: 1px solid #e0e0e0;
     border-left: 1px solid #6e6d6d;
     border-right: 1px solid #6e6d6d;
+    touch-action: none;
+    user-select: none;
     justify-content: flex-end;
     align-items: flex-start;
 }
@@ -204,6 +208,7 @@ main {
         padding-right: 1.5rem !important; 
     }
 }
+
 
 /* Diálogo flotante para guardar : */
 .save-dialogue {

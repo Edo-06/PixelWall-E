@@ -1,3 +1,5 @@
+using System.Drawing;
+
 public class SemanticCheckerVisitor: IVisitor<bool>
 {
     public List<CompilingError> errors {get; set;}
@@ -152,12 +154,17 @@ public class SemanticCheckerVisitor: IVisitor<bool>
             /* errors.Add(new CompilingError(literal.location, ErrorCode.Invalid, "Invalid number format"));
             return false; */
         }
-        else if(ColorTypes.colors.Contains(value))
+        else if(ColorTypes.colorHexCodes.ContainsKey(value))
         {
-            literal.value = value;
+            literal.value = ColorTypes.HexagToRgba32(ColorTypes.colorHexCodes[value]);
             literal.type = ExpressionType.Color;
             /* errors.Add(new CompilingError(literal.location, ErrorCode.Invalid, "Invalid boolean format"));
             return false; */
+        }
+        else if(ColorTypes.IsValidHexColor(value))
+        {
+            literal.value = ColorTypes.HexagToRgba32(value);
+            literal.type = ExpressionType.Color;
         }
         else
         {

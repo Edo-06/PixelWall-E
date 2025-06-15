@@ -97,7 +97,7 @@ public partial class ConsolePw
             AltKey = e.AltKey,
             MetaKey = e.MetaKey
         };
-        if (ev.Code == "Enter")
+        if (ev.Code == "Enter" || ev.Code == "NumpadEnter")
         {
             Console.WriteLine($"ConsolePw: Enter key pressed. Notifying parent.");
             await OnConsoleKeyDown.InvokeAsync(ev); 

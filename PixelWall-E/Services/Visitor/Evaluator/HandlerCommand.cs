@@ -1,3 +1,5 @@
+using SixLabors.ImageSharp.PixelFormats;
+
 public static class HandlerCommand
 {
     public static async Task Execute(CommandNode command)
@@ -128,8 +130,8 @@ public static class HandlerCommand
     {
         int startX = PipeLineManager.currentPixel.x;
         int startY = PipeLineManager.currentPixel.y;
-        string targetColor = PipeLineManager.GetPixelColor(PipeLineManager.currentPixel.x, PipeLineManager.currentPixel.y);
-        string replacementColor = PincelState.brushColor; 
+        Rgba32 targetColor = PipeLineManager.GetPixelColor(PipeLineManager.currentPixel.x, PipeLineManager.currentPixel.y);
+        Rgba32 replacementColor = PincelState.brushColor; 
 
         if (targetColor == replacementColor) return;
 
@@ -175,7 +177,7 @@ public static class HandlerCommand
     }
     private static void ExecuteColor(CommandNode command)
     {
-        PincelState.SetBrushColor((string)command.parameters[0].value);
+        PincelState.SetBrushColor((Rgba32)command.parameters[0].value);
         Console.WriteLine($"Brush color set to {PincelState.brushColor}");
     }
     private static void ExecuteSize(CommandNode command)

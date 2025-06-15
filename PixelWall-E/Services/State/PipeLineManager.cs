@@ -1,4 +1,5 @@
 using PixelWall_E.Components;
+using SixLabors.ImageSharp.PixelFormats;
 public  static class PipeLineManager
 {
     public delegate Task OnErrorsDetectedEventHandler(List<CompilingError> errors);
@@ -75,16 +76,16 @@ public  static class PipeLineManager
         }
         return canvas.numberOfPixels;
     }
-    public static string GetPixelColor(int x, int y)
+    public static Rgba32 GetPixelColor(int x, int y)
     {
         if(canvas == null)
         {
             Console.WriteLine("Canvas is null");
-            return "";
+            return new Rgba32();
         }
         return canvas.GetPixelColor(x, y);
     }
-    public static void ChangePixelColor(int x, int y, string color)
+    public static void ChangePixelColor(int x, int y, Rgba32 color)
     {
         if(canvas == null)
         {

@@ -66,7 +66,7 @@ body {
 }
 @media (max-width: 640.98px) {
     .monaco-editor-container {
-        height: 100vh; 
+        height: 100vh;
     }
 }
 .decorationGlyphMarginClass {
