@@ -154,16 +154,16 @@ public class SemanticCheckerVisitor: IVisitor<bool>
             /* errors.Add(new CompilingError(literal.location, ErrorCode.Invalid, "Invalid number format"));
             return false; */
         }
-        else if(ColorTypes.colorHexCodes.ContainsKey(value))
+        else if(Colors.colorHexCodes.ContainsKey(value))
         {
-            literal.value = ColorTypes.HexagToRgba32(ColorTypes.colorHexCodes[value]);
+            literal.value = Colors.HexagToRgba32(Colors.colorHexCodes[value]);
             literal.type = ExpressionType.Color;
             /* errors.Add(new CompilingError(literal.location, ErrorCode.Invalid, "Invalid boolean format"));
             return false; */
         }
-        else if(ColorTypes.IsValidHexColor(value))
+        else if(Colors.IsValidHexColor(value))
         {
-            literal.value = ColorTypes.HexagToRgba32(value);
+            literal.value = Colors.HexagToRgba32(value);
             literal.type = ExpressionType.Color;
         }
         else

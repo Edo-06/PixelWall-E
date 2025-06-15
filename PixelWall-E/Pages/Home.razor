@@ -5,27 +5,76 @@
 
 <PageTitle>Home</PageTitle>
 
+<header class="app-header">
+    <div class="app-title-text">
+        <i class="fas fa-robot text-xl"></i>
+        <span>Pixel Wall-E Studio</span>
+    </div>
+
+    <div class="header-controls">
+        <div class="theme-toggle-dropdown">
+            <select @onchange="HandleMonacoThemeChanged" class="theme-toggle-button">
+                <option value="pixelwalle-light-theme">Light</option>
+                <option value="pixelwalle-dark-theme">Dark</option>
+                <option value="pixelwalle-high-contrast-black-theme">High Contrast Black</option>
+                <span>Light</span> <i class="fas fa-chevron-down text-xs ml-1"></i>
+            </select>
+        </div>
+        <a href="#" class="about-button" id="about-btn">About</a>
+    </div>
+</header>
 <section id=split-screen>
     <div class="left">
-        <CanvasGrid/>
+        <CanvasGrid @ref=canvasGridRef />
     </div>
     <div @ref="splitContainerRef" class="right  @currentMonacoTheme">
-    <div @ref="topPanelRef" id="rightTop" class="right-top">
-        <PixelWall_E.Components.CodeEditor 
-            @ref="codeEditorRef"
-            OnThemeChanged="HandleMonacoThemeChanged" />
-    </div>
-    <div @ref="splitterRef" id="splitter" class="splitter">
-        <div class="button-container">
-            <button @onclick="HandleClearConsole" class="btn"><i class="fas fa-trash"></i></button>
+        <div @ref="topPanelRef" id="rightTop" class="right-top">
+            <nav class="header-nav-menu hidden">
+                <ul>
+                    <input class="theme-toggle-button-size" @ref="numberOfPixels" type="int" placeholder="37" />
+                    <li><a href="#" @onclick="HandleResize"><i class="fas fa-expand-arrows-alt mr-2"></i></a></li>
+                    <li><a href="#" @onclick="HandleSaveImage"><i class="fas fa-file-image mr-2"></i></a></li>
+                    <li><a href="#" @onclick="HandleExecute"><i class="fas fa-play mr-2"></i></a></li>
+                    <li><a href="#" @onclick="HandleSaveFile"><i class="fas fa-save mr-2"></i></a></li>
+                    <li><a href="#" @onclick="HandleLoadFile"><i class="fas fa-folder-open mr-2"></i></a></li>
+                    <li><a href="#" @onclick="HandleLoadFile"><i class="fas fa-terminal mr-2"></i></a></li>
+                </ul>
+            </nav>
+            <PixelWall_E.Components.CodeEditor @ref="codeEditorRef" />
+        </div>
+        <div @ref="splitterRef" id="splitter" class="splitter">
+            <nav class="header-nav-menu hidden">
+                <ul>
+                    <li><a href="#" @onclick="HandleClearConsole"><i class="fas fa-trash mr-2"></i></a></li>
+                </ul>
+            </nav>
+        </div>
+        <div @ref="bottomPanelRef" id="rightBottom" class="right-bottom">
+            <ConsolePw @ref="consoleRef" OnConsoleKeyDown="HandleConsoleKeyDown" />
         </div>
     </div>
-    <div @ref="bottomPanelRef" id="rightBottom" class="right-bottom">
-        <ConsolePw 
-            @ref="consoleRef"
-            OnConsoleKeyDown="HandleConsoleKeyDown" />
-    </div>
-</div>  
 </section>
-
-
+<InputFile @ref="inputFileElement" id="imageInput" hidden accept/>
+<div class="save-dialogue" style="@dialogueIStyle">
+    <div class="dialogue-content">
+        <h3>Guardar archivo</h3>
+        <input @ref="filenameInput" type="text" placeholder="name.png" />
+        <div class="dialogue-buttons">
+            <button @onclick="HandleCancelSaveImage" class="btn btn-primary cancel">Cancel</button>
+            <button @onclick="HandleConfirmSaveImage" class="btn btn-primary accept">Save</button>
+        </div>
+    </div>
+</div>
+<InputFile @ref="inputFileElement" id="fileInput" hidden accept=".pw" />
+<div class="save-dialogue" style="@dialogueFStyle">
+    <div class="dialogue-content">
+        <h3>Guardar archivo</h3>
+        <input @ref="imagenameInput" 
+                type="text" 
+                placeholder="name.pw" />
+        <div class="dialogue-buttons">
+            <button @onclick="HandleCancelSaveFile"class="btn btn-primary cancel">Cancel</button>
+            <button @onclick="HandleConfirmSaveFile"class="btn btn-primary accept">Save</button>
+        </div>
+    </div>
+</div>

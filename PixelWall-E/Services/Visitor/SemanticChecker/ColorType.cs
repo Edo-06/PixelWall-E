@@ -1,7 +1,7 @@
 using System.Text.RegularExpressions;
 using System.Drawing; 
 using SixLabors.ImageSharp.PixelFormats;
-public static class ColorTypes
+public static class Colors
 {
     public static readonly Dictionary<string, string> colorHexCodes = new Dictionary<string, string>
     {
@@ -34,7 +34,30 @@ public static class ColorTypes
         { "Turquoise", "#40E0D0" },
         { "Lavender", "#E6E6FA" },
         { "Gold", "#FFD700" },
-        { "Coral", "#FF7F50" }
+        { "Coral", "#FF7F50" },
+        { "Pink", "#FFC0CB" },
+        { "DarkRed", "#8B0000" },
+        { "DarkBlue", "#00008B" },
+        { "DarkOrange", "#FF8C00" },
+        { "DarkViolet", "#9400D3" },
+        { "LightGray", "#D3D3D3" },
+        { "LightBlue", "#ADD8E6" },
+        { "LightGreen", "#90EE90" },
+        { "LightPink", "#FFB6C1" },
+        { "LightYellow", "#FFFFE0" },
+        { "LightCoral", "#F08080" },
+        { "LightCyan", "#E0FFFF" },
+        { "DarkCyan", "#008B8B" },
+        { "DarkMagenta", "#8B008B" },
+        { "DarkGray", "#A9A9A9" },
+        { "DarkKhaki", "#BDB76B" },
+        { "DarkSalmon", "#E9967A" },
+        { "DarkSeaGreen", "#8FBC8F" },
+        { "DarkSlateBlue", "#483D8B" },
+        { "DarkSlateGray", "#2F4F4F" },
+        { "DimGray", "#696969" },
+        { "LightGoldenrodYellow", "#FAFAD2" },
+        {"Transparent", "#00000000" }
     };
     public static bool IsValidHexColor(string hexColorString)
     {
@@ -44,10 +67,14 @@ public static class ColorTypes
     }
     public static Rgba32 HexagToRgba32(string hexColor)
     {
-        
         if (string.IsNullOrWhiteSpace(hexColor))
         {
             throw new ArgumentException("El string de color hexadecimal no puede ser nulo o vacío.", nameof(hexColor));
+        }
+
+        if(hexColor == "#00000000") // Special case for transparent color
+        {
+            return new Rgba32(255, 255, 255, 0);
         }
 
         string pattern = @"^#([0-9A-Fa-f]{6}|[0-9A-Fa-f]{3})$";

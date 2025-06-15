@@ -130,12 +130,17 @@ public static class HandlerCommand
     {
         int startX = PipeLineManager.currentPixel.x;
         int startY = PipeLineManager.currentPixel.y;
+        if(PipeLineManager.currentPixel.x < 0 || PipeLineManager.currentPixel.y < 0 || 
+           PipeLineManager.currentPixel.x >= PipeLineManager.GetCanvasSize() || 
+           PipeLineManager.currentPixel.y >= PipeLineManager.GetCanvasSize())
+        {
+            Console.WriteLine("Error: Current pixel is out of bounds.");
+            return;
+        }
         Rgba32 targetColor = PipeLineManager.GetPixelColor(PipeLineManager.currentPixel.x, PipeLineManager.currentPixel.y);
         Rgba32 replacementColor = PincelState.brushColor; 
 
-        if (targetColor == replacementColor) return;
-
-        int size = PipeLineManager.GetCanvasSize();
+        if (targetColor == replacementColor) return; 
 
         //Start
         Queue<(int x, int y)> pixelsToVisit = new Queue<(int x, int y)>();
@@ -159,8 +164,8 @@ public static class HandlerCommand
                 int neighborX = currentX + dx;
                 int neighborY = currentY + dy;
 
-                if (neighborX >= 0 && neighborX < size &&
-                    neighborY >= 0 && neighborY < size)
+                if (neighborX >= 0 && neighborX < PipeLineManager.GetCanvasSize() &&
+                    neighborY >= 0 && neighborY < PipeLineManager.GetCanvasSize())
                 {
                     if (!visitedPixels.Contains((neighborX, neighborY)))
                     {

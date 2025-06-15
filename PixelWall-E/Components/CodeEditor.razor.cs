@@ -11,10 +11,6 @@ public partial class CodeEditor
 {
     [Parameter]public EventCallback<string> OnThemeChanged { get; set; }
     public string code {get; private set;} = "";
-    private InputFile? _inputFileElement;
-    private ElementReference _name;
-    private string dialogueStyle = "display: none;";
-    private string temporaryContent = "";
     private string _selectedTheme = "vs-light";
     public string selectedTheme
     {
@@ -24,6 +20,17 @@ public partial class CodeEditor
             if (_selectedTheme != value)
             {
                 _selectedTheme = value; 
+            }
+        }
+    }
+    public StandaloneCodeEditor editor
+    {
+        get => _editor;
+        set
+        {
+            if (_editor != value)
+            {
+                _editor = value; 
             }
         }
     }
@@ -71,7 +78,7 @@ public partial class CodeEditor
     {
         Console.WriteLine("OnContextMenu : " + JsonSerializer.Serialize(eventArg));
     }
-    private async Task ChangeTheme(ChangeEventArgs e)
+    public async Task ChangeTheme(ChangeEventArgs e)
     {
         string? newTheme = e.Value?.ToString();
         if (newTheme != null && newTheme != _selectedTheme)
@@ -104,64 +111,12 @@ public partial class CodeEditor
             Console.WriteLine("La ejecución del código ha finalizado.");
         }
     }
-#region LoadFile
-    private async Task LoadFile()
+    public async Task LoadFile()
     {
         await jsRuntime.InvokeVoidAsync("clickFileInput", "fileInput");
     }
-    private async Task HandleFileSelected(InputFileChangeEventArgs e)
-    {
-        try
-        {
-            var file = e.File;
-            if (Path.GetExtension(file.Name) != ".pw")
-            {
-                Console.WriteLine("Error: Solo se permiten archivos .pw");
-                return;
-            }
-
-            var stream = file.OpenReadStream();
-            using var reader = new StreamReader(stream);
-            string fileContent = await reader.ReadToEndAsync();
-
-            await _editor.SetValue(fileContent);
-            Console.WriteLine("Archivo cargado exitosamente!");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
-        }
-    }
     
-#endregion
-#region SaveFile
-    private async Task ShowDialogueForSave()
-    {
-        temporaryContent = await _editor.GetValue();
-        dialogueStyle = "display: block;";
-        await Task.Delay(10); 
-        await jsRuntime.InvokeVoidAsync("focusInput", _name);
-    }
-    private async Task ConfirmSave()
-    {
-        var name = await jsRuntime.InvokeAsync<string>("getFileName", _name);
-        
-        if (string.IsNullOrWhiteSpace(name))
-        {
-            Console.WriteLine("Nombre inválido");
-            return;
-        }
-
-        if (!name.EndsWith(".pw")) name += ".pw";
-
-        await jsRuntime.InvokeVoidAsync("downloadFile", name, temporaryContent);
-        dialogueStyle = "display: none;";
-    }
-    private void CancelSave()
-    {
-        dialogueStyle = "display: none;";
-    }
-#endregion
+#region InitialCode
     private static string _value = @"Spawn(25,21)
 Color(""NavyBlue"")
 
@@ -261,4 +216,6 @@ DrawLine(0,-1,4)
 DrawLine(1,1,2)
 DrawLine(1,-1,2)
 DrawLine(0,1,4)";
+#endregion
+
 }

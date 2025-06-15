@@ -67,7 +67,15 @@ public partial class ConsolePw
             Run = async (console) => 
             {
                 Console.WriteLine("Enter key pressed on THIS editor (via action). Newline prevented.");
-                await Task.CompletedTask; 
+                await OnConsoleKeyDown.InvokeAsync( new KeyboardEventArgs
+                {
+                    Code = "Enter",
+                    Key = "Enter",
+                    CtrlKey = false,
+                    ShiftKey = false,
+                    AltKey = false,
+                    MetaKey = false
+                });
             }
         });
         await _console.AddAction(new ActionDescriptor
@@ -88,20 +96,6 @@ public partial class ConsolePw
     }
     private async Task HandleConsoleKeyDown(KeyboardEvent e)
     {
-        KeyboardEventArgs ev = new KeyboardEventArgs
-        {
-            Code = e.Code,
-            Key = e.Code,
-            CtrlKey = e.CtrlKey,
-            ShiftKey = e.ShiftKey,
-            AltKey = e.AltKey,
-            MetaKey = e.MetaKey
-        };
-        if (ev.Code == "Enter" || ev.Code == "NumpadEnter")
-        {
-            Console.WriteLine($"ConsolePw: Enter key pressed. Notifying parent.");
-            await OnConsoleKeyDown.InvokeAsync(ev); 
-        }
         if(e.Code == "KeyC" && e.CtrlKey)
         {
             await AppendOutput("^C");

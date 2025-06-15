@@ -8,20 +8,16 @@ using SixLabors.ImageSharp.Processing;
 namespace PixelWall_E.Components;
 public partial class CanvasGrid
 {
-    private ElementReference _numberOfPixels { get; set; }
+    public ElementReference _numberOfPixels { get; set; }
     public int numberOfPixels { get; set; } = 37;
-    private Image<Rgba32>? image;
+    public Image<Rgba32>? image;
     private string? imageDataUrl { get; set; }
-    private string dialogueStyle = "display: none;";
-    private ElementReference _filenameInput;
-    private InputFile? _inputFileElement;
-
     protected override void OnInitialized()
     {
         base.OnInitialized();
         CreateImage();
     }
-    private void CreateImage()
+    public void CreateImage()
     {
         image?.Dispose();
 
@@ -36,7 +32,7 @@ public partial class CanvasGrid
         UpdateImageDisplay();
         PipeLineManager.canvas = this;
     }
-    private async Task ChangeNumberOfPixels()
+    public async Task ChangeNumberOfPixels()
     {
         PipeLineManager.ReStart();
         var numberOfPixels = await jsRuntime.InvokeAsync<int>("getNumberOfPixels", _numberOfPixels);
@@ -62,57 +58,6 @@ public partial class CanvasGrid
     {
         image?.Dispose();
     }
-    private Rgba32 StringToRgba32(string colorString)
-    {
-        Rgba32 namedColor = colorString switch
-        {
-            "Red" => new Rgba32(255, 0, 0),
-            "Green" => new Rgba32(0, 255, 0),
-            "Blue" => new Rgba32(0, 0, 255),
-            "White" => new Rgba32(255, 255, 255),
-            "Black" => new Rgba32(0, 0, 0),
-            "Yellow" => new Rgba32(255, 255, 0),
-            "Orange" => new Rgba32(255, 165, 0),
-            "Purple" => new Rgba32(128, 0, 128),
-            "NavyBlue" => new Rgba32(0, 0, 128),
-            "MediumBlue" => new Rgba32(0, 0, 205),
-            "SkyBlue" => new Rgba32(135, 206, 235),
-            "Brown" => new Rgba32(165, 42, 42),
-            "Pink" => new Rgba32(255, 192, 203),
-            "OrangeRed" => new Rgba32(255, 69, 0),
-            "HotPink" => new Rgba32(255, 105, 180),
-            "MediumVioletRed" => new Rgba32(199, 21, 133),
-
-            _ => new Rgba32(0, 0, 0, 0)
-        };
-
-        return namedColor;
-    }
-
-    private string Rgba32ToString(Rgba32 color)
-    {
-        string colorString = color switch
-        {
-            { R: 255, G: 0, B: 0 } => "Red",
-            { R: 0, G: 255, B: 0 } => "Green",
-            { R: 0, G: 0, B: 255 } => "Blue",
-            { R: 255, G: 255, B: 255 } => "White",
-            { R: 0, G: 0, B: 0 } => "Black",
-            { R: 255, G: 255, B: 0 } => "Yellow",
-            { R: 255, G: 165, B: 0 } => "Orange",
-            { R: 128, G: 0, B: 128 } => "Purple",
-            { R: 0, G: 0, B: 128 } => "NavyBlue",
-            { R: 0, G: 0, B: 205 } => "MediumBlue",
-            { R: 135, G: 206, B: 235 } => "SkyBlue",
-            { R: 165, G: 42, B: 42 } => "Brown",
-            { R: 255, G: 192, B: 203 } => "Pink",
-            { R: 255, G: 69, B: 0 } => "OrangeRed",
-            { R: 255, G: 105, B: 180 } => "HotPink",
-            { R: 199, G: 21, B: 133 } => "MediumVioletRed",
-            _ => $"({color.R}, {color.G}, {color.B})"
-        };
-        return colorString;
-    }
     public void ChangePixelColor(int x, int y, Rgba32 color)
     {
         if (image == null) return;
@@ -130,49 +75,4 @@ public partial class CanvasGrid
         if (image == null) return new Rgba32(0, 0, 0, 0);
         return image[x, y];
     }
-    #region Save Image
-    private async Task ConfirmSaveImage()
-    {
-        var name = await jsRuntime.InvokeAsync<string>("getFileName", _filenameInput);
-
-        if (string.IsNullOrWhiteSpace(name))
-        {
-            Console.WriteLine("Nombre de archivo inválido o vacío.");
-            return;
-        }
-
-        if (!name.EndsWith(".png", StringComparison.OrdinalIgnoreCase))
-        {
-            name += ".png";
-        }
-
-        using var scaledImage = image?.Clone(x => x.Resize(new ResizeOptions
-        {
-            Size = new Size(500, 500),
-            
-            Mode = ResizeMode.Stretch, 
-            
-            Sampler = KnownResamplers.NearestNeighbor 
-        }));
-
-        using var streamForDownload = new MemoryStream();
-        scaledImage.SaveAsPng(streamForDownload); 
-
-        var dataUrlForDownload = $"data:image/png;base64,{Convert.ToBase64String(streamForDownload.ToArray())}";
-        await jsRuntime.InvokeVoidAsync("saveAsFile", name, dataUrlForDownload);
-        dialogueStyle = "display: none;";
-        StateHasChanged();
-    }
-    private void CancelSaveImage()
-    {
-        dialogueStyle = "display: none;";
-        StateHasChanged();
-    }
-    private async Task ShowDialogueForSave()
-    {
-        dialogueStyle = "display: block;";
-        await Task.Delay(10);
-        await jsRuntime.InvokeVoidAsync("focusInput", _filenameInput);
-    }
-    #endregion
 }

@@ -3,7 +3,7 @@ using SixLabors.ImageSharp.PixelFormats;
 public static class PincelState
 {
     public static int brushSize { get; private set; } = 1;
-    public static Rgba32 brushColor {get; private set; } = new Rgba32(255,255,255); // Transparent color
+    public static Rgba32 brushColor {get; private set; } = new Rgba32(255,255,255,0); // Transparent color
 
     public static void SetBrushSize(int k)
     {
@@ -30,7 +30,7 @@ public static class PincelState
 
     public static async Task PaintBrushAt(int centerX, int centerY)
     {
-        if(brushColor == new Rgba32(255,255,255)) return;
+        if(brushColor == new Rgba32(255,255,255,0)) return;
 
         int offset = (brushSize - 1) / 2;
 
@@ -49,6 +49,6 @@ public static class PincelState
     public static void ReStart()
     {
         brushSize = 1;
-        brushColor = new Rgba32(255,255,255); // Reset to transparent color
+        brushColor = new Rgba32(255,255,255,0); // Reset to transparent color
     }
 }

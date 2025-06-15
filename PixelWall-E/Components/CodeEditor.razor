@@ -4,34 +4,7 @@
 @inject IJSRuntime jsRuntime
 
 <div style="margin:10px 0; display: flex;  flex-direction: column;">
-    <div class="button-container">
-        <div
-            Theme:
-            <select @onchange="ChangeTheme">
-                <option value="pixelwalle-light-theme">Light</option>
-                <option value="pixelwalle-dark-theme">Dark</option>
-                <option value="pixelwalle-high-contrast-black-theme">High Contrast Black</option>
-            </select>
-        </div>
-        <button @onclick="Run" class="btn"><i class="fas fa-play"></i></button>
-        <button @onclick="LoadFile" class="btn"><i class="fas fa-folder-open"></i></button>
-        <button @onclick="ShowDialogueForSave" class="btn"><i class="fas fa-save"></i></button>
-    </div>
 
     <StandaloneCodeEditor @ref="_editor" Id="code-editor" ConstructionOptions="EditorConstructionOptions"
         OnDidInit="EditorOnDidInit" OnContextMenu="OnContextMenu" />
-
-    <InputFile @ref="_inputFileElement" id="fileInput" OnChange="HandleFileSelected" hidden accept=".pw" />
-    <div class="save-dialogue" style="@dialogueStyle">
-        <div class="dialogue-content">
-            <h3>Guardar archivo</h3>
-            <input @ref="_name" 
-                    type="text" 
-                    placeholder="name.pw" />
-            <div class="dialogue-buttons">
-                <button @onclick="CancelSave"class="btn btn-primary cancel">Cancel</button>
-                <button @onclick="ConfirmSave"class="btn btn-primary accept">Save</button>
-            </div>
-        </div>
-    </div>
 </div>
