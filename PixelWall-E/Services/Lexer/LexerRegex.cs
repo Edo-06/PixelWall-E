@@ -5,7 +5,7 @@ public class LexerRegex
     {
         // Command
         new TokenPattern(TokenType.Spawn, @"^[ \t\n]*Spawn\b"),
-        new TokenPattern(TokenType.MoveTo, @"^[ \t\n]*MoveTo\b"),
+        new TokenPattern(TokenType.MoveTo, @"^[ \t]*MoveTo\b"),
         new TokenPattern(TokenType.Color, @"^[ \t]*Color\b"),
         new TokenPattern(TokenType.Size, @"^[ \t]*Size\b"),
         new TokenPattern(TokenType.DrawLine, @"^[ \t]*DrawLine\b"),
@@ -24,7 +24,7 @@ public class LexerRegex
 
         //Control
         new TokenPattern(TokenType.GoTo, @"^[ \t]*GoTo\b"),
-        new TokenPattern(TokenType.EndOfLine, @"^[ \t]*\r\n"),
+        new TokenPattern(TokenType.EndOfLine, @"^[ \t]*(\r\n|\n)"),
 
         // Operator
         new TokenPattern(TokenType.Power, @"^[ \t]*\*\*"),
