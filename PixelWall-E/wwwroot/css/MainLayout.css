@@ -50,11 +50,15 @@ main {
 .right {
     flex: 1;
     width: 100%; 
-    height: auto;
+    height: 100vh;
+    padding-bottom: 0;
+}
+.right-top{
+    height: 100vh;
 }
 .canvas{
     width: 100%; 
-    height: auto; 
+    height: 42vh; 
     overflow: hidden; 
     border: 1px solid gray;
 }
@@ -109,8 +113,10 @@ main {
 }
 @media (max-width: 640.98px) {
     #split-screen {
+        display: flex;
         flex-direction: column;
-        height: auto; 
+        height: 100vh;
+        width: 87vw;
     }
 }
 
@@ -120,6 +126,7 @@ main {
 
 .sidebar {
     background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);
+    height: 100vh;
 }
 
 /*

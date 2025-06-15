@@ -87,12 +87,22 @@ public partial class CodeEditor
         if(PipeLineManager.isRunning)
         {
             Console.WriteLine("Ya hay un proceso en ejecución.");
+            PipeLineManager.isRunning = true;
             return;
         }
         PipeLineManager.ReStart();
         code = await _editor.GetValue();
         Console.WriteLine(code);
         await PipeLineManager.Start(code);
+        if(PipeLineManager.isRunning)
+        {
+            Console.WriteLine("Código ejecutado exitosamente.");
+            PipeLineManager.isRunning = false;
+        }
+        else
+        {
+            Console.WriteLine("La ejecución del código ha finalizado.");
+        }
     }
 #region LoadFile
     private async Task LoadFile()

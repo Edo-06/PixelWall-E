@@ -64,7 +64,11 @@ body {
     position: relative;
     flex-grow: 1;
 }
-
+@media (max-width: 640.98px) {
+    .monaco-editor-container {
+        height: 100vh; 
+    }
+}
 .decorationGlyphMarginClass {
     background: red;
 }
