@@ -1,31 +1,43 @@
 html,
 body {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    height: 100%; 
+    margin: 0;   
+    padding: 0; 
 }
 
 #app {
     position: relative;
     display: flex;
-    flex-direction: column;
+    flex-direction: column; 
+    min-height: 100vh;      
+    width: 100%;            
 }
 
+/*
+ * Media Query para escritorio: 
+ */
 @media (min-width: 768px) {
     #app {
-        flex-direction: row;
+        flex-direction: row; 
     }
 }
 
+/*
+ * Texto de progreso de carga :
+ */
 .loading-progress-text {
     flex: 1;
     text-align: center;
-    margin-top: 50px;
-    font-size: 20px;
+    margin-top: 3.125rem; 
+    font-size: 1.25rem;  
     font-weight: bold;
 }
 
 .loading-progress-text:after {
     content: var(--blazor-load-percentage-text, "Loading");
 }
+
 
 #blazor-error-ui {
     background: lightyellow;
@@ -41,15 +53,16 @@ body {
 
 #blazor-error-ui .dismiss {
     cursor: pointer;
-    position: absolute;
     right: 0.75rem;
     top: 0.5rem;
+    position: absolute;
 }
 
 .monaco-editor-container {
-    height: 500px;
+    height: 70vh;
     border: 1px solid gray;
     position: relative;
+    flex-grow: 1;
 }
 
 .decorationGlyphMarginClass {
@@ -59,9 +72,3 @@ body {
 .decorationContentClass {
     background: lightblue;
 }
-
-.monaco-editor-container {
-    height: 650px;
-}
-/*///////////////////////////////////////////////////////*/
-

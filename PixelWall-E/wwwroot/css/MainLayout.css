@@ -2,9 +2,10 @@ main {
     flex: 1;
     width: 0;
 }
+
 .left {
     height: 100vh;
-    width: 50%;
+    width: 50%; 
 }
 
 .right {
@@ -13,25 +14,27 @@ main {
     height: 100vh;
     width: 50%;
     position: relative;
-    display: flex; 
+    display: flex;
     flex-direction: column;
     overflow: hidden;
     padding-bottom: 5.2rem; 
-    /*border: 1px solid #ddd; */
 }
+
 .right-top {
-    background-color: #ffffff; 
-    height: 60vh;
-    min-height: 20vh;
-    max-height: 100vh;
+    background-color: #ffffff;
+    height: 60vh;      
+    min-height: 17vh; 
+    max-height: 100vh; 
     overflow: hidden;
 }
+
 .right-bottom {
-    flex: 1; 
-    background-color: #e0e0e0; 
+    flex: 1;
+    background-color: #e0e0e0;
     overflow: hidden;
     border-bottom: 2px solid rgba(0, 0, 0, 0.2);
 }
+
 .no-select {
     -webkit-user-select: none; /* Safari */
     -moz-user-select: none;    /* Firefox */
@@ -39,9 +42,12 @@ main {
     user-select: none;         /* Standard */
 }
 
+/*
+ * Separador:
+ */
 .splitter {
-    height: 40px; 
-    cursor: ns-resize; 
+    height: 2.5rem;
+    cursor: ns-resize;
     background-color: #f0f0f0;
     border-top: 1px solid #e0e0e0;
     border-bottom: 1px solid #e0e0e0;
@@ -51,6 +57,7 @@ main {
     align-items: flex-start;
 }
 
+/* Estilos de tema para el separador */
 .right.monaco-pixelwalle-light-theme .splitter {
     background-color: #f0f0f0;
     border-top: 1px solid #e0e0e0;
@@ -69,6 +76,8 @@ main {
     border-bottom: 1px solid #0a0a0a;
 }
 
+/* Contenedor de la pantalla dividida :
+ */
 #split-screen {
     display: flex;
     flex-direction: row;
@@ -83,6 +92,9 @@ main {
     background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);
 }
 
+/*
+ * Fila superior:
+ */
 .top-row {
     background-color: #f7f7f7;
     border-bottom: 1px solid #d6d5d5;
@@ -108,6 +120,9 @@ main {
     text-overflow: ellipsis;
 }
 
+/*
+ * Media Query para móviles pequeños :
+ */
 @media (max-width: 640.98px) {
     .top-row:not(.auth) {
         display: none;
@@ -123,11 +138,14 @@ main {
     }
 }
 
+/*
+ * Media Query para escritorio y tabletas grandes:
+ */
 @media (min-width: 641px) {
     .sidebar {
-        width: 250px;
-        height: 100vh;
-        position: sticky;
+        width: 250px;     
+        height: 100vh;     
+        position: sticky;  
         top: 0;
     }
 
@@ -145,13 +163,12 @@ main {
 
     .top-row,
     article {
-        padding-left: 2rem !important;
-        padding-right: 1.5rem !important;
+        padding-left: 2rem !important; 
+        padding-right: 1.5rem !important; 
     }
 }
 
-
-/* Diálogo flotante para guardar*/
+/* Diálogo flotante para guardar : */
 .save-dialogue {
     position: absolute;
     top: 60%; 
@@ -216,7 +233,11 @@ main {
     justify-content: flex-end;
 }
 
-/* Asegúrate de que tus íconos (si usas Font Awesome) tengan el tamaño correcto */
+/*
+ * Íconos de Font Awesome (`.btn .fas`):
+ * El `font-size` se cambió a `rem` (`1.25rem` que es 20px). Esto es esencial
+ * para que los íconos escalen junto con el texto cuando el usuario hace zoom.
+ */
 .btn .fas {
-    font-size: 20px; /* O el tamaño que desees */
+    font-size: 1.25rem; /* Escala con el zoom y el tamaño de la fuente */
 }
