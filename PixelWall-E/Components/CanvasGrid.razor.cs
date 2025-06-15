@@ -8,8 +8,6 @@ using SixLabors.ImageSharp.Processing;
 namespace PixelWall_E.Components;
 public partial class CanvasGrid
 {
-    private int height { get; set; } = 91;
-    private int width { get; set; } = 44;
     private ElementReference _numberOfPixels { get; set; }
     public int numberOfPixels { get; set; } = 37;
     private Image<Rgba32>? image;

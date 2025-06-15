@@ -84,6 +84,11 @@ public partial class CodeEditor
     }
     public async Task Run()
     {
+        if(PipeLineManager.isRunning)
+        {
+            Console.WriteLine("Ya hay un proceso en ejecución.");
+            return;
+        }
         PipeLineManager.ReStart();
         code = await _editor.GetValue();
         Console.WriteLine(code);

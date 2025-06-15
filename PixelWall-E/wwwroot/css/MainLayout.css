@@ -34,7 +34,31 @@ main {
     overflow: hidden;
     border-bottom: 2px solid rgba(0, 0, 0, 0.2);
 }
+.canvas{
+    width: 44vw;
+    height: 91vh; 
+    overflow: hidden; 
+    border: 1px solid gray;
+}
 
+@media (max-width: 640.98px){
+.left {
+    width: 100%; /* Default: full width on mobile, stacks vertically */
+    height: auto; /* Height adapts to content on mobile */
+}
+
+.right {
+    flex: 1;
+    width: 100%; 
+    height: auto;
+}
+.canvas{
+    width: 100%; 
+    height: auto; 
+    overflow: hidden; 
+    border: 1px solid gray;
+}
+}
 .no-select {
     -webkit-user-select: none; /* Safari */
     -moz-user-select: none;    /* Firefox */
@@ -139,7 +163,7 @@ main {
 }
 
 /*
- * Media Query para escritorio y tabletas grandes:
+ * Media Query para escritorio:
  */
 @media (min-width: 641px) {
     .sidebar {

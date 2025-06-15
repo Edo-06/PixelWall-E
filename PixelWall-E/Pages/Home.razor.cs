@@ -67,6 +67,11 @@ public partial class Home
                     {
                         await consoleRef.AppendOutput("Running");
 
+                        if(PipeLineManager.isRunning)
+                        {
+                            await consoleRef.AppendOutput("Pipeline is already running.");
+                            return;
+                        }
                         await codeEditorRef.Run();
                         if(PipeLineManager.isRunning)
                         {
