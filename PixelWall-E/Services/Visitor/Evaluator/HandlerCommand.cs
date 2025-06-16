@@ -56,7 +56,8 @@ public static class HandlerCommand
         int currentY = PipeLineManager.currentPixel.y;
         CheckBounds(currentX, currentY, command);
 
-        await PincelState.PaintBrushAt(currentX, currentY);
+        PincelState.PaintBrushAt(currentX, currentY);
+        await Task.Delay(1);
         for (int i = 0; i < distance; i++)
         {
             if (!PipeLineManager.isRunning) return;
@@ -65,7 +66,8 @@ public static class HandlerCommand
             currentY += dirY;
             CheckBounds(currentX, currentY, command);
             Console.WriteLine($"Drawing" + PincelState.brushColor + $" at ({currentX}, {currentY})");
-            await PincelState.PaintBrushAt(currentX, currentY);
+            PincelState.PaintBrushAt(currentX, currentY);
+            await Task.Delay(1);
         }
         PipeLineManager.currentPixel = (currentX, currentY);
     }
@@ -95,7 +97,8 @@ public static class HandlerCommand
                     int currentX = centerX + x;
                     int currentY = centerY + y;
                     Console.WriteLine($"Drawing" + PincelState.brushColor + $" at ({currentX}, {currentY}) for circle");
-                    await PincelState.PaintBrushAt(currentX, currentY);
+                    PincelState.PaintBrushAt(currentX, currentY);
+                    await Task.Delay(1);
                 }
             }
         }
@@ -115,8 +118,8 @@ public static class HandlerCommand
 
         CheckBounds(startX, startY, command);
 
-        int endX = startX + width;
-        int endY = startY + height - 1;
+        int endX = startX + width + 1;
+        int endY = startY + height + 1;
 
         int centerX = (startX + endX) / 2;
         int centerY = (startY + endY) / 2;
@@ -126,18 +129,20 @@ public static class HandlerCommand
         {
             if (!PipeLineManager.isRunning) return;
             Console.WriteLine($"Drawing" + PincelState.brushColor + $" at ({x}, {startY}) for rectangle");
-            await PincelState.PaintBrushAt(x, startY);
+            PincelState.PaintBrushAt(x, startY);
             Console.WriteLine($"Drawing" + PincelState.brushColor + $" at ({x}, {endY}) for rectangle");
-            await PincelState.PaintBrushAt(x, endY);
+            PincelState.PaintBrushAt(x, endY);
+            await Task.Delay(1);
         }
 
         for (int y = startY + 1; y < endY; y++)
         {
             if (!PipeLineManager.isRunning) return;
             Console.WriteLine($"Drawing" + PincelState.brushColor + $" at ({startX}, {y}) for rectangle");
-            await PincelState.PaintBrushAt(startX, y);
+            PincelState.PaintBrushAt(startX, y);
             Console.WriteLine($"Drawing" + PincelState.brushColor + $" at ({endX}, {y}) for rectangle");
-            await PincelState.PaintBrushAt(endX, y);
+            PincelState.PaintBrushAt(endX, y);
+            await Task.Delay(1);
         }
         PipeLineManager.currentPixel = (centerX, centerY);
     }
@@ -164,13 +169,21 @@ public static class HandlerCommand
         HashSet<(int x, int y)> visitedPixels = new HashSet<(int x, int y)>();
         visitedPixels.Add((startX, startY));
 
+        int pixelsProcessed = 0;
+        int delayBatchSize = 50;
+
         while (pixelsToVisit.Any())
         {
             (int currentX, int currentY) = pixelsToVisit.Dequeue();
 
             PipeLineManager.currentPixel = (currentX, currentY);
             if (!PipeLineManager.isRunning) return;
-            await PincelState.PaintBrushAt(currentX, currentY);
+            PincelState.PaintBrushAt(currentX, currentY);
+            pixelsProcessed++;
+            if (pixelsProcessed % delayBatchSize == 0)
+            {
+                await Task.Delay(1); 
+            }
 
             (int dx, int dy)[] directions = { (0, 1), (0, -1), (1, 0), (-1, 0) };
 
@@ -203,31 +216,32 @@ public static class HandlerCommand
     }
     private static void ExecuteSize(CommandNode command)
     {
-        PincelState.SetBrushSize((int)command.parameters[0].value);
+        int size = (int)command.parameters[0].value;
+        if (size < 1 || size > PipeLineManager.GetCanvasSize() / 4)
+            throw new RuntimeError(command.location, RuntimeErrorCode.OutOfBounds,
+                $"Brush size must be in range (1-{PipeLineManager.GetCanvasSize() / 4})");
+        PincelState.SetBrushSize(size);
         Console.WriteLine($"Brush size set to {PincelState.brushSize}");
     }
-#region Checks
+    #region Checks
     private static void CheckBounds(int x, int y, CommandNode command)
     {
         int canvasSize = PipeLineManager.GetCanvasSize();
         if (x < 0 || x >= canvasSize || y < 0 || y >= canvasSize)
-        {
             throw new RuntimeError(command.location, RuntimeErrorCode.OutOfBounds,
                 $"Pixel ({x}, {y}) is out of canvas bounds (0-{canvasSize - 1}, 0-{canvasSize - 1}).");
-        }
     }
     private static void ValidateDirection(int dx, int dy, CommandNode command)
     {
         bool isValidDirection =
             (dx == -1 && (dy == -1 || dy == 0 || dy == 1)) ||
-            (dx == 0 && (dy == -1 || dy == 1 || dy == 0)) || 
+            (dx == 0 && (dy == -1 || dy == 1 || dy == 0)) ||
             (dx == 1 && (dy == -1 || dy == 0 || dy == 1));
 
         if (!isValidDirection)
-        {
-                throw new RuntimeError(command.location, RuntimeErrorCode.InvalidDirection,
-                    $"Direction ({dx}, {dy}) is invalid. Direction components must be -1, 0, or 1, and not both zero.");
-        }
+
+            throw new RuntimeError(command.location, RuntimeErrorCode.InvalidDirection,
+                $"Direction ({dx}, {dy}) is invalid. Direction components must be -1, 0, or 1, and not both zero.");
     }
-#endregion
+    #endregion
 }

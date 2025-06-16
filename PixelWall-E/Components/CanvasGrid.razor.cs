@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
+using System.Timers;
+using Timer = System.Timers.Timer; //evitar conflictos con Microsoft.AspNetCore.Components.Web.Timer
 
 namespace PixelWall_E.Components;
 public partial class CanvasGrid
@@ -10,10 +12,19 @@ public partial class CanvasGrid
     public int numberOfPixels { get; set; } = 37;
     public Image<Rgba32>? image;
     private string? imageDataUrl { get; set; }
+    private Timer? renderTimer;
     protected override void OnInitialized()
     {
         base.OnInitialized();
         CreateImage();
+        renderTimer = new Timer(16);
+        renderTimer.Elapsed += OnRenderTimerElapsed;
+        renderTimer.AutoReset = true;
+        renderTimer.Enabled = true;
+    }
+    private void OnRenderTimerElapsed(object? sender, ElapsedEventArgs e)
+    {
+        InvokeAsync(UpdateImageDisplay);
     }
     public void CreateImage()
     {
@@ -51,11 +62,6 @@ public partial class CanvasGrid
         imageDataUrl = $"data:image/png;base64,{Convert.ToBase64String(stream.ToArray())}";
         StateHasChanged();
     }
-
-    public void Dispose()
-    {
-        image?.Dispose();
-    }
     public void ChangePixelColor(int x, int y, Rgba32 color)
     {
         if (image == null) return;
@@ -65,8 +71,8 @@ public partial class CanvasGrid
             Console.WriteLine($"Error: Coordenadas fuera de rango ({x}, {y})");
             return;
         }
+        if (image[x, y] == color) return;
         image[x, y] = color;
-        UpdateImageDisplay();
     }
     public Rgba32 GetPixelColor(int x, int y)
     {

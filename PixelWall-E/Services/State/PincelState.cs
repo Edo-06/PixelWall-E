@@ -1,3 +1,4 @@
+using BlazorMonaco.Languages;
 using SixLabors.ImageSharp.PixelFormats;
 
 public static class PincelState
@@ -7,12 +8,6 @@ public static class PincelState
 
     public static void SetBrushSize(int k)
     {
-        if (k <= 0)
-        {
-            Console.WriteLine("Error: El tamaño del pincel debe ser un número positivo.");
-            return;
-        }
-
         if (k % 2 == 0)
         {
             brushSize = k - 1;
@@ -28,7 +23,7 @@ public static class PincelState
         brushColor = color;
     }
 
-    public static async Task PaintBrushAt(int centerX, int centerY)
+    public static void PaintBrushAt(int centerX, int centerY)
     {
         if(brushColor == new Rgba32(255,255,255,0)) return;
 
@@ -40,11 +35,9 @@ public static class PincelState
             {
                 int pixelX = centerX + dx;
                 int pixelY = centerY + dy;
-
                 PipeLineManager.ChangePixelColor(pixelX, pixelY, brushColor);
             }
         }
-        await Task.Delay(1);
     }
     public static void ReStart()
     {

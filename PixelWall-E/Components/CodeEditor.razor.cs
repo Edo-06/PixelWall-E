@@ -34,26 +34,7 @@ public partial class CodeEditor
             Theme = "pixelwalle-light-theme",
             GlyphMargin = true,
             AutomaticLayout = true,
-            Value = _value, 
-
-            /* WordBasedSuggestions = false,
-            SuggestOnTriggerCharacters = false,
-            QuickSuggestions = new BlazorMonaco.Editor.QuickSuggestionsOptions 
-            {
-                Other = "off",
-                Comments = "off",
-                Strings = "off"
-            },
-            AcceptSuggestionOnEnter = "off",
-            AcceptSuggestionOnCommitCharacter = false,
-            TabCompletion = "off",
-            SnippetSuggestions = "none", 
-            ParameterHints = new EditorParameterHintOptions { Enabled = false },
-            Hover = new EditorHoverOptions { Enabled = false },
-            SuggestSelection = "first", 
-            Links = false,       
-            CodeLens = false,       
-            Folding = false,  */       
+            Value = _value,   
         };
     }
     private async Task EditorOnDidInit()
