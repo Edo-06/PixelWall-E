@@ -23,5 +23,6 @@ public class CompilingError: Exception
     {
         Expected,
         Invalid,
+        Unexpected,
         Unknown,
     }

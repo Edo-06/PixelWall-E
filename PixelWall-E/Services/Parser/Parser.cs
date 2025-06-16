@@ -55,6 +55,8 @@ public class Parser
         {
             if(Construct.IsCallableCommand(tokens[currentPosition].type))
             {
+                if(tokens[currentPosition].type == TokenType.Spawn)
+                    errors.Add(new CompilingError(tokens[currentPosition].location, ErrorCode.Unexpected, $"Unexpected Spawn"));
                 nodes.Add(ParseCallable(new CommandNode(tokens[currentPosition].location, tokens[currentPosition].type)));
                 ConsumeEOL();
             }
