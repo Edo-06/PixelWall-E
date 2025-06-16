@@ -274,11 +274,7 @@ public class Parser
                     Console.WriteLine("default function");
                     return ParseCallable(new FunctionNode(tokens[currentPosition].location, tokens[currentPosition].type));
                 }
-                else
-                {
-                    errors.Add(new CompilingError(token.location, ErrorCode.Invalid, "Invalid expression"));
-                    return null!;
-                }
+                return null!;
         }
     }
 #endregion
