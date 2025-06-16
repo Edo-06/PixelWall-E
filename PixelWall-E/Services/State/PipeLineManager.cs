@@ -65,6 +65,7 @@ public  static class PipeLineManager
         {
             Console.WriteLine("Executor Exception: " + ex.Message);
             await OnErrorsDetected.Invoke(ex);
+            isRunning = false;
             return;
         }
         Console.WriteLine("currentPixel: " + currentPixel.x + " " + currentPixel.y);

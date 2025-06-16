@@ -107,6 +107,29 @@ public partial class CodeEditor
     {
         await jsRuntime.InvokeVoidAsync("clickFileInput", "fileInput");
     }
+    public async Task HandleFileSelected(InputFileChangeEventArgs e)
+    {
+        try
+        {
+            var file = e.File;
+            if (Path.GetExtension(file.Name) != ".pw")
+            {
+                Console.WriteLine("Error: Solo se permiten archivos .pw");
+                return;
+            }
+
+            var stream = file.OpenReadStream();
+            using var reader = new StreamReader(stream);
+            string fileContent = await reader.ReadToEndAsync();
+
+            await _editor.SetValue(fileContent);
+            Console.WriteLine("Archivo cargado exitosamente!");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
     
 #region InitialCode
     private static string _value = @"Spawn(25,21)

@@ -180,6 +180,10 @@ public partial class Home
             Console.WriteLine("Home: CodeEditor reference is null, cannot load file.");
         }
     }
+    private async Task HandleFileSelected(InputFileChangeEventArgs e)
+    {
+        await codeEditorRef.HandleFileSelected(e);
+    }
     private async Task HandleSaveImage()
     {
         dialogueIStyle = "display: block;";
