@@ -179,7 +179,11 @@ public static class HandlerCommand
                 int neighborX = currentX + dx;
                 int neighborY = currentY + dy;
 
-                CheckBounds(neighborX, neighborY, command);
+                if (neighborX < 0 || neighborX >= PipeLineManager.GetCanvasSize() ||
+                    neighborY < 0 || neighborY >= PipeLineManager.GetCanvasSize())
+                {
+                    continue; // Skip out of bounds neighbors
+                }
                 if (!visitedPixels.Contains((neighborX, neighborY)))
                 {
                     if (PipeLineManager.GetPixelColor(neighborX, neighborY) == targetColor)

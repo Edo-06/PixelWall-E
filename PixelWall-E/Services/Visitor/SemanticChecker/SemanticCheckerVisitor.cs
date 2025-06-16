@@ -23,7 +23,6 @@ public class SemanticCheckerVisitor: IVisitor<bool>
     {
         if (!assignment.expression.Accept(this))
         {
-            Console.WriteLine($"tenias razon ");
             return false;
         }
         assignment.type = assignment.expression.type;
