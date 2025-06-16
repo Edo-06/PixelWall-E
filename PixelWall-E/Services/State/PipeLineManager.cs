@@ -2,7 +2,7 @@ using PixelWall_E.Components;
 using SixLabors.ImageSharp.PixelFormats;
 public  static class PipeLineManager
 {
-    public delegate Task OnErrorsDetectedEventHandler(List<CompilingError> errors);
+    public delegate Task OnErrorsDetectedEventHandler(Exception errors);
     public static event OnErrorsDetectedEventHandler OnErrorsDetected = delegate {return Task.CompletedTask;};
     private static LexerAnalyzer lexer = new LexerAnalyzer();
     private static List<Token> tokens = new List<Token>();
@@ -18,10 +18,10 @@ public  static class PipeLineManager
         {
             tokens = lexer.GetTokens(code);
         }
-        catch (Exception ex)
+        catch (LexerException ex)
         {
             lexerExceptions.Add(ex.Message);
-            Console.WriteLine("Lexer Exception: " + ex.Message);
+            await OnErrorsDetected.Invoke(ex);
             tokens = []; 
         }
         if(lexerExceptions.Count > 0) return;
@@ -38,20 +38,35 @@ public  static class PipeLineManager
         SemanticCheckerVisitor semanticChecker = new SemanticCheckerVisitor(parser.errors);
         if(semanticChecker.errors.Count > 0)
         {
-            await OnErrorsDetected.Invoke(semanticChecker.errors);
+            foreach (var error in semanticChecker.errors)
+            {
+                await OnErrorsDetected.Invoke(error);
+            }
             PrintErrors(semanticChecker.errors);
             return;
         }
         semanticChecker.Visit(program);
         if(semanticChecker.errors.Count > 0) 
         {
-            await OnErrorsDetected.Invoke(semanticChecker.errors);
+            foreach (var error in semanticChecker.errors)
+            {
+                await OnErrorsDetected.Invoke(error);
+            }
             PrintErrors(semanticChecker.errors);
             return;
         }
         Executor executor = new Executor();
         isRunning = true;
-        await executor.Visit(program);
+        try
+        {
+            await executor.Visit(program);
+        }
+        catch(RuntimeError ex)
+        {
+            Console.WriteLine("Executor Exception: " + ex.Message);
+            await OnErrorsDetected.Invoke(ex);
+            return;
+        }
         Console.WriteLine("currentPixel: " + currentPixel.x + " " + currentPixel.y);
     }
     public static void ReStart()
@@ -94,11 +109,11 @@ public  static class PipeLineManager
         }
         canvas.ChangePixelColor(x, y, color);
     }
-    private static void PrintErrors(List<CompilingError> errors) 
+    private static void PrintErrors(List<Exception> errors) 
     {
         for(int i = 0; i < errors.Count; i++)
         {
-            Console.WriteLine(errors[i].message + errors[i].location.line);
+            Console.WriteLine(errors);
         }
     }
 #endregion

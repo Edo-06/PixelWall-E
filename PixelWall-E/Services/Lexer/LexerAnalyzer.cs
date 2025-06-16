@@ -58,7 +58,7 @@ public class LexerAnalyzer
                     return;
                 }
             }
-            throw new LexerException($"Carácter inesperado: '{code[position]}' ", location);
+            throw new LexerException(location, LexerErrorCode.UnexpectedCharacter, $"Unexpected Character");
         }
 
         public CodeLocation location

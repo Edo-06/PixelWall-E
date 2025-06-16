@@ -90,19 +90,19 @@ main {
 }
 
 /* Estilos de tema para el separador */
-.right.monaco-pixelwalle-light-theme .splitter {
+.right.monaco-light-theme .splitter {
     background-color: #f0f0f0;
     border-top: 1px solid #e0e0e0;
     border-bottom: 1px solid #e0e0e0;
 }
 
-.right.monaco-pixelwalle-dark-theme .splitter {
+.right.monaco-dark-theme .splitter {
     background-color: #333;
     border-top: 1px solid #444;
     border-bottom: 1px solid #222;
 }
 
-.right.monaco-pixelwalle-high-contrast-black-theme .splitter {
+.right.monaco-high-contrast-black-theme .splitter {
     background-color: #1a1a1a;
     border-top: 1px solid #2a2a2a;
     border-bottom: 1px solid #0a0a0a;

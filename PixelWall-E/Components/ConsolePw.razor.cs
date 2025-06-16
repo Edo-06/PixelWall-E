@@ -21,7 +21,8 @@ public partial class ConsolePw
     {
         return new StandaloneEditorConstructionOptions
         {
-            Language = "plaintext",
+            Language = "pixelwalle-console",
+            Theme = "pixelwalle-light-theme",
             GlyphMargin = true,
             AutomaticLayout = true,
             Value = _value,   

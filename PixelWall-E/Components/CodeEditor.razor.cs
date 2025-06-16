@@ -9,20 +9,10 @@ using Microsoft.JSInterop;
 namespace PixelWall_E.Components;
 public partial class CodeEditor
 {
-    [Parameter]public EventCallback<string> OnThemeChanged { get; set; }
+    public delegate Task OnRunEnd(string message);
+    public event OnRunEnd OnRunEndEvent = delegate { return Task.CompletedTask; };
     public string code {get; private set;} = "";
     private string _selectedTheme = "vs-light";
-    public string selectedTheme
-    {
-        get => _selectedTheme;
-        set
-        {
-            if (_selectedTheme != value)
-            {
-                _selectedTheme = value; 
-            }
-        }
-    }
     public StandaloneCodeEditor editor
     {
         get => _editor;
@@ -83,10 +73,10 @@ public partial class CodeEditor
         string? newTheme = e.Value?.ToString();
         if (newTheme != null && newTheme != _selectedTheme)
         {
-            Console.WriteLine($"setting theme to: {e.Value?.ToString()}");
-            await Global.SetTheme(jsRuntime, e.Value?.ToString());
+            string codeThemeName = $"pixelwalle-{newTheme}";
+            Console.WriteLine($"setting theme to: code");
+            await Global.SetTheme(jsRuntime, codeThemeName);
             _selectedTheme = newTheme;
-            await OnThemeChanged.InvokeAsync(newTheme);
         }
     }
     public async Task Run()
@@ -103,11 +93,13 @@ public partial class CodeEditor
         await PipeLineManager.Start(code);
         if(PipeLineManager.isRunning)
         {
+            await OnRunEndEvent.Invoke("Code executed successfully.");
             Console.WriteLine("Código ejecutado exitosamente.");
             PipeLineManager.isRunning = false;
         }
         else
         {
+            await OnRunEndEvent.Invoke("Code execution has finished");
             Console.WriteLine("La ejecución del código ha finalizado.");
         }
     }

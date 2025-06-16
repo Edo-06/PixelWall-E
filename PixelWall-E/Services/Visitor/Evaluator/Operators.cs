@@ -12,7 +12,12 @@ public static class Operators<T> where T : IComparable<T>
             }
         },
         { TokenType.Power, (a, b) => (int)Math.Pow(a, b)},
-        { TokenType.Modulo, (a, b) => a % b}
+        { TokenType.Modulo, (a, b) =>
+        {
+            if (b == 0) throw new DivideByZeroException("Modulo by zero is not allowed."); 
+            return a % b;
+        }
+    }
     };
     public static Dictionary<TokenType, Func<T, T, bool>> ComparisionOperator = new Dictionary<TokenType, Func<T, T, bool>>
     {

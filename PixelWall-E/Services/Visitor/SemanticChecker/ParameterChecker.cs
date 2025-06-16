@@ -1,6 +1,6 @@
 public static class ParameterChecker
 {
-    public static bool CheckParameters<T>(T node, IVisitor<bool> visitor, List<CompilingError> errors, CodeLocation location) where T: ICallableNode
+    public static bool CheckParameters<T>(T node, IVisitor<bool> visitor, List<Exception> errors, CodeLocation location) where T: ICallableNode
     {
         List<ExpressionType> toCheck = [];
         if(node is CommandNode) toCheck = TypeOfCommandParameters[node.tokenType];

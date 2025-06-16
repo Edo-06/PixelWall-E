@@ -3,7 +3,7 @@ public class Parser
     private List<Token> tokens;
     private int currentPosition;
     public List<ASTNode> nodes {get; private set;} = new List<ASTNode>();
-    public List<CompilingError> errors {get; private set;} = new List<CompilingError>();
+    public List<Exception> errors {get; private set;} = new List<Exception>();
     public ProgramNode programNode {get; private set;} = new ProgramNode(new CodeLocation());
     public Parser(List<Token> tokens)
     {

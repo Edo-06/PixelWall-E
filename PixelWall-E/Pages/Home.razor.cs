@@ -31,6 +31,10 @@ public partial class Home
         if (firstRender)
         {
             PipeLineManager.OnErrorsDetected += HandleErrors;
+            if(codeEditorRef!=null)
+            {
+                codeEditorRef.OnRunEndEvent += HandleConsoleLog;
+            }
             try
             {
                 await jsRuntime.InvokeVoidAsync(
@@ -56,10 +60,10 @@ public partial class Home
     }
     public async Task HandleMonacoThemeChanged(ChangeEventArgs e)
     {
-        string newMonacoTheme = e.Value?.ToString() ?? "vs-light";
-        if (_currentMonacoTheme != newMonacoTheme)
+        string newMonacoThemeBase = e.Value?.ToString() ?? "vs-light";
+        if (_currentMonacoTheme != newMonacoThemeBase)
         {
-            _currentMonacoTheme = newMonacoTheme;
+            _currentMonacoTheme = newMonacoThemeBase;
             StateHasChanged(); 
             Console.WriteLine($"Home: Monaco theme changed to {_currentMonacoTheme}. Splitter class updated.");
             await codeEditorRef.ChangeTheme(e);
@@ -86,16 +90,6 @@ public partial class Home
                             return;
                         }
                         await codeEditorRef.Run();
-                        if(PipeLineManager.isRunning)
-                        {
-                            await consoleRef.AppendOutput("Code executed successfully.");
-                            PipeLineManager.isRunning = false;
-                        }
-                        else
-                        {
-                            await consoleRef.AppendOutput("Code execution has finished.");
-                        }
-                        
                     }
                     else
                     {
@@ -142,15 +136,15 @@ public partial class Home
             Console.WriteLine("Home: ConsolePw reference is null, cannot clear console.");
         }
     }
-    private async Task HandleErrors(List<CompilingError> errors)
+    private async Task HandleConsoleLog(string message)
+    {
+        await consoleRef.AppendOutput(message);
+    }
+    private async Task HandleErrors(Exception error)
     {
         if (consoleRef != null)
         {
-            Console.WriteLine(errors.Count + " errors detected.");
-            foreach(var error in errors)
-            {
-                await consoleRef.AppendOutput($"Error: {error.message} at line:{error.location.line}, char:{error.location.column}");
-            }
+            await consoleRef.AppendOutput(error.ToString());
         }
         else
         {

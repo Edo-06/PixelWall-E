@@ -2,8 +2,8 @@ using System.Drawing;
 
 public class SemanticCheckerVisitor: IVisitor<bool>
 {
-    public List<CompilingError> errors {get; set;}
-    public SemanticCheckerVisitor(List<CompilingError> errors)
+    public List<Exception> errors {get; set;}
+    public SemanticCheckerVisitor(List<Exception> errors)
     {
         this.errors = errors;
     }

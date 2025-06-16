@@ -49,6 +49,22 @@ require(['vs/editor/editor.main'], function() {
 
         tokenizer: {
             root: [
+                // --- REGLAS DE CONSOLA (Prioridad Alta) ---
+                // Errores (deben ir al principio para capturar la línea completa)
+                [/^Compiling Error:.*$/, 'error.compiling'],
+                [/^Lexer Exception:.*$/, 'error.lexer'],
+                [/^Runtime Error:.*$/, 'error.runtime'],
+
+                [/^Running.*$/, 'console.status.running'],
+                [/^Code executed.*$/, 'console.status.success'],
+                [/^Code execution .*$/, 'console.status.finished'],
+
+                // Comandos como '> run', '> help', '> clean' (deben ir antes que las keywords generales)
+                // Ajustado para capturar el '>' y el espacio opcional al inicio de la línea.
+                [/^>\s*run\b.*$/, 'status.run'],    
+                [/^>\s*help\b.*$/, 'console.command'],
+                [/^>\s*clean\b.*$/, 'console.command'],
+
                 // Identifiers: This rule attempts to match keywords, functions, variables, and labels.
                 [/[a-zA-Z_][a-zA-Z0-9_\-]*/, {
                     cases: {
@@ -111,7 +127,15 @@ require(['vs/editor/editor.main'], function() {
             { token: 'delimiter.parenthesis', foreground: 'C586C0' },// For () - Purple
             { token: 'delimiter.square', foreground: '667788' },     // For []
             { token: 'delimiter.comma', foreground: 'FFFFFF' },      // For , - White
-            { token: 'invalid', foreground: 'CD3131' }         
+            { token: 'invalid', foreground: 'CD3131' }   ,  
+            { token: 'error.compiling', foreground: 'FF0000' },
+             { token: 'console.status.running', foreground: 'FFD700' }, // "Running" en dorado (otro amarillo)
+            { token: 'console.status.success', foreground: '32CD32' }, // "Code executed successfully." en verde lima
+            { token: 'console.status.finished', foreground: 'FFA500' },
+            { token: 'error.lexer', foreground: 'FF0000' },
+            { token: 'error.runtime', foreground: 'FF0000' },
+            { token: 'status.run', foreground: 'FFFF00' },
+            { token: 'console.command', foreground: '569CD6' },    
         ],
         colors: {
         }
@@ -136,7 +160,15 @@ require(['vs/editor/editor.main'], function() {
         { token: 'delimiter.square', foreground: '000000' },     // Negro para corchetes
         { token: 'delimiter.comma', foreground: '000000' },       // Negro para comas
 
-        { token: 'invalid', foreground: 'FF0000' } // Rojo brillante para indicar errores 
+           { token: 'console.status.finished', foreground: 'FF8C00' },
+                    { token: 'console.status.running', foreground: 'DAA520' }, // "Running" en Goldenrod oscuro
+            { token: 'console.status.success', foreground: '008000' }, // "Code executed successfully." en verde oscuro
+        { token: 'invalid', foreground: 'FF0000' } ,// Rojo brillante para indicar errores 
+        { token: 'error.compiling', foreground: 'FF0000' },
+            { token: 'error.lexer', foreground: 'FF0000' },
+            { token: 'error.runtime', foreground: 'FF0000' },
+            { token: 'status.run', foreground: 'B8860B' },
+            { token: 'console.command', foreground: '0000FF' },
     ],
         colors: {
         }
@@ -159,7 +191,16 @@ require(['vs/editor/editor.main'], function() {
         { token: 'delimiter.parenthesis', foreground: 'C586C0' },// For () - Purple
         { token: 'delimiter.square', foreground: 'FAFAD2' },     // For []
         { token: 'delimiter.comma', foreground: 'FFFFFF' },      // For , - White
-        { token: 'invalid', foreground: 'CD3131' }   
+        { token: 'invalid', foreground: 'CD3131' }   ,
+        { token: 'error.compiling', foreground: 'FF0000' },
+        { token: 'console.status.running', foreground: 'F0E68C' }, // "Running" en Khaki (otro amarillo)
+            { token: 'console.status.success', foreground: 'ADFF2F' }, // "Code executed successfully." en GreenYellow
+            { token: 'console.status.finished', foreground: 'FF8C00' },//
+            { token: 'error.lexer', foreground: 'FF0000' },
+            { token: 'error.runtime', foreground: 'FF0000' },
+            { token: 'status.run', foreground: 'FFFF00' },
+            { token: 'console.command', foreground: '569CD6' },
+            
     ],
     colors: {
         }

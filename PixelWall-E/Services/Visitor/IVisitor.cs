@@ -1,6 +1,6 @@
 public interface IVisitor<T>
 {
-    List<CompilingError> errors {get; set;}
+    List<Exception> errors {get; set;}
     T Visit(ProgramNode program);
 
     T Visit(UnaryOpNode unaryOp);
