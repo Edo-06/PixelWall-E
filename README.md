@@ -1,29 +1,87 @@
-# PixelWallE - Web (C#)
+# ✨ PixelWall-E
 
-## Descripción
+PixelWall-E es una aplicación interactiva desarrollada en C# para la creación y manipulación visual de imágenes pixeladas, pensada como proyecto educativo para estudiantes de Ciencias de la Computación.
 
-PixelWallE es una aplicación web en C# para crear pixel art. Escribe código, Wall-E dibuja!
+🔗 [Sitio web](https://pixel-wall-e-uqob.vercel.app/)
+<!-- Si tienes un README_EN, agrega el enlace aquí -->
 
-## Características
+---
 
-*   **Editor:** Escribe comandos PixelWallE.
-*   **Canvas:** Visualiza tu arte en tiempo real.
-*   **Carga/Guarda:** Comparte tus creaciones (`.pw`).
+## 🚀 ¿Qué es PixelWall-E?
 
-## El Lenguaje PixelWallE
+PixelWall-E permite experimentar con algoritmos gráficos y la manipulación de píxeles desde una interfaz visual sencilla. Es ideal para quienes desean aprender los principios básicos de gráficos por computadora y lógica de programación a través de la creatividad visual.
 
-Comandos sencillos para dibujar píxeles:
+---
 
-*   `Spawn(x, y)`: Inicia a Wall-E.
-*   `Color(color)`: Cambia el color (Red, Blue, ...).
-*   `Size(tamaño)`: Ajusta el tamaño del pincel.
-*   `DrawLine(dirX, dirY, distancia)`: Traza una línea.
-*   Y más!
+## 📌 Características principales
 
-## Arquitectura
+- Genera imágenes pixeladas a partir de instrucciones o interacción directa.
+- Permite guardar las imágenes generadas.
+- Paleta de colores ampliable con soporte para valores RGB en hexadecimal y decimal.
+- Motor eficiente de matriz de píxeles para renderizado rápido.
+- Interfaz intuitiva orientada al aprendizaje y la experimentación.
+- Proyecto 100% open source bajo licencia MIT.
 
-*   **Backend:** API .NET (ejecuta el código, valida y gestiona el canvas).
-*   **Frontend:** Blazor WebAssembly (interfaz de usuario).
+---
 
-## Estructura del proyecto
+## 📥 Cómo empezar
 
+Puedes usar PixelWall-E de dos maneras:
+
+### 1️⃣ Usar la versión online
+
+Accede directamente desde el navegador en  
+👉 [https://pixel-wall-e-uqob.vercel.app/](https://pixel-wall-e-uqob.vercel.app/)
+
+### 2️⃣ Clonar el repositorio
+
+Si prefieres explorar el código fuente o contribuir:
+
+```sh
+git clone https://github.com/Edo-06/PixelWall-E.git
+```
+
+---
+
+## 📖 Documentación
+
+Actualmente la documentación se encuentra en desarrollo.  
+Puedes consultar los comentarios en el código fuente y el sitio web para ejemplos de uso.
+
+---
+
+## 🖼️ Capturas de pantalla
+
+<!-- Agrega aquí imágenes si las tienes -->
+![Ejemplo 1](#)
+![Ejemplo 2](#)
+
+---
+
+## 🤝 Cómo contribuir
+
+¿Quieres ayudar a mejorar PixelWall-E? ¡Eres bienvenido!
+
+Formas de aportar:
+
+- Reportando bugs o errores
+- Proponiendo nuevas funciones
+- Mejorando la documentación
+- Compartiendo ejemplos de uso propios
+
+Haz tus sugerencias a través de issues o pull requests en este repositorio.
+
+---
+
+## 💬 Contacto
+
+- **Autor:** [Edo-06](https://github.com/Edo-06)
+- **Correo:** ailemamr04@gmail.com
+
+---
+
+## 📝 Licencia
+
+Este proyecto está bajo la licencia MIT. Consulta el archivo [LICENSE](LICENSE) para más detalles.
+
+---
