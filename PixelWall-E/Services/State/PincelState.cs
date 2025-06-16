@@ -44,12 +44,12 @@ public static class PincelState
                 PipeLineManager.ChangePixelColor(pixelX, pixelY, brushColor);
             }
         }
-        if(brushSize == 1) await Task.Delay(1);
-        else return;
+        await Task.Delay(1);
     }
     public static void ReStart()
     {
         brushSize = 1;
         brushColor = new Rgba32(255,255,255,0); // Reset to transparent color
     }
+
 }

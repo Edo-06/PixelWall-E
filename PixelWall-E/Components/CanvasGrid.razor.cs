@@ -2,8 +2,6 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
-using Microsoft.AspNetCore.Components.Forms;
-using SixLabors.ImageSharp.Processing;
 
 namespace PixelWall_E.Components;
 public partial class CanvasGrid

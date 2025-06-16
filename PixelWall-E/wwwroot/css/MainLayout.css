@@ -33,7 +33,7 @@ main {
     background-color: #e0e0e0;
     overflow: hidden;
     border-bottom: 2px solid rgba(0, 0, 0, 0.2);
-    min-height: 0vh;
+    min-height: 20vh;
 }
 .canvas{
     width: 44vw;

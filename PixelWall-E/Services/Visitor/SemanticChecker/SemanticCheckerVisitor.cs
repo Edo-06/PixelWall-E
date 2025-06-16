@@ -106,12 +106,7 @@ public class SemanticCheckerVisitor: IVisitor<bool>
         }
         switch (binary.op)
         {
-            case TokenType.Plus:
-            case TokenType.Minus:
-            case TokenType.Multiply:
-            case TokenType.Divide:
-            case TokenType.Modulo:
-            case TokenType.Power:
+            case TokenType.Plus: case TokenType.Minus: case TokenType.Multiply: case TokenType.Divide: case TokenType.Modulo: case TokenType.Power:
                 if(binary.left.type != ExpressionType.Number)
                 {
                     errors.Add(new CompilingError(binary.location, ErrorCode.Invalid, "Invalid type for arithmetic operation"));
@@ -119,14 +114,7 @@ public class SemanticCheckerVisitor: IVisitor<bool>
                 }
                 binary.type = ExpressionType.Number;
                 break;
-            case TokenType.Equal:
-            case TokenType.NotEqual:
-            case TokenType.Less:
-            case TokenType.Greater:
-            case TokenType.LessEqual:
-            case TokenType.GreaterEqual:
-            case TokenType.And:
-            case TokenType.Or:
+            case TokenType.Equal: case TokenType.NotEqual: case TokenType.Less: case TokenType.Greater: case TokenType.LessEqual: case TokenType.GreaterEqual: case TokenType.And: case TokenType.Or:
                 binary.type = ExpressionType.Bool;
                 Console.WriteLine("check bool");
                 break;

@@ -23,9 +23,7 @@ public class Parser
         if(currentPosition < tokens.Count - 1)
         {
             if(tokens[currentPosition].type != TokenType.EndOfLine)
-            {
                 errors.Add(new CompilingError(tokens[currentPosition].location, ErrorCode.Expected, "Expected an EndOfLine token"));
-            }
             while(currentPosition < tokens.Count - 1 && tokens[currentPosition].type == TokenType.EndOfLine)
             {
                 Consume(); //Skip EOL tokens
@@ -39,14 +37,11 @@ public class Parser
             Consume();
         }
         if(currentPosition < tokens.Count && tokens[currentPosition].type == TokenType.EndOfLine)
-        {
             Consume(); // Skip the EndOfLine token
-        }
     }
     private void Consume()
     {
-        if(currentPosition + 1 < tokens.Count)
-            currentPosition++;
+        if(currentPosition + 1 < tokens.Count) currentPosition++;
         return;
     }
     private void ParseStatements()

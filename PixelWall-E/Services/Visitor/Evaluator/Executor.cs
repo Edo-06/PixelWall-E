@@ -147,24 +147,16 @@ public class Executor : IVisitor<Task>
     private void CheckGoTo(ProgramNode program)
     {
         if (!(program.statements[currentStatement] is GoToNode))
-        {
             instructionsSinceLastGoto++;
-        }
         else
-        {
             instructionsSinceLastGoto = 0;
-        }
     }
     private void CheckLoop(string labelName, GoToNode goTo)
     {
         if (gotoVisitCounts.ContainsKey(labelName))
-        {
             gotoVisitCounts[labelName]++;
-        }
         else
-        {
             gotoVisitCounts[labelName] = 1;
-        }
 
         lastGotoLabel = labelName;
         instructionsSinceLastGoto = 0; 

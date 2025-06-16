@@ -55,5 +55,7 @@ window.fillPixel = (canvasId, pixelSize, x, y, color, gridColor) => {
 };
 
 window.getNumberOfPixels = (element) => {
-    return element.value ? parseInt(element.value) : 0;
+    if(parseInt(element.value))
+    return parseInt(element.value);
+    else return 0;
 };
