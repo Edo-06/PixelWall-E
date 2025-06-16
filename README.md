@@ -53,8 +53,8 @@ Puedes consultar los comentarios en el código fuente y el sitio web para ejempl
 ## 🖼️ Capturas de pantalla
 
 <!-- Agrega aquí imágenes si las tienes -->
-![Ejemplo 1](#)
-![Ejemplo 2](#)
+![Ejemplo 1](screenshots/Screenshot_15-6-2025_233227_localhost.jpeg)
+![Ejemplo 2](screenshots/Screenshot_15-6-2025_233116_localhost.jpeg)
 
 ---
 
