@@ -53,7 +53,7 @@ public class Parser
     {
         while (currentPosition < tokens.Count && tokens[currentPosition].type != TokenType.EndOfFile)
         {
-            if(tokens[currentPosition].IsCallable())
+            if(Construct.IsCallableCommand(tokens[currentPosition].type))
             {
                 nodes.Add(ParseCallable(new CommandNode(tokens[currentPosition].location, tokens[currentPosition].type)));
                 ConsumeEOL();
@@ -269,7 +269,7 @@ public class Parser
                 Consume(); //RightParen
                 return expression;
             default:
-                if(tokens[currentPosition].IsCallableExpression())
+                if(Construct.IsCallableExpression(tokens[currentPosition].type))
                 {
                     Console.WriteLine("default function");
                     return ParseCallable(new FunctionNode(tokens[currentPosition].location, tokens[currentPosition].type));

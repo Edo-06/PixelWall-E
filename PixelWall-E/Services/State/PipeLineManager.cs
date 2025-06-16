@@ -14,6 +14,7 @@ public  static class PipeLineManager
 #region Run
     public static async Task Start(string code)
     {
+        Construct.Set();
         try
         {
             tokens = lexer.GetTokens(code);

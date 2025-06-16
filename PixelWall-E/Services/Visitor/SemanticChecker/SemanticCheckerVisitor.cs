@@ -187,7 +187,7 @@ public class SemanticCheckerVisitor: IVisitor<bool>
     public bool Visit(FunctionNode function)
     {
         if(!ParameterChecker.CheckParameters(function, this, errors, function.location)) return false;
-        function.type = ParameterChecker.TypeOfFunctionReturn[function.tokenType];
+        function.type = Construct.GetElementByToken(function.tokenType).expected.Output;
         return true;
     }
 #endregion

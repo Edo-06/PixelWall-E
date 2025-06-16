@@ -2,8 +2,9 @@ public class LexerAnalyzer
 {
     public List<Token> GetTokens(string code)
     {
+        LexerRegex lexerRegex = new LexerRegex();
         List<Token> tokens = new List<Token>();
-        Reader reader = new Reader(code);
+        Reader reader = new Reader(code, lexerRegex.GetTokenPatterns());
 
         while (!reader.IsAtEnd())
         {
@@ -18,14 +19,15 @@ public class LexerAnalyzer
 
     private class Reader
     {
-        private LexerRegex lexerRegex = new LexerRegex();
+        private List<TokenPattern> tokenPatterns;
         private string code;
         private int position;
         private int line;
         private int last;
 
-        public Reader(string code)
+        public Reader(string code, List<TokenPattern> tokenPatterns)
         {
+            this.tokenPatterns = tokenPatterns;
             this.code = code;
             position = 0;
             line = 1;
@@ -39,7 +41,7 @@ public class LexerAnalyzer
         }
         public void ScanToken(List<Token> tokens)
         {
-            foreach (var pattern in lexerRegex.tokenPatterns)
+            foreach (var pattern in tokenPatterns)
             {
                 var match = pattern.Regex.Match(code.Substring(position));
                 

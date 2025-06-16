@@ -43,23 +43,11 @@ public class Token
         this.type = type;
         this.location = location;
     }
-    public bool IsCallable() => callables.Contains(type);
     public bool IsController() => controllers.Contains(type);
-    public bool IsCallableExpression() => callablesWhitReturn.Contains(type);
     public override string ToString()
     {
         return $"[{type}] '{lexeme}' at {location.line}:{location.column}";
     }
-    private readonly HashSet<TokenType> callables = new HashSet<TokenType>
-    {
-        TokenType.Spawn, TokenType.MoveTo, TokenType.Color, TokenType.Size, TokenType.DrawLine,
-        TokenType.DrawCircle, TokenType.DrawRectangle, TokenType.Fill,
-    };
-    private readonly HashSet<TokenType> callablesWhitReturn = new HashSet<TokenType>
-    {
-        TokenType.GetActualX, TokenType.GetActualY, TokenType.GetCanvasSize, TokenType.GetColorCount,
-        TokenType.IsBrushColor, TokenType.IsBrushSize, TokenType.IsCanvasColor
-    };
     private readonly HashSet<TokenType> controllers = new HashSet<TokenType>
     {
         TokenType.GoTo, TokenType.Identifier, TokenType.EndOfLine,

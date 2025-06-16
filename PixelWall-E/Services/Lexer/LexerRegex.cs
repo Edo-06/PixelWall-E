@@ -3,25 +3,6 @@ public class LexerRegex
 {
     public List<TokenPattern> tokenPatterns = new List<TokenPattern> 
     {
-        // Command
-        new TokenPattern(TokenType.Spawn, @"^[ \t\n]*Spawn\b"),
-        new TokenPattern(TokenType.MoveTo, @"^[ \t]*MoveTo\b"),
-        new TokenPattern(TokenType.Color, @"^[ \t]*Color\b"),
-        new TokenPattern(TokenType.Size, @"^[ \t]*Size\b"),
-        new TokenPattern(TokenType.DrawLine, @"^[ \t]*DrawLine\b"),
-        new TokenPattern(TokenType.DrawCircle, @"^[ \t]*DrawCircle\b"),
-        new TokenPattern(TokenType.DrawRectangle, @"^[ \t]*DrawRectangle\b"),
-        new TokenPattern(TokenType.Fill, @"^[ \t]*Fill\b"),
-
-        // Function
-        new TokenPattern(TokenType.GetActualX, @"^[ \t]*GetActualX\b"),
-        new TokenPattern(TokenType.GetActualY, @"^[ \t]*GetActualY\b"),
-        new TokenPattern(TokenType.GetCanvasSize, @"^[ \t]*GetCanvasSize\b"),
-        new TokenPattern(TokenType.GetColorCount, @"^[ \t]*GetColorCount\b"),
-        new TokenPattern(TokenType.IsBrushColor, @"^[ \t]*IsBrushColor\b"),
-        new TokenPattern(TokenType.IsBrushSize, @"^[ \t]*IsBrushSize\b"),
-        new TokenPattern(TokenType.IsCanvasColor, @"^[ \t]*IsCanvasColor\b"),
-
         //Control
         new TokenPattern(TokenType.GoTo, @"^[ \t]*GoTo\b"),
         new TokenPattern(TokenType.EndOfLine, @"^[ \t]*(\r\n|\n)"),
@@ -63,6 +44,12 @@ public class LexerRegex
         
         new TokenPattern(TokenType.EndOfFile, @"\s+$"),
     };
+    public List<TokenPattern> GetTokenPatterns()
+    {
+        List<TokenPattern> tokens = Construct.GetTokenPatterns();
+        tokens.AddRange(tokenPatterns);
+        return tokens;
+    }
 }
 public class TokenPattern
 {

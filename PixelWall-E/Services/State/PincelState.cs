@@ -44,7 +44,8 @@ public static class PincelState
                 PipeLineManager.ChangePixelColor(pixelX, pixelY, brushColor);
             }
         }
-        await Task.Delay(1);
+        if(brushSize == 1) await Task.Delay(1);
+        else return;
     }
     public static void ReStart()
     {

@@ -206,6 +206,7 @@ public static class HandlerCommand
         PincelState.SetBrushSize((int)command.parameters[0].value);
         Console.WriteLine($"Brush size set to {PincelState.brushSize}");
     }
+#region Checks
     private static void CheckBounds(int x, int y, CommandNode command)
     {
         int canvasSize = PipeLineManager.GetCanvasSize();
@@ -228,4 +229,5 @@ public static class HandlerCommand
                     $"Direction ({dx}, {dy}) is invalid. Direction components must be -1, 0, or 1, and not both zero.");
         }
     }
+#endregion
 }
