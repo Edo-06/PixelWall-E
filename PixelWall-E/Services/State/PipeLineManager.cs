@@ -7,7 +7,7 @@ public  static class PipeLineManager
     private static LexerAnalyzer lexer = new LexerAnalyzer();
     private static List<Token> tokens = new List<Token>();
     public static ProgramNode program = null!;
-    public static List<string> lexerExceptions = [];
+    public static List<LexerException> lexerExceptions = [];
     public static CanvasGrid? canvas;
     public static (int x, int y) currentPixel {get; set;}= (0,0);
     public static bool isRunning = false;
@@ -21,7 +21,7 @@ public  static class PipeLineManager
         }
         catch (LexerException ex)
         {
-            lexerExceptions.Add(ex.Message);
+            lexerExceptions.Add(ex);
             await OnErrorsDetected.Invoke(ex);
             tokens = []; 
         }
@@ -75,6 +75,7 @@ public  static class PipeLineManager
     {
         isRunning = false;
         lexer = new LexerAnalyzer();
+        lexerExceptions = [];
         program = null!;
         tokens = new List<Token>();
         currentPixel = (0,0);
