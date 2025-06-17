@@ -103,6 +103,12 @@ public partial class ConsolePw
             PipeLineManager.isRunning = false;
             return; 
         }
+        if(e.Code == "KeyQ" && e.CtrlKey)
+        {
+            await AppendOutput("^Quick");
+            HandlerCommand.isAwait = false;
+            return;
+        }
     }
     public async Task<string> HandleEnter()
     {

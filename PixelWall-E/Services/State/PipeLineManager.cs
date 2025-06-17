@@ -81,6 +81,7 @@ public  static class PipeLineManager
         Scope.variables = [];
         Scope.labels = [];
         PincelState.ReStart();
+        HandlerCommand.ReStart();
     }
 #endregion
 #region Auxiliar Functions

@@ -9,9 +9,7 @@ public class Executor : IVisitor<Task>
     {
         while (currentStatement < program.statements.Count && PipeLineManager.isRunning)
         {
-            AwayGoTo();
             await program.statements[currentStatement].Accept(this);
-            CheckGoTo(program);
             currentStatement++;
         }
         return;
@@ -119,7 +117,7 @@ public class Executor : IVisitor<Task>
         Console.WriteLine($"GoToNode: {goTo.label.name} with value {goTo.parameters[0].value}");
         if ((bool)goTo.parameters[0].value)
         {
-            CheckLoop(goTo.label.name, goTo);
+            CheckLoop(goTo.location, goTo);
             Console.WriteLine($"Jumping to label {goTo.label.name}");
             Console.WriteLine($"{Scope.labels[goTo.label.name]} to {goTo.label.breakP}");
             currentStatement = Scope.labels[goTo.label.name] - 1;
@@ -127,44 +125,20 @@ public class Executor : IVisitor<Task>
         }
     }
     #region Loop Detection
-    private Dictionary<string, int> gotoVisitCounts = new Dictionary<string, int>();
+    private Dictionary<CodeLocation, int> gotoVisitCounts = new Dictionary<CodeLocation, int>();
     private const int GOTO_THRESHOLD = 10000;
-    private const int GOTO_RESET_THRESHOLD = 500;
-    private int instructionsSinceLastGoto = 0;
-    private string? lastGotoLabel = null;
-    private void AwayGoTo()
-    {
-        if (lastGotoLabel != null && instructionsSinceLastGoto > GOTO_RESET_THRESHOLD)
-        {
-            if (gotoVisitCounts.TryGetValue(lastGotoLabel, out int count) && count < GOTO_THRESHOLD)
-            {
-                gotoVisitCounts.Remove(lastGotoLabel);
-            }
-            lastGotoLabel = null;
-            instructionsSinceLastGoto = 0;
-        }
-    }
-    private void CheckGoTo(ProgramNode program)
-    {
-        if (!(program.statements[currentStatement] is GoToNode))
-            instructionsSinceLastGoto++;
-        else
-            instructionsSinceLastGoto = 0;
-    }
-    private void CheckLoop(string labelName, GoToNode goTo)
-    {
-        if (gotoVisitCounts.ContainsKey(labelName))
-            gotoVisitCounts[labelName]++;
-        else
-            gotoVisitCounts[labelName] = 1;
 
-        lastGotoLabel = labelName;
-        instructionsSinceLastGoto = 0; 
+    private void CheckLoop(CodeLocation counter, GoToNode goTo)
+    {
+        if (gotoVisitCounts.ContainsKey(counter))
+            gotoVisitCounts[counter]++;
+        else
+            gotoVisitCounts[counter] = 1;
 
-        if (gotoVisitCounts[labelName] > GOTO_THRESHOLD)
+        if (gotoVisitCounts[counter] > GOTO_THRESHOLD)
         {
             throw new RuntimeError(goTo.location, RuntimeErrorCode.InfiniteLoopDetected,
-                $"Possible infinite loop detected: label '{labelName}' visited too many times ({gotoVisitCounts[labelName]} times).");
+                $"Possible infinite loop detected: label '{goTo.label.name}' visited too many times ({gotoVisitCounts[counter]} times).");
         }
     }
     #endregion

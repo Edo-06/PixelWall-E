@@ -57,7 +57,7 @@ public static class HandlerCommand
         CheckBounds(currentX, currentY, command);
 
         PincelState.PaintBrushAt(currentX, currentY);
-        await Task.Delay(1);
+        if(isAwait) if(isAwait) await Task.Delay(1);
         for (int i = 0; i < distance; i++)
         {
             if (!PipeLineManager.isRunning) return;
@@ -67,7 +67,7 @@ public static class HandlerCommand
             CheckBounds(currentX, currentY, command);
             Console.WriteLine($"Drawing" + PincelState.brushColor + $" at ({currentX}, {currentY})");
             PincelState.PaintBrushAt(currentX, currentY);
-            await Task.Delay(1);
+            if(isAwait) if(isAwait) await Task.Delay(1);
         }
         PipeLineManager.currentPixel = (currentX, currentY);
     }
@@ -98,7 +98,7 @@ public static class HandlerCommand
                     int currentY = centerY + y;
                     Console.WriteLine($"Drawing" + PincelState.brushColor + $" at ({currentX}, {currentY}) for circle");
                     PincelState.PaintBrushAt(currentX, currentY);
-                    await Task.Delay(1);
+                    if(isAwait) await Task.Delay(1);
                 }
             }
         }
@@ -132,7 +132,7 @@ public static class HandlerCommand
             PincelState.PaintBrushAt(x, startY);
             Console.WriteLine($"Drawing" + PincelState.brushColor + $" at ({x}, {endY}) for rectangle");
             PincelState.PaintBrushAt(x, endY);
-            await Task.Delay(1);
+            if(isAwait) await Task.Delay(1);
         }
 
         for (int y = startY + 1; y < endY; y++)
@@ -142,7 +142,7 @@ public static class HandlerCommand
             PincelState.PaintBrushAt(startX, y);
             Console.WriteLine($"Drawing" + PincelState.brushColor + $" at ({endX}, {y}) for rectangle");
             PincelState.PaintBrushAt(endX, y);
-            await Task.Delay(1);
+            if(isAwait) await Task.Delay(1);
         }
         PipeLineManager.currentPixel = (centerX, centerY);
     }
@@ -182,7 +182,7 @@ public static class HandlerCommand
             pixelsProcessed++;
             if (pixelsProcessed % delayBatchSize == 0)
             {
-                await Task.Delay(1); 
+                if(isAwait) await Task.Delay(1); 
             }
 
             (int dx, int dy)[] directions = { (0, 1), (0, -1), (1, 0), (-1, 0) };
@@ -242,6 +242,11 @@ public static class HandlerCommand
 
             throw new RuntimeError(command.location, RuntimeErrorCode.InvalidDirection,
                 $"Direction ({dx}, {dy}) is invalid. Direction components must be -1, 0, or 1, and not both zero.");
+    }
+    public static bool isAwait = true;
+    public static void ReStart()
+    {
+        isAwait = true;
     }
     #endregion
 }

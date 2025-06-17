@@ -55,7 +55,7 @@ require(['vs/editor/editor.main'], function() {
     });
 
     monaco.editor.defineTheme('pixelwalle-console-light-theme', {
-        base: 'pixelwalle-light-theme',
+        base: 'vs',
         inherit: true,
         rules: [
             
