@@ -1,4 +1,4 @@
-# Estructura Lógica del Proyecto PixelWall-E (Enfoque en `/Services`)
+# Estructura Lógica del Proyecto PixelWall-E
 
 PixelWall-E implementa un **motor de interpretación de scripts** para manipulación de imágenes y lógica personalizada sobre un lienzo de píxeles.  
 La arquitectura separa claramente la interfaz de usuario (UI) de la lógica de interpretación y procesamiento, facilitando la extensión y el mantenimiento.
