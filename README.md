@@ -45,7 +45,7 @@ git clone https://github.com/Edo-06/PixelWall-E.git
 
 ## 📖 Documentación
 
-- Consulta la documentación de uso en la sección [About](/about) de la propia aplicación web.
+- Consulta la documentación de uso en la sección About de la propia aplicación web.
 - También puedes revisar la estructura técnica en el archivo [Struct.md](https://github.com/Edo-06/PixelWall-E/blob/main/Struct.md).
 
 ---
