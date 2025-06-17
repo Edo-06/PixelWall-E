@@ -58,6 +58,9 @@ main {
 .right-top{
     height: 100vh;
 }
+.right-bottom {
+    min-height: 0vh;
+}
 .canvas{
     width: 100%; 
     height: 42vh; 

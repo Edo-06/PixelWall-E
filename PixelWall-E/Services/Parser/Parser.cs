@@ -289,7 +289,10 @@ public class Parser
             if(tokens[currentPosition].type == TokenType.EndOfLine || tokens[currentPosition].type == TokenType.EndOfFile)
             {
                 Console.WriteLine("here");
-                Scope.labels.Add(token.lexeme, nodes.Count);
+                if(Scope.labels.ContainsKey(token.lexeme))
+                    errors.Add(new CompilingError(token.location, ErrorCode.Invalid, $"Label {token.lexeme} already exists"));
+                else
+                    Scope.labels.Add(token.lexeme, nodes.Count);
                 return;
             }
             //asignacion
@@ -298,23 +301,16 @@ public class Parser
                 AssignmentNode assignment = new AssignmentNode(token.location, token.lexeme);
                 Consume();
                 ExpressionNode expression = ParseExpression();
-                if(tokens[currentPosition].type == TokenType.EndOfLine || tokens[currentPosition].type == TokenType.EndOfFile)
-                {
-                    ConsumeEOL();
-                }
+                if(tokens[currentPosition].type == TokenType.EndOfLine || tokens[currentPosition].type == TokenType.EndOfFile) ConsumeEOL();
                 else
-                {
                     errors.Add(new CompilingError(tokens[currentPosition].location, ErrorCode.Expected, "Expected an EndOfLine token"));
-                }
                 if(expression != null)
                 {
                     assignment.expression = expression;
                     nodes.Add(assignment);
                 }
                 else
-                {
                     errors.Add(new CompilingError(tokens[currentPosition].location, ErrorCode.Invalid,"Invalid expression"));
-                }
                 return;
             }
             //errors.Add(new CompilingError(token.location, ErrorCode.Expected, "Expected an assignment or EndOfLine token"));

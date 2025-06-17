@@ -1,17 +1,18 @@
 html,
 body {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    height: 100%; /* Asegura que el body ocupe todo el alto disponible */
-    margin: 0;   
-    padding: 0; 
+    height: 100%;
+    /* Asegura que el body ocupe todo el alto disponible */
+    margin: 0;
+    padding: 0;
 }
 
 #app {
     position: relative;
     display: flex;
     flex-direction: row;
-    min-height: 100vh;      
-    width: 100%;            
+    min-height: 100vh;
+    width: 100%;
 }
 
 /*
@@ -19,7 +20,7 @@ body {
  */
 @media (max-width: 640.98px) {
     #app {
-        flex-direction: column; 
+        flex-direction: column;
     }
 }
 
@@ -29,8 +30,8 @@ body {
 .loading-progress-text {
     flex: 1;
     text-align: center;
-    margin-top: 3.125rem; 
-    font-size: 1.25rem;  
+    margin-top: 3.125rem;
+    font-size: 1.25rem;
     font-weight: bold;
 }
 
@@ -64,11 +65,13 @@ body {
     position: relative;
     flex-grow: 1;
 }
+
 @media (max-width: 640.98px) {
     .monaco-editor-container {
         height: 100vh;
     }
 }
+
 .decorationGlyphMarginClass {
     background: red;
 }
@@ -80,144 +83,216 @@ body {
 
 
 .app-header {
-            display: flex;
-            justify-content: space-between;
-            padding: 0.75rem 1.5rem; /* Adjusted padding for a compact look */
-            background-color: #fcfcfc; /* Very light, almost white background */
-            border-bottom: 1px solid #e7e7e7; /* Lighter, more subtle separator */
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03); /* Very light shadow for depth */
-            width: 100%; /* Occupy full width */
-            border-radius: 8px; /* Slight rounding for the header bar itself */
-        }
+    display: flex;
+    justify-content: space-between;
+    padding: 0.75rem 1.5rem;
+    /* Adjusted padding for a compact look */
+    background-color: #fcfcfc;
+    /* Very light, almost white background */
+    border-bottom: 1px solid #e7e7e7;
+    /* Lighter, more subtle separator */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
+    /* Very light shadow for depth */
+    width: 100%;
+    /* Occupy full width */
+    border-radius: 8px;
+    /* Slight rounding for the header bar itself */
+}
+
+.app-title-text {
+    font-size: 1.15rem;
+    /* Slightly smaller for a more compact header */
+    font-weight: 600;
+    /* Medium bold */
+    color: #4a5568;
+    /* Darker gray for strong readability */
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    /* Slightly more space for clarity */
+}
+
+.app-title-text i {
+    color: #e67e22;
+    /* Wall-E accent color for icon */
+    font-size: 1.3rem;
+    /* Slightly larger icon */
+}
+
+/* Navigation Menu in Header (for in-app actions) */
+.header-nav-menu ul {
+    display: flex;
+    gap: 1.25rem;
+    /* Slightly less gap for compactness */
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    justify-content: flex-end;
+}
+
+.header-nav-menu a {
+    color: #718096;
+    /* Soft gray for menu items */
+    font-weight: 500;
+    text-decoration: none;
+    padding: 0.4rem 0.6rem;
+    /* Smaller padding */
+    padding-top: 1rem;
+    border-radius: 4px;
+    /* Slightly less rounded */
+    transition: background-color 0.2s ease, color 0.2s ease;
+    font-size: 0.9rem;
+    /* Smaller font size */
+    font-size: 1.2rem;
+    float: right
+}
+
+.header-nav-menu a:hover {
+    background-color: #edf2f7;
+    /* Very light hover background */
+    color: #2d3748;
+    /* Darker text on hover */
+}
+
+/* Right-side controls (Theme Toggle, About) */
+.header-controls {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1.25rem;
+    /* Consistent gap */
+
+}
+
+.theme-toggle-dropdown {
+    position: relative;
+    float: right;
+}
+
+.theme-toggle-button {
+    background-color: #ffffff;
+    /* White background for the dropdown button */
+    border: 1px solid #cbd5e0;
+    /* Subtle border matching the image */
+    padding: 0.4rem 0.8rem;
+    /* Adjusted padding */
+    border-radius: 6px;
+    /* Match the subtle rounding in image */
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    /* Smaller gap */
+    font-size: 0.85rem;
+    /* Slightly smaller font */
+    color: #4a5568;
+    /* Darker text for dropdown */
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+    width: 5vw;
+}
+
+.theme-toggle-button-size {
+    width: 3vw;
+    background-color: #ffffff;
+    /* White background for the dropdown button */
+    border: 1px solid #cbd5e0;
+    /* Subtle border matching the image */
+    padding: 0.1rem 0.1rem;
+    /* Adjusted padding */
+    border-radius: 6px;
+    /* Match the subtle rounding in image */
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    /* Smaller gap */
+    font-size: 0.85rem;
+    /* Slightly smaller font */
+    color: #4a5568;
+    /* Darker text for dropdown */
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+    margin-top: 10px;
+}
+
+.theme-toggle-button:hover {
+    background-color: #f7fafc;
+    /* Very light hover */
+    border-color: #a0aec0;
+    /* Slightly darker border on hover */
+}
+
+.theme-options {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    /* Lighter border for dropdown options */
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    /* Slightly more prominent shadow */
+    min-width: 130px;
+    /* Slightly wider */
+    z-index: 100;
+    overflow: hidden;
+    display: none;
+    /* Controlled by JS */
+}
+
+.theme-options a {
+    display: block;
+    padding: 0.6rem 1rem;
+    /* Adjusted padding */
+    color: #333333;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+    font-size: 0.9rem;
+}
+
+.theme-options a:hover {
+    background-color: #f0f0f0;
+}
+
+.theme-options.show {
+    display: block;
+}
+
+.about-button {
+    color: #718096;
+    /* Soft gray */
+    font-weight: 500;
+    text-decoration: none;
+    padding: 0.4rem 0.6rem;
+    /* Smaller padding */
+    border-radius: 6px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    font-size: 0.9rem;
+    /* Smaller font size */
+    float: right;
+}
+
+.about-button:hover {
+    background-color: #edf2f7;
+    color: #2d3748;
+}
+
 @media (max-width: 640.98px) {
-            .app-header {
-                width: 87vw;
-                padding: initial;
-            }
-        }
+    .app-header {
+        width: 87vw;
+        padding: initial;
+    }
 
-        .app-title-text {
-            font-size: 1.15rem; /* Slightly smaller for a more compact header */
-            font-weight: 600; /* Medium bold */
-            color: #4a5568; /* Darker gray for strong readability */
-            display: flex;
-            align-items: center;
-            gap: 0.6rem; /* Slightly more space for clarity */
-        }
-        .app-title-text i {
-            color: #e67e22; /* Wall-E accent color for icon */
-            font-size: 1.3rem; /* Slightly larger icon */
-        }
+    .theme-toggle-button-size {
+        width: 40px;
+    }
+    .theme-toggle-button {
+        width: 100px;
+    }
 
-        /* Navigation Menu in Header (for in-app actions) */
-        .header-nav-menu ul {
-            display: flex;
-            gap: 1.25rem; /* Slightly less gap for compactness */
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            justify-content: flex-end;
-        }
-        .header-nav-menu a {
-            color: #718096; /* Soft gray for menu items */
-            font-weight: 500;
-            text-decoration: none;
-            padding: 0.4rem 0.6rem; /* Smaller padding */
-            padding-top: 1rem;
-            border-radius: 4px; /* Slightly less rounded */
-            transition: background-color 0.2s ease, color 0.2s ease;
-            font-size: 0.9rem; /* Smaller font size */
-            font-size: 1.2rem;
-            float:right
-        }
-        .header-nav-menu a:hover {
-            background-color: #edf2f7; /* Very light hover background */
-            color: #2d3748; /* Darker text on hover */
-        }
+    .theme-toggle-button:hover {
+        width: 100px;
+    }
 
-        /* Right-side controls (Theme Toggle, About) */
-        .header-controls {
-            display: flex;
-            justify-content: flex-end;
-            gap: 1.25rem; /* Consistent gap */
-
-        }
-        .theme-toggle-dropdown {
-            position: relative;
-            float:right;
-        }
-        .theme-toggle-button {
-            background-color: #ffffff; /* White background for the dropdown button */
-            border: 1px solid #cbd5e0; /* Subtle border matching the image */
-            padding: 0.4rem 0.8rem; /* Adjusted padding */
-            border-radius: 6px; /* Match the subtle rounding in image */
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 0.4rem; /* Smaller gap */
-            font-size: 0.85rem; /* Slightly smaller font */
-            color: #4a5568; /* Darker text for dropdown */
-            transition: background-color 0.2s ease, border-color 0.2s ease;
-            width: 5vw;
-        }
-        .theme-toggle-button-size {
-            width: 3vw;
-            background-color: #ffffff; /* White background for the dropdown button */
-            border: 1px solid #cbd5e0; /* Subtle border matching the image */
-            padding: 0.1rem 0.1rem; /* Adjusted padding */
-            border-radius: 6px; /* Match the subtle rounding in image */
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 0.4rem; /* Smaller gap */
-            font-size: 0.85rem; /* Slightly smaller font */
-            color: #4a5568; /* Darker text for dropdown */
-            transition: background-color 0.2s ease, border-color 0.2s ease;
-            margin-top: 10px;
-        }
-        .theme-toggle-button:hover {
-            background-color: #f7fafc; /* Very light hover */
-            border-color: #a0aec0; /* Slightly darker border on hover */
-        }
-        .theme-options {
-            position: absolute;
-            top: calc(100% + 8px);
-            right: 0;
-            background-color: #ffffff;
-            border: 1px solid #e2e8f0; /* Lighter border for dropdown options */
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Slightly more prominent shadow */
-            min-width: 130px; /* Slightly wider */
-            z-index: 100;
-            overflow: hidden;
-            display: none; /* Controlled by JS */
-        }
-        .theme-options a {
-            display: block;
-            padding: 0.6rem 1rem; /* Adjusted padding */
-            color: #333333;
-            text-decoration: none;
-            transition: background-color 0.2s ease;
-            font-size: 0.9rem;
-        }
-        .theme-options a:hover {
-            background-color: #f0f0f0;
-        }
-        .theme-options.show {
-            display: block;
-        }
-
-        .about-button {
-            color: #718096; /* Soft gray */
-            font-weight: 500;
-            text-decoration: none;
-            padding: 0.4rem 0.6rem; /* Smaller padding */
-            border-radius: 6px;
-            transition: background-color 0.2s ease, color 0.2s ease;
-            font-size: 0.9rem; /* Smaller font size */
-            float: right;
-        }
-        .about-button:hover {
-            background-color: #edf2f7;
-            color: #2d3748;
-        }
+    .header-nav-menu ul  {
+        gap: 1px;
+    }
+}

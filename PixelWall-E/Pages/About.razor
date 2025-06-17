@@ -1,0 +1,99 @@
+@page "/about"
+@using Microsoft.AspNetCore.Components
+@inherits LayoutComponentBase
+
+<PageTitle>About PixelWall-E</PageTitle>
+
+<h1>
+    <i class="fas fa-robot" style="color:#e67e22;"></i>
+    PixelWall-E Studio
+</h1>
+
+<p>
+    <b>PixelWall-E</b> es un estudio interactivo para programar, visualizar y manipular imágenes sobre un lienzo de píxeles usando un lenguaje de scripting propio. 
+    La aplicación fusiona un editor de código, un área de consola tipo terminal y un canvas visual, permitiendo experimentar con lógica, arte y programación creativa.
+</p>
+
+<h2>¿Qué puedes hacer en PixelWall-E?</h2>
+<ul>
+    <li><b>Dibujar</b> figuras y patrones sobre un lienzo de píxeles usando comandos de alto nivel.</li>
+    <li><b>Modificar colores, tamaños y estados</b> de la brocha programáticamente.</li>
+    <li><b>Guardar y cargar</b> tus scripts y resultados de imagen.</li>
+    <li><b>Usar la consola</b> integrada para ejecutar comandos rápidos, limpiar la salida o pedir ayuda.</li>
+    <li><b>Cambiar el tema</b> visual del editor y la consola.</li>
+</ul>
+
+<h2>Comandos del lenguaje de PixelWall-E</h2>
+<p>El editor reconoce los siguientes <b>comandos principales</b> para manipular el canvas:</p>
+<ul>
+    <li><code>Spawn(x, y)</code>: Coloca la brocha en la posición <b>(x, y)</b> del lienzo.</li>
+    <li><code>MoveTo(x, y)</code>: Mueve la brocha a <b>(x, y)</b> sin dibujar.</li>
+    <li><code>Color("NombreColor")</code>: Cambia el color de la brocha.</li>
+    <li><code>Size(n)</code>: Cambia el tamaño de la brocha.</li>
+    <li><code>DrawLine(dx, dy, distancia)</code>: Dibuja una línea desde la posición actual en la dirección <b>(dx, dy)</b> con una longitud dada.</li>
+    <li><code>DrawCircle(dx, dy, radio)</code>: Dibuja un círculo desde la posición actual, desplazando el centro por <b>(dx, dy)</b> y con radio dado.</li>
+    <li><code>DrawRectangle(x, y, width, height, thickness)</code>: Dibuja un rectángulo desde la posición actual o especificada.</li>
+    <li><code>Fill()</code>: Rellena el área actual con el color de la brocha.</li>
+    <li><code>GoTo(label)</code>: Salta a una etiqueta en el código (flujo de control).</li>
+</ul>
+<p>También existen <b>funciones de consulta</b> útiles:</p>
+<ul>
+    <li><code>GetActualX()</code>, <code>GetActualY()</code>: Devuelven la posición actual de la brocha.</li>
+    <li><code>GetCanvasSize()</code>: Devuelve el tamaño del lienzo.</li>
+    <li><code>GetColorCount(...)</code>: Cuenta colores en un área.</li>
+    <li><code>IsBrushColor(color)</code>, <code>IsBrushSize(n)</code>, <code>IsCanvasColor(color, x, y)</code>: Predicados para lógica condicional.</li>
+</ul>
+<p>
+    El lenguaje también soporta <b>asignaciones</b> (<code>x &lt;- 5</code>), <b>expresiones aritméticas</b>, <b>condiciones</b> y <b>etiquetas</b> para crear bucles y lógica personalizada.
+</p>
+
+<h2>Comandos de la Consola</h2>
+<p>
+    La consola a la derecha acepta los siguientes comandos rápidos:
+</p>
+<ul>
+    <li><b>run</b>: Ejecuta el código del editor principal.</li>
+    <li><b>clear</b>: Limpia la consola.</li>
+    <li><b>help</b>: Muestra la lista de comandos disponibles.</li>
+</ul>
+<ul>
+    <li><kbd>Ctrl+C</kbd>: Detiene la ejecución del pipeline/código.</li>
+    <li><kbd>Ctrl+Q</kbd>: Detiene la animación de pintado (útil para finalizar rápidamente el dibujo si es grande).</li>
+</ul>
+
+<h2>Controles y Acciones en la Interfaz</h2>
+<ul>
+    <li>Puedes <b>cambiar el tamaño del lienzo</b> mediante el input superior.</li>
+    <li>Botones principales del editor:
+        <ul>
+            <li><b>Ejecutar</b> <i class="fas fa-play mr-2"></i>: Ejecuta el código del editor.</li>
+            <li><b>Guardar imagen</b> <i class="fas fa-file-image mr-2"></i>: Guarda el resultado actual como PNG.</li>
+            <li><b>Guardar archivo</b> <i class="fas fa-save mr-2"></i>: Guarda el script como archivo <code>.pw</code>.</li>
+            <li><b>Cargar archivo</b> <i class="fas fa-folder-open mr-2"></i>: Carga un script guardado.</li>
+            <li><b>Limpiar consola</b> <i class="fas fa-trash mr-2"></i>: Limpia solo la consola.</li>
+        </ul>
+    </li>
+    <li><b>Cambio de tema oscuro/claro/alto contraste</b> desde la barra superior (<i class="fas fa-chevron-down text-xs ml-1"></i>).</li>
+</ul>
+
+<h2>¿Cómo funciona internamente?</h2>
+<p>
+    PixelWall-E analiza y ejecuta tu código en estas etapas:
+    <ol>
+        <li><b>Análisis léxico:</b> Convierte el texto en tokens.</li>
+        <li><b>Análisis sintáctico:</b> Construye un árbol de sintaxis (AST).</li>
+        <li><b>Visita y ejecución:</b> Interpreta el AST y modifica el estado del lienzo.</li>
+        <li><b>Actualización visual:</b> El canvas refleja los cambios en tiempo real.</li>
+    </ol>
+</p>
+<p>
+    Puedes encontrar detalles técnicos de estructura en el archivo <a href="https://github.com/Edo-06/PixelWall-E/blob/main/Struct.md" target="_blank">Struct.md</a>.
+</p>
+
+<hr />
+<p style="font-size:small;color:gray;">
+    <b>PixelWall-E Studio</b> - Proyecto didáctico y creativo para programación visual.<br/>
+    Autor: <a href="https://github.com/Edo-06" target="_blank"><i class="fab fa-github"></i> Edo-06</a> — 
+    <a href="mailto:edoardoperez06@gmail.com"><i class="fas fa-envelope"></i> ailemamr04@gmail.com</a><br/>
+    <a href="https://github.com/Edo-06/PixelWall-E" target="_blank">Ver en GitHub</a>
+</p>
