@@ -18,11 +18,6 @@ body {
 /*
  * Media Query para movil: 
  */
-@media (max-width: 640.98px) {
-    #app {
-        flex-direction: column;
-    }
-}
 
 /*
  * Texto de progreso de carga :
@@ -284,6 +279,7 @@ body {
     .theme-toggle-button-size {
         width: 40px;
     }
+
     .theme-toggle-button {
         width: 100px;
     }
@@ -292,7 +288,13 @@ body {
         width: 100px;
     }
 
-    .header-nav-menu ul  {
+    .header-nav-menu ul {
         gap: 1px;
+    }
+
+    @media (max-width: 640.98px) {
+        #app {
+            flex-direction: row
+        }
     }
 }
