@@ -90,7 +90,7 @@ public class Parser
     }
     private T ParseGoTo<T>(T node) where T: GoToNode
     {
-        int size = Construct.GetElementByToken(node.tokenType).expected.Input.Count;
+        int size = node.excpectedParametersCount;
         Consume(); 
         if(tokens[currentPosition].type == TokenType.LeftBracket)
             Consume();

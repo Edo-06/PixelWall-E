@@ -2,6 +2,7 @@ public class GoToNode: StatementNode, ICallableNode
 {
     public TokenType tokenType { get ; set; }
     public List<ExpressionNode> parameters { get; set; } = [];
+    public readonly int excpectedParametersCount = 1;
     public LabelNode label { get; set; } = null!;
     public GoToNode(CodeLocation location):base(location)
     {
