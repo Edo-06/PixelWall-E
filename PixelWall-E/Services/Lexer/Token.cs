@@ -52,29 +52,5 @@ public class Token
     {
         TokenType.GoTo, TokenType.Identifier, TokenType.EndOfLine,
     };
-
-    public readonly IReadOnlyDictionary<TokenType, int> expectedParameterCounts = new Dictionary<TokenType, int>
-    {
-        // Command
-        { TokenType.Spawn, 2 },
-        { TokenType.MoveTo, 2 },
-        { TokenType.Color, 1 },
-        { TokenType.Size, 1 },
-        { TokenType.DrawLine, 3 },
-        { TokenType.DrawCircle, 3 },
-        { TokenType.DrawRectangle, 5 },
-        { TokenType.Fill, 0 },
-
-        // Function
-        { TokenType.GetActualX, 0 },
-        { TokenType.GetActualY, 0 },
-        { TokenType.GetCanvasSize, 0 },
-        { TokenType.GetColorCount, 0 },
-        { TokenType.IsBrushColor, 1 },
-        { TokenType.IsBrushSize, 1 },
-        { TokenType.IsCanvasColor, 1 },
-
-        {TokenType.GoTo, 1}
-    };
 }
 #endregion

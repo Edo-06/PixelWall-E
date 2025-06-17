@@ -83,14 +83,14 @@ public class Parser
 #region ParseCommand
     private T ParseCallable<T>(T node) where T : ICallableNode
     {
-        int size = tokens[currentPosition].expectedParameterCounts[tokens[currentPosition].type];
+        int size = Construct.GetElementByToken(node.tokenType).expected.Input.Count;
         Consume(); // Consume the command token
         ParseParameters(node.parameters, size);
         return node;
     }
     private T ParseGoTo<T>(T node) where T: GoToNode
     {
-        int size = tokens[currentPosition].expectedParameterCounts[tokens[currentPosition].type];
+        int size = Construct.GetElementByToken(node.tokenType).expected.Input.Count;
         Consume(); 
         if(tokens[currentPosition].type == TokenType.LeftBracket)
             Consume();
