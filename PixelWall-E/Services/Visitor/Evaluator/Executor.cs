@@ -126,7 +126,7 @@ public class Executor : IVisitor<Task>
     }
     #region Loop Detection
     private Dictionary<CodeLocation, int> gotoVisitCounts = new Dictionary<CodeLocation, int>();
-    private const int GOTO_THRESHOLD = 10000;
+    private const int GOTO_THRESHOLD = 1000;
 
     private void CheckLoop(CodeLocation counter, GoToNode goTo)
     {

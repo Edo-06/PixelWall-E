@@ -7,7 +7,7 @@ public static class Construct
     private static HashSet<Callable> Callables = new HashSet<Callable>
     {
         new Callable(
-            new TokenPattern(TokenType.Spawn, @"^[ \t\n]*Spawn\b"),
+            new TokenPattern(TokenType.Spawn, @"^[ \s+]*Spawn\b"),
             new Expected(
                 new List<ExpressionType>
                 {
