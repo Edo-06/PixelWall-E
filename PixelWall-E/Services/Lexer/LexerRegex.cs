@@ -24,10 +24,10 @@ public class LexerRegex
         new TokenPattern(TokenType.RightBracket, @"^[ \t]*\]"),
 
         // ComparisionOperator
-        new TokenPattern(TokenType.Greater, @"^[ \t]*>"),
-        new TokenPattern(TokenType.Less, @"^[ \t]*<"),
         new TokenPattern(TokenType.GreaterEqual, @"^[ \t]*>="),
         new TokenPattern(TokenType.LessEqual, @"^[ \t]*<="),
+        new TokenPattern(TokenType.Greater, @"^[ \t]*>"),
+        new TokenPattern(TokenType.Less, @"^[ \t]*<"),
         new TokenPattern(TokenType.NotEqual, @"^[ \t]*!="),
         new TokenPattern(TokenType.Equal, @"^[ \t]*=="),
 

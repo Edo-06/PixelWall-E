@@ -11,9 +11,7 @@ public class LexerAnalyzer
             reader.ScanToken(tokens);
         }
         if(tokens.Count > 0 && tokens[^1].type != TokenType.EndOfFile)
-        {
             tokens.Add(new Token(TokenType.EndOfFile, reader.location, ""));
-        }
         return tokens;
     }
 
@@ -86,9 +84,7 @@ public class LexerAnalyzer
                     Console.WriteLine($"Nueva línea detectada: {line}");
                 }
                 else
-                {
                     last++;
-                }
             }
         }
     }
