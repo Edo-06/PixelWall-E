@@ -57,7 +57,7 @@ public static class HandlerCommand
         CheckBounds(currentX, currentY, command);
 
         PincelState.PaintBrushAt(currentX, currentY);
-        if (isAwait) if (isAwait) await Task.Delay(1);
+        if (isAwait) await Task.Delay(1);
         for (int i = 0; i < distance; i++)
         {
             if (!PipeLineManager.isRunning) return;
@@ -67,7 +67,7 @@ public static class HandlerCommand
             CheckBounds(currentX, currentY, command);
             Console.WriteLine($"Drawing" + PincelState.brushColor + $" at ({currentX}, {currentY})");
             PincelState.PaintBrushAt(currentX, currentY);
-            if (isAwait) if (isAwait) await Task.Delay(1);
+            if (isAwait) await Task.Delay(1);
         }
         PipeLineManager.currentPixel = (currentX, currentY);
     }
