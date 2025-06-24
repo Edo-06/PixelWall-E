@@ -9,7 +9,7 @@ public static class ParameterChecker
             if(!node.parameters[i].Accept(visitor)) return false;
             if(node.parameters[i].type != toCheck[i])
             {
-                errors.Add(new CompilingError(location, ErrorCode.Invalid, $"Parameter {i + 1} must be of type {toCheck[i]} in node {node.tokenType}"));
+                errors.Add(new CompilingError(location, ErrorCode.Invalid, $"parameter {i + 1} must be of type {toCheck[i]} in {node.tokenType}"));
                 return false;
             }
         }

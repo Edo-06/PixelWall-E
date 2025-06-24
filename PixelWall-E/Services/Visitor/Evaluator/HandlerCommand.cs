@@ -31,7 +31,7 @@ public static class HandlerCommand
                 ExecuteSize(command);
                 break;
             default:
-                throw new RuntimeError(command.location, RuntimeErrorCode.CommandExecutionError, $"Unknown command type: '{command.tokenType}'.");
+                throw new RuntimeError(command.location, RuntimeErrorCode.NotImplemented, $".Unknown command type: '{command.tokenType}'.");
         }
     }
     private static void ExecuteSpawn(CommandNode command)
@@ -234,7 +234,7 @@ public static class HandlerCommand
         int size = (int)command.parameters[0].value;
         if (size < 1 || size > PipeLineManager.GetCanvasSize() / 4)
             throw new RuntimeError(command.location, RuntimeErrorCode.OutOfBounds,
-                $"Brush size must be in range (1-{PipeLineManager.GetCanvasSize() / 4})");
+                $"brush size must be in range (1-{PipeLineManager.GetCanvasSize() / 4})");
         PincelState.SetBrushSize(size);
         Console.WriteLine($"Brush size set to {PincelState.brushSize}");
     }
@@ -244,7 +244,7 @@ public static class HandlerCommand
         int canvasSize = PipeLineManager.GetCanvasSize();
         if (x < 0 || x >= canvasSize || y < 0 || y >= canvasSize)
             throw new RuntimeError(command.location, RuntimeErrorCode.OutOfBounds,
-                $"Pixel ({x}, {y}) is out of canvas bounds (0-{canvasSize - 1}, 0-{canvasSize - 1}).");
+                $"pixel ({x}, {y}) is out of canvas bounds (0-{canvasSize - 1}, 0-{canvasSize - 1}).");
     }
     private static void ValidateDirection(int dx, int dy, CommandNode command)
     {
@@ -256,7 +256,7 @@ public static class HandlerCommand
         if (!isValidDirection)
 
             throw new RuntimeError(command.location, RuntimeErrorCode.InvalidDirection,
-                $"Direction ({dx}, {dy}) is invalid. Direction components must be -1, 0, or 1, and not both zero.");
+                $"({dx}, {dy}). Direction components must be -1, 0, or 1, and not both zero.");
     }
     public static bool isAwait = true;
     public static void ReStart()

@@ -7,14 +7,14 @@ public static class Operators<T> where T : IComparable<T>
         { TokenType.Multiply, (a, b) => a * b},
         { TokenType.Divide, (a, b) => 
             {
-                if (b == 0) throw new DivideByZeroException("Division by zero is not allowed.");
+                if (b == 0) throw new DivideByZeroException("");
                 return a / b;
             }
         },
         { TokenType.Power, (a, b) => (int)Math.Pow(a, b)},
         { TokenType.Modulo, (a, b) =>
         {
-            if (b == 0) throw new DivideByZeroException("Modulo by zero is not allowed."); 
+            if (b == 0) throw new DivideByZeroException("modulo by zero is not allowed"); 
             return a % b;
         }
     }

@@ -13,7 +13,7 @@ public class LexerException : Exception
     }
     public override string ToString()
     {
-        return $"Lexer Exception: {message} at line {location.line}, column {location.column}";
+        return $"Lexer Exception: {code} {message} at line {location.line}, column {location.column}";
     }
 }
 

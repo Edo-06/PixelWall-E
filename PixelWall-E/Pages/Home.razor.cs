@@ -72,7 +72,6 @@ public partial class Home
     private async Task HandleConsoleKeyDown(KeyboardEventArgs e)
     {
         Console.WriteLine($"Home: Key '{e.Key}' pressed in ConsolePw.");
-        await consoleRef.HandleEnter();
         if (codeEditorRef != null )
         {
             string userCommand = await consoleRef.HandleEnter();

@@ -1,5 +1,3 @@
-using System.Runtime.CompilerServices;
-
 public class Executor : IVisitor<Task>
 {
     public List<Exception> errors { get; set; } = [];
@@ -14,7 +12,7 @@ public class Executor : IVisitor<Task>
         }
         return;
     }
-
+#region Expression
     public Task Visit(UnaryOpNode unary)
     {
         unary.operand.Accept(this);
@@ -27,7 +25,7 @@ public class Executor : IVisitor<Task>
                 unary.value = !(bool)unary.operand.value;
                 break;
             default:
-                throw new NotImplementedException($"Unary operator {unary.op} is not a unary operator (semantic checker missed this).");
+                throw new RuntimeError(unary.location, RuntimeErrorCode.NotImplemented, $"unary operator {unary.op} is not a unary operator (semantic checker missed this).");
         }
         return Task.CompletedTask;
     }
@@ -60,7 +58,7 @@ public class Executor : IVisitor<Task>
                     binary.value = Operators<bool>.ComparisionOperator[binary.op].Invoke((bool)binary.left.value, (bool)binary.right.value);
                 break;
             default:
-                throw new RuntimeError(binary.location, RuntimeErrorCode.InvalidOperation, $"Binary operation not implemented for type '{binary.left.type}' (semantic checker missed this).");
+                throw new RuntimeError(binary.location, RuntimeErrorCode.InvalidOperation, $"binary operation not implemented for type '{binary.left.type}' (semantic checker missed this).");
         }
         return Task.CompletedTask;
     }
@@ -83,13 +81,14 @@ public class Executor : IVisitor<Task>
     public Task Visit(VariableNode variable)
     {
         if (!Scope.variables.ContainsKey(variable.name))
-            errors.Add(new CompilingError(variable.location, ErrorCode.Invalid, $"Variable '{variable.name}' is not defined."));
+            errors.Add(new CompilingError(variable.location, ErrorCode.Invalid, $"variable '{variable.name}' is not defined."));
         else
             variable.value = Scope.variables[variable.name].value;
         Console.WriteLine($"Variable {variable.name} = {variable.value}");
         return Task.CompletedTask;
     }
-
+#endregion
+#region Statement
     public Task Visit(AssignmentNode assignment)
     {
         assignment.expression.Accept(this);
@@ -110,7 +109,7 @@ public class Executor : IVisitor<Task>
     {
         return Task.CompletedTask;
     }
-
+#endregion
     public async Task Visit(GoToNode goTo)
     {
         await goTo.parameters[0].Accept(this);
@@ -138,7 +137,7 @@ public class Executor : IVisitor<Task>
         if (gotoVisitCounts[counter] > GOTO_THRESHOLD)
         {
             throw new RuntimeError(goTo.location, RuntimeErrorCode.InfiniteLoopDetected,
-                $"Possible infinite loop detected: label '{goTo.label.name}' visited too many times ({gotoVisitCounts[counter]} times).");
+                $"possible infinite loop detected: label '{goTo.label.name}' visited too many times ({gotoVisitCounts[counter]} times).");
         }
     }
     #endregion

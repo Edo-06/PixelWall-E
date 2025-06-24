@@ -42,7 +42,7 @@ public class LexerRegex
         new TokenPattern(TokenType.Identifier, @"^[ \t]*[a-zA-Z][a-zA-Z0-9_]*"),
         new TokenPattern(TokenType.ColorString, @"^[ \t]*""([#a-zA-Z0-9]*)"""),
         
-        new TokenPattern(TokenType.EndOfFile, @"\s+$"),
+        new TokenPattern(TokenType.EndOfFile, @"^\s+$"),
     };
     public List<TokenPattern> GetTokenPatterns()
     {

@@ -10,11 +10,10 @@ public class LexerAnalyzer
         {
             reader.ScanToken(tokens);
         }
-        if(tokens.Count > 0 && tokens[^1].type != TokenType.EndOfFile)
+        if(tokens.Count > 0 && tokens[^1].type != TokenType.EndOfFile && reader.IsAtEnd())
             tokens.Add(new Token(TokenType.EndOfFile, reader.location, ""));
         return tokens;
     }
-
     private class Reader
     {
         private List<TokenPattern> tokenPatterns;
@@ -55,12 +54,11 @@ public class LexerAnalyzer
                     UpdateLineAndColumn(lexeme);
                     lexeme = lexeme.Trim();
                     tokens.Add(new Token(type, l, lexeme));
-                    return;
+                    return; // retorna al crear un token
                 }
             }
-            throw new LexerException(location, LexerErrorCode.UnexpectedCharacter, $"Unexpected Character");
+            throw new LexerException(location, LexerErrorCode.UnexpectedCharacter, $"character");
         }
-
         public CodeLocation location
         {
             get

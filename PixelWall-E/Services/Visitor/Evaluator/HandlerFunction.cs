@@ -1,5 +1,4 @@
 using SixLabors.ImageSharp.PixelFormats;
-
 public static class HandlerFunction
 {
     public static object Execute(FunctionNode function)
@@ -21,7 +20,7 @@ public static class HandlerFunction
             case TokenType.IsCanvasColor:
                 return ExecuteIsCanvasColor(function);
             default:
-                throw new NotImplementedException($"Function {function.tokenType} is not implemented.");
+                throw new RuntimeError(function.location, RuntimeErrorCode.NotImplemented, $".Unknown command type: '{function.tokenType}'.");
         }
     }
     private static int ExecuteGetActualX(FunctionNode function)
@@ -95,7 +94,7 @@ public static class HandlerFunction
         if (x < 0 || x >= canvasSize || y < 0 || y >= canvasSize)
         {
             throw new RuntimeError(function.location, RuntimeErrorCode.OutOfBounds,
-                $"Pixel ({x}, {y}) is out of canvas bounds (0-{canvasSize - 1}, 0-{canvasSize - 1}).");
+                $"pixel ({x}, {y}) is out of canvas bounds (0-{canvasSize - 1}, 0-{canvasSize - 1}).");
         }
     }
 }

@@ -13,7 +13,7 @@ public class RuntimeError : Exception
     }
     public override string ToString()
     {
-        return $"Runtime Error: {message} at line {location.line}, column {location.column}";
+        return $"Runtime Error: {code} {message} at line {location.line}, column {location.column}";
     }
 }
 
@@ -23,7 +23,7 @@ public enum RuntimeErrorCode
     OutOfBounds,
     TypeMismatch,
     InvalidOperation,
-    CommandExecutionError,
+    NotImplemented,
     InvalidDirection,
     InfiniteLoopDetected,
     UnhandledInternalError

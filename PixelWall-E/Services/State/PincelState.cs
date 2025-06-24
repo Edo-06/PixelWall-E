@@ -1,4 +1,3 @@
-using BlazorMonaco.Languages;
 using SixLabors.ImageSharp.PixelFormats;
 
 public static class PincelState
@@ -22,7 +21,6 @@ public static class PincelState
     {
         brushColor = color;
     }
-
     public static void PaintBrushAt(int centerX, int centerY)
     {
         if(brushColor == new Rgba32(255,255,255,0)) return;
@@ -44,5 +42,4 @@ public static class PincelState
         brushSize = 1;
         brushColor = new Rgba32(255,255,255,0); // Reset to transparent color
     }
-
 }

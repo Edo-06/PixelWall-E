@@ -12,7 +12,7 @@ public partial class CanvasGrid
     public int numberOfPixels { get; set; } = 37;
     public Image<Rgba32>? image;
     private string? imageDataUrl { get; set; }
-    private Timer? renderTimer;
+    private Timer? renderTimer; //para animacion
     protected override void OnInitialized()
     {
         base.OnInitialized();

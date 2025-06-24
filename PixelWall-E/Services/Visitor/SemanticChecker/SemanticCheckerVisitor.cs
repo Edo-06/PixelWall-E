@@ -1,5 +1,3 @@
-using System.Drawing;
-
 public class SemanticCheckerVisitor: IVisitor<bool>
 {
     public List<Exception> errors {get; set;}
@@ -52,7 +50,7 @@ public class SemanticCheckerVisitor: IVisitor<bool>
         if(!goTo.parameters[0].Accept(this)) return false;
         if(goTo.parameters[0].type != ExpressionType.Bool)
         {
-            errors.Add(new CompilingError(goTo.location, ErrorCode.Invalid, "Parameter must be a boolean in GoTo statement"));
+            errors.Add(new CompilingError(goTo.location, ErrorCode.Invalid, "parameter in GoTo must be a boolean"));
             return false;
         }
         return true;
@@ -61,7 +59,7 @@ public class SemanticCheckerVisitor: IVisitor<bool>
     {
         if(!Scope.labels.ContainsKey(label.name))
         {
-            errors.Add(new CompilingError(label.location, ErrorCode.Invalid, $"Label '{label.name}' is not defined"));
+            errors.Add(new CompilingError(label.location, ErrorCode.Invalid, $"label '{label.name}' is not defined"));
             return false;
         }
         return true;
@@ -76,7 +74,7 @@ public class SemanticCheckerVisitor: IVisitor<bool>
             case TokenType.Not:
                 if (unary.operand.type != ExpressionType.Bool)
                 {
-                    errors.Add(new CompilingError(unary.location, ErrorCode.Invalid, "Invalid type for logical NOT operation"));
+                    errors.Add(new CompilingError(unary.location, ErrorCode.Invalid, "type for logical NOT operation"));
                     return false;
                 }
                 unary.type = ExpressionType.Bool;
@@ -84,13 +82,13 @@ public class SemanticCheckerVisitor: IVisitor<bool>
             case TokenType.Minus:
                 if (unary.operand.type != ExpressionType.Number)
                 {
-                    errors.Add(new CompilingError(unary.location, ErrorCode.Invalid, "Invalid type for negation operation"));
+                    errors.Add(new CompilingError(unary.location, ErrorCode.Invalid, "type for negation operation"));
                     return false;
                 }
                 unary.type = ExpressionType.Number;
                 break;
             default:
-                errors.Add(new CompilingError(unary.location, ErrorCode.Invalid, "Unsupported unary operation"));
+                errors.Add(new CompilingError(unary.location, ErrorCode.Invalid, "unsupported unary operation"));
                 return false;
         }
         return true;
@@ -101,7 +99,7 @@ public class SemanticCheckerVisitor: IVisitor<bool>
         if (!binary.left.Accept(this) || !binary.right.Accept(this)) return false;
         if (binary.left.type != binary.right.type)
         {
-            errors.Add(new CompilingError(binary.location, ErrorCode.Invalid, $"Types do not match for binary operation {binary.left.type} != {binary.right.type}"));
+            errors.Add(new CompilingError(binary.location, ErrorCode.Invalid, $"types do not match for binary operation {binary.left.type} != {binary.right.type}"));
             return false;
         }
         switch (binary.op)
@@ -109,7 +107,7 @@ public class SemanticCheckerVisitor: IVisitor<bool>
             case TokenType.Plus: case TokenType.Minus: case TokenType.Multiply: case TokenType.Divide: case TokenType.Modulo: case TokenType.Power:
                 if(binary.left.type != ExpressionType.Number)
                 {
-                    errors.Add(new CompilingError(binary.location, ErrorCode.Invalid, "Invalid type for arithmetic operation"));
+                    errors.Add(new CompilingError(binary.location, ErrorCode.Invalid, "type for arithmetic operation"));
                     return false;
                 }
                 binary.type = ExpressionType.Number;
@@ -119,7 +117,7 @@ public class SemanticCheckerVisitor: IVisitor<bool>
                 Console.WriteLine("check bool");
                 break;
             default:
-                errors.Add(new CompilingError(binary.location, ErrorCode.Invalid, "Unsupported binary operation"));
+                errors.Add(new CompilingError(binary.location, ErrorCode.Invalid, ".Unsupported binary operation"));
                 return false;
         }
         return true;
@@ -138,15 +136,11 @@ public class SemanticCheckerVisitor: IVisitor<bool>
         {
             literal.value = boolean;
             literal.type = ExpressionType.Bool;
-            /* errors.Add(new CompilingError(literal.location, ErrorCode.Invalid, "Invalid number format"));
-            return false; */
         }
         else if(Colors.colorHexCodes.ContainsKey(value))
         {
             literal.value = Colors.HexagToRgba32(Colors.colorHexCodes[value]);
             literal.type = ExpressionType.Color;
-            /* errors.Add(new CompilingError(literal.location, ErrorCode.Invalid, "Invalid boolean format"));
-            return false; */
         }
         else if(Colors.IsValidHexColor(value))
         {
@@ -155,7 +149,7 @@ public class SemanticCheckerVisitor: IVisitor<bool>
         }
         else
         {
-            errors.Add(new CompilingError(literal.location, ErrorCode.Invalid, "Unsupported literal type"));
+            errors.Add(new CompilingError(literal.location, ErrorCode.Invalid, ".Unsupported literal type"));
             return false;
         }
         return true;
@@ -165,7 +159,7 @@ public class SemanticCheckerVisitor: IVisitor<bool>
         Console.WriteLine("parseando variable");
         if (!Scope.variables.ContainsKey(variable.name))
         {
-            errors.Add(new CompilingError(variable.location, ErrorCode.Invalid, $"Variable '{variable.name}' is not defined"));
+            errors.Add(new CompilingError(variable.location, ErrorCode.Invalid, $"variable '{variable.name}' is not defined"));
             return false;
         }
         //Scope.variables[variable.name].Accept(this);

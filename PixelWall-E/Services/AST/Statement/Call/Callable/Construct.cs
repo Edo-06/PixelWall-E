@@ -4,7 +4,7 @@ public static class Construct
     private static HashSet<TokenType> CallableCommandTokens = new HashSet<TokenType>();
     private static HashSet<TokenType> CallableExpressionTokens = new HashSet<TokenType>();
     private static Dictionary<TokenType,Callable> CallableInputs = new Dictionary<TokenType,Callable>();
-    private static HashSet<Callable> Callables = new HashSet<Callable>
+    private static readonly HashSet<Callable> Callables = new HashSet<Callable>
     {
         new Callable(
             new TokenPattern(TokenType.Spawn, @"^[ \s+]*Spawn\b"),
