@@ -138,8 +138,8 @@ public static class HandlerCommand
         int startX = centerX - width / 2;
         int startY = centerY - height / 2;
 
-        int endX = centerX + width - 1;
-        int endY = centerY + height - 1;
+        int endX = centerX + width/2 ;
+        int endY = centerY + height/2;
 
         for (int x = startX; x <= endX; x++)
         {
